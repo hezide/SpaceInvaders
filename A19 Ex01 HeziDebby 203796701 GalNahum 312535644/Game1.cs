@@ -1,62 +1,54 @@
-﻿using Microsoft.Xna.Framework;
+﻿using A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Interfaces;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Collections.Generic;
 
 namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
 {
-    /// <summary>
-    /// This is the main type for your game.
-    /// </summary>
     public class Game1 : Game
     {
-        GraphicsDeviceManager graphics;
-        SpriteBatch spriteBatch;
-
+        GraphicsDeviceManager           graphics;
+        private SpaceInvadersManager    m_SpaceInvadersManager;
+        private SpriteBatch             m_SpriteBatch;
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
+            m_SpaceInvadersManager = new SpaceInvadersManager();
             Content.RootDirectory = "Content";
         }
 
-        /// <summary>
-        /// Allows the game to perform any initialization it needs to before starting to run.
-        /// This is where it can query for any required services and load any non-graphic
-        /// related content.  Calling base.Initialize will enumerate through any components
-        /// and initialize them as well.
-        /// </summary>
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-
+            m_SpaceInvadersManager.Init();
+            this.Window.Title = "Space Invaders";
             base.Initialize();
+
         }
 
-        /// <summary>
-        /// LoadContent will be called once per game and is the place to load
-        /// all of your content.
-        /// </summary>
         protected override void LoadContent()
         {
             // Create a new SpriteBatch, which can be used to draw textures.
-            spriteBatch = new SpriteBatch(GraphicsDevice);
+            m_SpriteBatch = new SpriteBatch(GraphicsDevice);
+            
+            Texture2D pinkTexture = Content.Load<Texture2D>(@"Sprites\Enemy0101_32x32");
+            Texture2D blueTexture = Content.Load<Texture2D>(@"Sprites\Enemy0201_32x32");
+            Texture2D yellowTexture = Content.Load<Texture2D>(@"Sprites\Enemy0301_32x32");
+            Texture2D bulletTexture = Content.Load<Texture2D>(@"Sprites\Enemy0301_32x32");
+            Texture2D motherShipTexture = Content.Load<Texture2D>(@"Sprites\MotherShip_32x120");
+            Texture2D playerTexture = Content.Load<Texture2D>(@"Sprites\Ship01_32x32");
 
-            // TODO: use this.Content to load your game content here
+            Texture2D backgroundTexture = Content.Load<Texture2D>(@"Sprites\BG_Space01_1024x768");
+
+            m_SpaceInvadersManager.InitAllTextures(pinkTexture, blueTexture, yellowTexture, bulletTexture, motherShipTexture, playerTexture);
         }
 
-        /// <summary>
-        /// UnloadContent will be called once per game and is the place to unload
-        /// game-specific content.
-        /// </summary>
         protected override void UnloadContent()
         {
             // TODO: Unload any non ContentManager content here
         }
-
-        /// <summary>
-        /// Allows the game to run logic such as updating the world,
-        /// checking for collisions, gathering input, and playing audio.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
+ 
         protected override void Update(GameTime gameTime)
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
@@ -66,11 +58,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
 
             base.Update(gameTime);
         }
-
-        /// <summary>
-        /// This is called when the game should draw itself.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
+ 
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
