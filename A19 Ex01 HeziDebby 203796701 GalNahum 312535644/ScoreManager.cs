@@ -9,7 +9,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
     class ScoreManager
     {
         public int          CurrentScore { get; private set; }
-        public void UpdateScore(Utilities.eType i_TypeOfHitObject)
+        public void UpdateScore(Utilities.eDrawableType i_TypeOfHitObject)
         {
             throw new NotImplementedException();
         }

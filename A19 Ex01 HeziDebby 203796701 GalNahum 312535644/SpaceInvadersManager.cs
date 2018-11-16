@@ -10,32 +10,97 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
 {
     class SpaceInvadersManager
     {
-        private Enemy[,]        Enemies { get; set; }
-        private MotherSpaceship m_MotherSpaceship;//important to check if there is a spaceship in game before performing actions
-        private Player          m_Player;
-        private int             m_HitCounter = 0;
-        private int             m_RandomMotherSpaceshipSpawnTime;//could be gametime
-        private readonly int    k_EnemyMatRows = 9;
-        private readonly int    k_EnemyMatCols = 5;
+        private Enemy[,]                    Enemies { get; set; }
+        private MotherSpaceship             m_MotherSpaceship;//important to check if there is a spaceship in game before performing actions
+        private Player                      m_Player;
+        private List<Interfaces.IDrawable>  m_Drawables;
+        private List<Interfaces.IMoveable>  m_Moveables;
+        private int                         m_HitCounter = 0;
+        private int                         m_RandomMotherSpaceshipSpawnTime;//could be gametime
+        SpriteBatch                         m_SpriteBatch;
 
-        public void Init()
+        public SpaceInvadersManager()
         {
-            int enemyX = 0, enemyY = 96;
-            for (int row = 0 ; row < k_EnemyMatRows; row++)
-            {
-                for (int col = 0 ; col < k_EnemyMatCols ; col++)
-                {
-                    Enemies[row, col] = new Enemy();
-                    Enemies[row, col].Init();
+            m_Drawables = new List<Interfaces.IDrawable>();
+            m_Moveables = new List<Interfaces.IMoveable>();
 
+            Enemies = new Enemy[Utilities.k_EnemyMatRows, Utilities.k_EnemyMatCols];
+        }
+        public void Init(Dictionary<Utilities.eDrawableType,Texture2D> i_Textures, SpriteBatch i_SpriteBatch)
+        {
+            m_SpriteBatch = i_SpriteBatch;
+            InitAllEnemies(i_Textures);
+            //TODO:: init all the rest        
+        }
+
+        private void InitAllEnemies(Dictionary<Utilities.eDrawableType, Texture2D> i_Textures)
+        {
+            float enemyHeight = i_Textures[Utilities.eDrawableType.PinkEnemy].Height;
+            float enemyWidth = i_Textures[Utilities.eDrawableType.PinkEnemy].Width;
+            float enemyX, enemyY;
+            for (int row = 0; row < Utilities.k_EnemyMatRows; row++)
+            {
+                for (int col = 0; col < Utilities.k_EnemyMatCols; col++)
+                {
+                    enemyX = col * enemyWidth + enemyWidth * Utilities.k_EnemyGapMultiplier * col;
+                    enemyY = (row * enemyHeight + enemyHeight * Utilities.k_EnemyGapMultiplier* row )+ Utilities.k_InitialHightMultiplier * enemyHeight;
+
+                    Enemies[row, col] = new Enemy();
+                    //Initialize pink enemies
+                    if (Utilities.k_PinkEnemyFirstRow <= row && Utilities.k_PinkEnemyLastRow >= row)
+                    {
+                        Enemies[row, col].Init(
+                            Utilities.eDrawableType.PinkEnemy,
+                            i_Textures[Utilities.eDrawableType.PinkEnemy],
+                            Color.Pink,
+                            new Vector2(enemyX, enemyY),
+                            Utilities.eDirection.Right,
+                            i_Textures[Utilities.eDrawableType.PinkEnemy].Width,
+                            m_SpriteBatch);
+                    }
+                    else if (Utilities.k_BlueEnemyFirstRow <= row && Utilities.k_BlueEnemyLastRow >= row)
+                    {
+                        Enemies[row, col].Init(
+                            Utilities.eDrawableType.BlueEnemy,
+                            i_Textures[Utilities.eDrawableType.BlueEnemy],
+                            Color.Blue,
+                            new Vector2(enemyX, enemyY),
+                            Utilities.eDirection.Right,
+                            i_Textures[Utilities.eDrawableType.BlueEnemy].Width,
+                            m_SpriteBatch);
+                    }
+                    else if (Utilities.k_YellowEnemyFirstRow <= row && Utilities.k_YellowEnemyLastRow >= row)
+                    {
+                        Enemies[row, col].Init(
+                            Utilities.eDrawableType.YellowEnemy,
+                            i_Textures[Utilities.eDrawableType.YellowEnemy],
+                            Color.Yellow,
+                            new Vector2(enemyX, enemyY),
+                            Utilities.eDirection.Right,
+                            i_Textures[Utilities.eDrawableType.YellowEnemy].Width,
+                            m_SpriteBatch);
+                    }
+                    m_Drawables.Add(Enemies[row, col]);
+                    m_Moveables.Add(Enemies[row, col]);
+                    //enemyX += 30;
                 }
             }
         }
 
-        
+        public void Draw(GameTime gameTime)
+        {
+            foreach (Interfaces.IDrawable drawable in m_Drawables)
+            {
+                drawable.Draw(gameTime);
+            }
+        }
+
         public void Update(GameTime gameTime)
         {
-
+            foreach (Interfaces.IMoveable moveable in m_Moveables)
+            {
+                moveable.Update(gameTime);
+            }
         }
 
         private void increaseVelocity()
@@ -54,33 +119,6 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
         internal void GetAllDrawings()
         {
             throw new NotImplementedException();
-        }
-
-        internal void InitAllTextures(
-            Texture2D i_pinkTexture,
-            Texture2D i_blueTexture,
-            Texture2D i_yellowTexture, 
-            Texture2D i_bulletTexture,
-            Texture2D i_motherShipTexture, 
-            Texture2D i_playerTexture)
-        {
-            foreach (Enemy enemy in Enemies)
-            {
-                switch (enemy.Type )
-                {
-                    case Utilities.eType.BlueEnemy:
-                        enemy.Texture = i_blueTexture;
-                        break;
-                    case Utilities.eType.PinkEnemy:
-                        enemy.Texture = i_pinkTexture;
-                        break;
-                    case Utilities.eType.YellowEnemy:
-                        enemy.Texture = i_yellowTexture;
-                        break;
-                }
-            }
-            m_Player.Texture = i_playerTexture;
-            m_MotherSpaceship.Texture = i_motherShipTexture;
         }
     }
 }
