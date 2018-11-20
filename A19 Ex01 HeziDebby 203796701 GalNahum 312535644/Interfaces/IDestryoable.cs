@@ -8,5 +8,6 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Interfaces
 {
     interface IDestryoable
     {
+       int Souls { get; set; }
     }
 }

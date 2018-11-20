@@ -9,49 +9,45 @@ using System.Threading.Tasks;
 
 namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
 {
-    class Enemy : IMoveable, IDestryoable, Interfaces.IDrawable
+    public class Enemy : IMoveable, IDestryoable
     {
-        public Vector2                          CurrentPosition { get; set; }
-        public int                              Velocity { get; set; }
-        public Texture2D                        Texture { get; set; }
-        public Utilities.eDirection             CurrentDirection { get; set; }
-        public Utilities.eDrawableType          Type { get; set; }
-        private int                             m_ShootingFrequency;
-        public SpriteBatch                      SpriteBatch { private get; set; }
-        public Color                            Color { private get; set; }
+        public Vector2 CurrentPosition { get; set; }
+        public int Velocity { get; set; }
+        public Texture2D Texture { get; set; }
+        public Utilities.eDirection CurrentDirection { get; set; }
+        public Utilities.eDrawableType Type { get; set; }
+        private int m_ShootingFrequency;
+        public SpriteBatch SpriteBatch { get; set; }
+        public Color Color { get; private set; }
+        public int Souls { get; set; }
 
-        public void Init()
+        public Enemy(Texture2D i_texture, SpriteBatch i_spriteBatch, Color i_color)
         {
-            throw new NotImplementedException();
-            //TODO: update shooting frequency
-        }
-        public void Init(
-            Utilities.eDrawableType i_EnemyType,
-            Texture2D i_EnemyTexture,
-            Color i_Color,
-            Vector2 i_Position,
-            Utilities.eDirection i_Direction,
-            int i_Velocity,
-            SpriteBatch i_SpriteBatch)
-        {
-            Type = i_EnemyType;
-            Texture = i_EnemyTexture;
-            Color = i_Color;
-            CurrentPosition = i_Position;
-            Velocity = i_Velocity;
-            CurrentDirection = i_Direction;
-            SpriteBatch = i_SpriteBatch;
-            
-        }
-        public void Update(GameTime i_GameTime)
-        {
-            CurrentPosition = new Vector2(CurrentPosition.X + (float)Velocity * (float)i_GameTime.ElapsedGameTime.TotalSeconds,CurrentPosition.Y);
+            Texture = i_texture;
+            SpriteBatch = i_spriteBatch;
+          //  CurrentPosition = i_initialPosition;
+            Color = i_color;
         }
 
-        public void Draw(GameTime gameTime)
+        public void Init(Vector2 i_initialPosition)
+        {
+            CurrentDirection = Utilities.eDirection.Right;
+            Velocity = Utilities.k_EnemyVelocity;
+            Souls = Utilities.k_EnemySouls;
+            CurrentPosition = i_initialPosition;
+        }
+
+        public void Move(GameTime i_gameTime) // need to be jump
+        {
+            CurrentPosition = new Vector2(CurrentPosition.X + (float)Velocity * (float)i_gameTime.ElapsedGameTime.TotalSeconds, CurrentPosition.Y);
+        }
+
+        public void Draw(GameTime i_gameTime)
         {
             SpriteBatch.Begin();
+
             SpriteBatch.Draw(Texture, CurrentPosition, Color);
+
             SpriteBatch.End();
 
         }

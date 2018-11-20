@@ -11,10 +11,9 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Interfaces
     interface IDrawable
     {
         Texture2D       Texture { get; }
-        Vector2         CurrentPosition { get; set; }
-        SpriteBatch     SpriteBatch { set; }
+        SpriteBatch     SpriteBatch { get; }
+        Color Color { get; }
 
-        void Init();
-        void Draw(GameTime gameTime);
+        void Draw(GameTime i_gameTime);
     }
 }
