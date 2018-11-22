@@ -10,25 +10,31 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
 {
     public static class SpaceInvadersFactory
     {
-        public static PlayerSpaceship CreatePlayerSpaceship(Texture2D i_texture, SpriteBatch i_spriteBatch)
+        public static PlayerSpaceship CreatePlayerSpaceship(GraphicsDevice i_graphics)
         {
-            return new PlayerSpaceship(i_texture, i_spriteBatch, Color.White);
+            return new PlayerSpaceship(i_graphics);
         }
 
-        public static Enemy CreateEnemy(Texture2D i_texture, SpriteBatch i_spriteBatch, Utilities.eDrawableType i_drawableType)
+        public static Enemy CreateEnemy(GraphicsDevice i_graphics, Utilities.eDrawableType eEnemyType)
         {
             Enemy enemy;
 
-            switch (i_drawableType)
+            switch (eEnemyType)
             {
                 case Utilities.eDrawableType.PinkEnemy:
-                    enemy = new Enemy(i_texture, i_spriteBatch, Color.Pink);
+                    enemy = new Enemy(i_graphics);
+                    enemy.Type = Utilities.eDrawableType.PinkEnemy;
+                    enemy.Color = Color.Pink;
                     break;
                 case Utilities.eDrawableType.BlueEnemy:
-                    enemy = new Enemy(i_texture, i_spriteBatch, Color.Blue);
+                    enemy = new Enemy(i_graphics);
+                    enemy.Type = Utilities.eDrawableType.BlueEnemy;
+                    enemy.Color = Color.Blue;
                     break;
                 case Utilities.eDrawableType.YellowEnemy:
-                    enemy = new Enemy(i_texture, i_spriteBatch, Color.Yellow);
+                    enemy = new Enemy(i_graphics);
+                    enemy.Type = Utilities.eDrawableType.YellowEnemy;
+                    enemy.Color = Color.Yellow;
                     break;
                 default:
                     enemy = null;
@@ -38,9 +44,14 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
             return enemy;
         }
 
-        public static Bullet CreateBullet(Texture2D i_texture, SpriteBatch i_spriteBatch)
+        public static Bullet CreateBullet(GraphicsDevice i_graphicsDevice)
         {
-            return new Bullet(i_texture, i_spriteBatch, Color.White);
+            return new Bullet(i_graphicsDevice);
+        }
+
+        public static MotherSpaceship CreateMotherSpaceship(GraphicsDevice i_graphicsDevice)
+        {
+            return new MotherSpaceship(i_graphicsDevice);
         }
     }
 }

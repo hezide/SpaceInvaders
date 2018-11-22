@@ -14,7 +14,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Interfaces
         int                     Velocity { get; set; }
         Utilities.eDirection    CurrentDirection { get; set; }
 
-        void Init(Vector2 i_initialPosition); // TODO: not sure if required
+        void InitPosition(Vector2 i_initialPosition); // TODO: not sure if required
         void Move(GameTime i_GameTime);
     }
 }

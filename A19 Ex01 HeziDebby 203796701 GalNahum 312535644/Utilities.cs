@@ -27,10 +27,12 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
 
         public static readonly int k_SpaceshipSouls = 3;
         public static readonly int k_EnemySouls = 1;
+        public static readonly int k_MotherSpaceshipSouls = 1;
 
         public static readonly int k_SpaceshipVelocity = 120;
-        public static readonly int k_EnemyVelocity = 30;
+        public static readonly int k_EnemyVelocity = 120;
         public static readonly int k_BulletVelocity = 155;
+        public static readonly int k_MotherSpaceshipVelocity = 110;
 
     }
 }

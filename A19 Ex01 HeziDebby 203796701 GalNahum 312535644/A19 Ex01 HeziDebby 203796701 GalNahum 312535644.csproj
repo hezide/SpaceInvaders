@@ -45,6 +45,8 @@
     <Compile Include="Enemy.cs" />
     <Compile Include="EnemiesMat.cs" />
     <Compile Include="Game1.cs" />
+    <Compile Include="GameData.cs" />
+    <Compile Include="GameObject.cs" />
     <Compile Include="Interfaces\IDrawable.cs" />
     <Compile Include="SpaceInvadersFactory.cs" />
     <Compile Include="SpaceInvadersManager.cs" />

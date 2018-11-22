@@ -8,6 +8,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Interfaces
 {
     interface IShooter
     {
-        void Fire(Bullet i_bullet);
+        List<Bullet> BulletsList { get; }
+        void Fire();
     }
 }

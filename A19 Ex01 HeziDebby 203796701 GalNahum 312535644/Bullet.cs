@@ -1,5 +1,6 @@
 ﻿using A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Interfaces;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
@@ -9,42 +10,77 @@ using System.Threading.Tasks;
 
 namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
 {
-    public class Bullet : IMoveable
+    public class Bullet : GameObject
     {
-        public Vector2 CurrentPosition { get; set; }
-        public int Velocity { get ; set ; }
-        public Utilities.eDirection CurrentDirection { get; set; }
-        public Texture2D Texture { get; private set; }
-        public SpriteBatch SpriteBatch { get; private set; }
-        public Color Color { get; private set; }
+    //    public Vector2 CurrentPosition { get; set; }
+    //    public int Velocity { get; set; }
+    //    public Utilities.eDirection CurrentDirection { get; set; }
+    //    public Texture2D Texture { get; private set; }
+    //    public Color Color { get; private set; }
+    //    public Rectangle Rectangle { get; private set; }
+        public bool IsVisible { get; private set; }
 
-        public Bullet(Texture2D i_texture, SpriteBatch i_spriteBatch, Color i_color)
+        public Bullet(GraphicsDevice i_graphicsDevice) : base(i_graphicsDevice)
         {
-            Texture = i_texture;
-            SpriteBatch = i_spriteBatch;
-         //   CurrentPosition = i_initialPosition;
-            Color = i_color;
+
         }
 
-        public void Init(Vector2 i_initialPosition)
+        public override void Initialize(ContentManager i_content)
         {
+            base.Initialize(i_content);
+
             CurrentDirection = Utilities.eDirection.Up;
             Velocity = Utilities.k_BulletVelocity;
+            Color = Color.Red;
+            IsVisible = true;
+        }
+
+        protected override void LoadContent(ContentManager i_content)
+        {
+            base.LoadContent(i_content);
+
+            Texture = i_content.Load<Texture2D>(@"Sprites\Bullet");
+        }
+
+        public void InitPosition(Vector2 i_initialPosition)
+        {
             CurrentPosition = i_initialPosition;
         }
 
         public void Move(GameTime i_gameTime)
         {
-            CurrentPosition = new Vector2(CurrentPosition.X + (float)Velocity * (float)i_gameTime.ElapsedGameTime.TotalSeconds, CurrentPosition.Y);
+            CurrentPosition = new Vector2(CurrentPosition.X, CurrentPosition.Y - (float)Velocity * (float)i_gameTime.ElapsedGameTime.TotalSeconds);
         }
 
-        public void Draw(GameTime i_gameTime)
+        public override void Update(GameTime i_gameTime)
         {
-            SpriteBatch.Begin();
+            Move(i_gameTime);
+            base.Update(i_gameTime);
+      //      updateRectangle();
+        }
 
-            SpriteBatch.Draw(Texture, CurrentPosition, Color);
+        //private void updateRectangle()
+        //{
+        //    Rectangle rectangle = new Rectangle((int)CurrentPosition.X, (int)CurrentPosition.Y, Texture.Width, Texture.Height);
 
-            SpriteBatch.End();
+        //    Rectangle = rectangle;
+        //}
+
+        public override void Draw(GameTime i_gameTime)
+        {
+            if (IsVisible)
+            {
+                SpriteBatch.Begin();
+
+                SpriteBatch.Draw(Texture, CurrentPosition, Color);
+
+                SpriteBatch.End();
+            }
+        }
+
+        public void Hide()
+        {
+            IsVisible = false;
         }
     }
 }
