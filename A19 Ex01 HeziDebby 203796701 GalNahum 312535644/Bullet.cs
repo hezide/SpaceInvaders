@@ -13,7 +13,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
     {
         public Vector2 InitialPosition { get; set; }
         public Vector2 CurrentPosition { get; set; }
-        public int Velocity { get ; set ; }
+        public float Velocity { get ; set ; }
 
         public Texture2D Texture { get; private set; }
 
@@ -24,7 +24,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
             throw new NotImplementedException();
         }
 
-        public void Update(GameTime gameTime)
+        public void Move(GameTime gameTime)
         {
             throw new NotImplementedException();
         }

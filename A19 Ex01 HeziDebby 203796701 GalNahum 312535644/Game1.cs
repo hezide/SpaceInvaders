@@ -23,8 +23,8 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
         {
             // TODO: Add your initialization logic here
             this.Window.Title = "Space Invaders";
-            base.Initialize();
 
+            base.Initialize();
         }
 
         protected override void LoadContent()
@@ -32,8 +32,6 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
             // Create a new SpriteBatch, which can be used to draw textures.
             m_SpriteBatch = new SpriteBatch(GraphicsDevice);
             LoadTextures();
-
-            //m_SpaceInvadersManager.InitAllTextures(pinkTexture, blueTexture, yellowTexture, bulletTexture, motherShipTexture, playerTexture);
         }
 
         private void LoadTextures()
@@ -47,6 +45,10 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
             texturesDictionary[Utilities.eDrawableType.MotherSpaceship] = Content.Load<Texture2D>(@"Sprites\MotherShip_32x120");
             texturesDictionary[Utilities.eDrawableType.Player] = Content.Load<Texture2D>(@"Sprites\Ship01_32x32");
             texturesDictionary[Utilities.eDrawableType.Background] = Content.Load<Texture2D>(@"Sprites\BG_Space01_1024x768");
+
+            graphics.PreferredBackBufferWidth = texturesDictionary[Utilities.eDrawableType.Background].Width;
+            graphics.PreferredBackBufferHeight = texturesDictionary[Utilities.eDrawableType.Background].Height;
+            graphics.ApplyChanges();
 
             m_SpaceInvadersManager.Init(texturesDictionary, m_SpriteBatch);
         }
@@ -62,16 +64,15 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
             //this is an attempt to make the jumps only for specific objects
-            //this.TargetElapsedTime = TimeSpan.FromSeconds(0.5);
+            this.TargetElapsedTime = TimeSpan.FromSeconds(0.5);
             m_SpaceInvadersManager.Update(gameTime);
-           // this.TargetElapsedTime = TimeSpan.FromMilliseconds(16);
+            //this.TargetElapsedTime = TimeSpan.FromMilliseconds(16);
             base.Update(gameTime);
         }
  
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-
 
             // TODO: Add your drawing code here
             m_SpaceInvadersManager.Draw(gameTime);

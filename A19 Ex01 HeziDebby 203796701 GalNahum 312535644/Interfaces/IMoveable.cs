@@ -10,10 +10,10 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Interfaces
 {
     interface IMoveable
     {
-        int                     Velocity { get; set; }
+        float                   Velocity { get; set; }
         Utilities.eDirection    CurrentDirection { get; set; }
 
         void Init();
-        void Update(GameTime gameTime);
+        void Move(GameTime gameTime);
     }
 }
