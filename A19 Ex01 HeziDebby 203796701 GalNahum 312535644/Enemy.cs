@@ -1,5 +1,6 @@
 ﻿using A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Interfaces;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
@@ -9,77 +10,99 @@ using System.Threading.Tasks;
 
 namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
 {
-    class Enemy : IMoveable, IDestryoable, Interfaces.IDrawable, IShooter
+    public class Enemy : GameObject, IDestryoable
     {
-        public Vector2                                  CurrentPosition { get; set; }
-        public float                                    Velocity { get; set; }
-        public Texture2D                                Texture { get; set; }
-        public Utilities.eDirection                     CurrentDirection { get; set; }
-        public Utilities.eDrawableType                  Type { get; set; }
-        private int                                     m_ShootingFrequency;
-        public SpriteBatch                              SpriteBatch { private get; set; }
-        public Color                                    Color { private get; set; }
-        public Rectangle                                ScreenBoundries { private get; set; }
+     //   public Vector2 CurrentPosition { get; set; }
+      //  public int Velocity { get; set; }
+     //   public Texture2D Texture { get; set; }
+      //  public Utilities.eDirection CurrentDirection { get; set; }
+        public Utilities.eDrawableType Type { get; set; }
+        private int m_ShootingFrequency;
+     //   public Color Color { get; set; }
+        public int Souls { get; set; }
+     //   public Rectangle Rectangle { get; private set; }
+     //   private readonly float k_jumpIndicator = 0.5f;
+        private float m_timeToJump = 0;
 
-        public event EventHandler<Utilities.eDirection> WallWasHit;
-
-        public void Init()
+        public Enemy(GraphicsDevice i_graphics) : base(i_graphics)
         {
-            throw new NotImplementedException();
-
-            //TODO: update shooting frequency
-        }
-        public void Init(
-            Utilities.eDrawableType i_EnemyType,
-            Texture2D i_EnemyTexture,
-            Color i_Color,
-            Vector2 i_Position,
-            Utilities.eDirection i_Direction,
-            int i_Velocity,
-            SpriteBatch i_SpriteBatch,
-            Rectangle i_ScreenBoundries)
-        {
-            Type = i_EnemyType;
-            Texture = i_EnemyTexture;
-            Color = i_Color;
-            CurrentPosition = i_Position;
-            Velocity = i_Velocity;
-            CurrentDirection = i_Direction;
-            SpriteBatch = i_SpriteBatch;
-            ScreenBoundries = i_ScreenBoundries;
-
-            Random rnd = new Random();
-            m_ShootingFrequency = rnd.Next(1, 10);//todo make sure its ok
-        }
-        public void Move(GameTime i_GameTime)
-        {
-            if (CurrentPosition.X >= ScreenBoundries.Width - Texture.Width)
-                WallWasHit.Invoke(this, Utilities.eDirection.Right);
-            if (CurrentPosition.X <= 0)
-                WallWasHit.Invoke(this, Utilities.eDirection.Left);
-            if (CurrentPosition.Y >= ScreenBoundries.Height - Texture.Height)
-                WallWasHit.Invoke(this, Utilities.eDirection.Down);
-
-            //Direction left is -1 and right is +1, this makes the enemies jump e
-            CurrentPosition = new Vector2(CurrentPosition.X + ((float)CurrentDirection) * (Velocity * (float)i_GameTime.ElapsedGameTime.TotalSeconds), CurrentPosition.Y);
         }
 
-        public void Draw(GameTime gameTime)
+        public override void Initialize(ContentManager i_content)
         {
-            SpriteBatch.Begin();
-            SpriteBatch.Draw(Texture, CurrentPosition, Color);
-            SpriteBatch.End();
+            base.Initialize(i_content);
+
+            CurrentDirection = Utilities.eDirection.Right;
+            Velocity = Utilities.k_EnemyVelocity;
+            Souls = Utilities.k_EnemySouls;
         }
 
-        public void StepDown()
+        public void InitPosition(int i_row, int i_col)
         {
-            CurrentPosition = new Vector2(CurrentPosition.X, CurrentPosition.Y + (Texture.Height / 2));
+            float x;
+            float y;
+            float height = Texture.Height;
+            float width = Texture.Width;
+
+            x = i_col * width + width * Utilities.k_EnemyGapMultiplier * i_col;
+            y = (i_row * height + height * Utilities.k_EnemyGapMultiplier * i_row) + Utilities.k_InitialHightMultiplier * height;
+
+            CurrentPosition = new Vector2(x, y);
         }
 
-        public void IncreaseVelocity(float i_VelocityMultiplier)
+        protected override void LoadContent(ContentManager i_content)
         {
-            Velocity *= i_VelocityMultiplier;
+            base.LoadContent(i_content);
+
+          string folder = @"Sprites\";
+          string enemy = String.Format("Enemy0{0}01_32x32", (int)Type + 1);
+          Texture = Content.Load<Texture2D>(folder + enemy);
+
         }
 
+        private void Move(GameTime i_gameTime) // need to be jump
+        {
+            CurrentPosition = new Vector2(CurrentPosition.X + (float)Velocity * (float)i_gameTime.ElapsedGameTime.TotalSeconds, CurrentPosition.Y);
+        }
+
+        public override void Update(GameTime i_gameTime)
+        {
+            Move(i_gameTime);
+            base.Update(i_gameTime);
+            //         updateRectangle();
+        }
+
+        //private void updateRectangle()
+        //{
+        //    Rectangle rectangle = new Rectangle((int)CurrentPosition.X, (int)CurrentPosition.Y, Texture.Width, Texture.Height);
+
+        //    Rectangle = rectangle;
+        //}
+
+        //     public override void Draw(GameTime i_gameTime)
+        //   {
+        //     if (m_timeToJump >= k_jumpIndicator)
+        //     {
+        //         m_timeToJump -= k_jumpIndicator;
+
+        //SpriteBatch.Begin();
+
+        //SpriteBatch.Draw(Texture, CurrentPosition, Color);
+
+        //SpriteBatch.End();
+        //    }
+
+        //    m_timeToJump += (float)i_gameTime.ElapsedGameTime.TotalSeconds;
+        //     }
+
+        public void GetHit()
+        {
+            Souls--;
+        }
+
+        public bool IsDead()
+        {
+            return Souls == 0;
+        }
     }
 }
