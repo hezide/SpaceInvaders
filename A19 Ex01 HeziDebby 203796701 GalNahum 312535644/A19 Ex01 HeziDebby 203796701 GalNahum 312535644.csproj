@@ -44,7 +44,6 @@
     <Compile Include="Bullet.cs" />
     <Compile Include="Enemy.cs" />
     <Compile Include="EnemiesMat.cs" />
-    <Compile Include="EventHandlerWallHit.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="GameData.cs" />
     <Compile Include="GameObject.cs" />
@@ -61,7 +60,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ScoreManager.cs" />
     <Compile Include="Utilities.cs" />
-    <Compile Include="WallHitResponse.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">

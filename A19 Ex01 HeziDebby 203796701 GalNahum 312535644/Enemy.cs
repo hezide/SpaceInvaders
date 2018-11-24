@@ -12,14 +12,13 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
 {
     public class Enemy : GameObject, IDestryoable, IShooter
     {
-        public Utilities.eDrawableType                  Type { get; set; }
-        private int                                     m_shootingFrequency;
         public int                                      Souls { get; set; }
         public List<Bullet>                             BulletsList { get; private set; }
         private float                                   m_timeToJump = 0;
         private RandomActionComponent                   m_randomShootingNotifier;
         private ShootingLogic                           m_shootingLogic;
-        public Utilities.eShooterType                   ShooterType { get; set; }
+        //public Utilities.eShooterType                   ShooterType { get; set; }
+        public Action<Bullet>                           ShotFired { get; set; }
 
         public Enemy(GraphicsDevice i_graphics,int i_randomSeed) : base(i_graphics)
         {
@@ -88,18 +87,29 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
         //    return new Vector2(xScale, yScale);
         //}
 
-        internal WallHitResponse IsWallHit()
+        internal void IsWallHit(ref bool isWalHit, ref Utilities.eDirection hitDirection)
         {
             if (CurrentPosition.X >= Utilities.k_ScreenWidth - Texture.Width)
-                return new WallHitResponse(true,Utilities.eDirection.Right);
+            {
+                isWalHit = true;
+                hitDirection = Utilities.eDirection.Right;
+            }
+            else if (CurrentPosition.X <= 0)
+            {
+                isWalHit = true;
+                hitDirection = Utilities.eDirection.Left;
+            }
+            else if (CurrentPosition.Y >= Utilities.k_ScreenHeight - Texture.Height)
+            {
+                isWalHit = true;
+                hitDirection = Utilities.eDirection.Down;
+            }
+            else
+            {
+                isWalHit = false;
+                hitDirection = Utilities.eDirection.None;
+            }
 
-            if (CurrentPosition.X <= 0)
-                return new WallHitResponse(true, Utilities.eDirection.Left);
-
-            if (CurrentPosition.Y >= Utilities.k_ScreenHeight - Texture.Height)
-                return new WallHitResponse(true, Utilities.eDirection.Down); 
-
-            return new WallHitResponse(false, Utilities.eDirection.None);
         }
 
         public override void Update(GameTime i_gameTime)
@@ -159,7 +169,8 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
 
         public void Fire()
         {
-            m_shootingLogic.Fire(CurrentPosition.X - Texture.Width / 2, CurrentPosition.Y,Utilities.eDirection.Down,ShooterType);
+            Bullet bullet = m_shootingLogic.Fire(CurrentPosition.X - Texture.Width / 2, CurrentPosition.Y,Utilities.eDirection.Down,Type);
+           // ShotFired.Invoke(bullet);
         }
 
         public List<Bullet> GetBulletsList()

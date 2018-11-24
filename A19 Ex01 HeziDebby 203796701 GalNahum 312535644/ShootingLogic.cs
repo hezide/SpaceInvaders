@@ -24,18 +24,17 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Interfaces
             m_gun = new Gun(3);
         }
 
-        public void Fire(float i_x, float i_y, Utilities.eDirection i_shootingDirection,Utilities.eShooterType i_shooterType)
+        public Bullet Fire(float i_x, float i_y, Utilities.eDirection i_shootingDirection,Utilities.eGameObjectType i_shooterType)
         {
             if (!m_gun.Fire())//cannot fire
-                return;
-
+                return null;
             Bullet bullet = SpaceInvadersFactory.CreateBullet(m_graphicsDevice, i_shooterType);
             bullet.Initialize(m_content);
             bullet.CurrentDirection = i_shootingDirection;
             BulletsList.Add(bullet);
 
             bullet.InitPosition(new Vector2(i_x, i_y));
-            
+            return bullet;
         }
 
         private void updateBullets(GameTime i_gameTime)

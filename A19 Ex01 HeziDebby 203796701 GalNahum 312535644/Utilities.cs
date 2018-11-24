@@ -19,8 +19,20 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
             return eDirection.Right;
 
         }
-        public enum eDrawableType { PinkEnemy, BlueEnemy, YellowEnemy, Spaceship, MotherSpaceship, Bullet, Background}
-        public enum eShooterType { Enemy,PlayerSpaceship}
+        public enum eGameObjectType { PinkEnemy, BlueEnemy, YellowEnemy, Spaceship, MotherSpaceship, Bullet, Background}
+        public static bool IsEnemy(eGameObjectType type)
+        {
+            if (type == eGameObjectType.PinkEnemy || type == eGameObjectType.BlueEnemy || type == eGameObjectType.YellowEnemy)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        //public enum eShooterType { Enemy,PlayerSpaceship}
+
         public static readonly int      k_InitialHightMultiplier = 3;
         public static readonly float    k_EnemyGapMultiplier = 0.6f;
         public static readonly int      k_EnemyMatRows = 5;

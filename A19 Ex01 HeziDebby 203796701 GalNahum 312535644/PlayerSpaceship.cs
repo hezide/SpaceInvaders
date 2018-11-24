@@ -17,7 +17,8 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
         private MouseState?             m_prevMouseState;
         private KeyboardState           m_prevKeyboardState;
         private ShootingLogic           m_shootingLogic;
-        public Utilities.eShooterType   ShooterType { get; set; }
+        //public Utilities.eShooterType   ShooterType { get; set; }
+        public Action<Bullet>           ShotFired { get; set; }
 
         public PlayerSpaceship(GraphicsDevice i_graphicsDevice) : base(i_graphicsDevice)
         {
@@ -70,7 +71,8 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
                 }
                 if (keyboardState != m_prevKeyboardState && m_prevKeyboardState.IsKeyDown(Keys.Space))
                 {
-                    m_shootingLogic.Fire(CurrentPosition.X - Texture.Width / 2, CurrentPosition.Y, Utilities.eDirection.Up,ShooterType);
+                    Bullet bullet = m_shootingLogic.Fire(CurrentPosition.X - Texture.Width / 2, CurrentPosition.Y, Utilities.eDirection.Up,Type);
+                    //ShotFired.Invoke(bullet);
                 }
 
                 m_prevKeyboardState = keyboardState;
@@ -89,7 +91,8 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
             {
                 if (m_prevMouseState.Value.LeftButton == ButtonState.Pressed && currMouseState.LeftButton == ButtonState.Released)
                 {
-                    m_shootingLogic.Fire(CurrentPosition.X - Texture.Width / 2, CurrentPosition.Y, Utilities.eDirection.Up,ShooterType);
+                    Bullet bullet = m_shootingLogic.Fire(CurrentPosition.X - Texture.Width / 2, CurrentPosition.Y, Utilities.eDirection.Up,Type);
+                   // ShotFired.Invoke(bullet);
                 }
             }
 

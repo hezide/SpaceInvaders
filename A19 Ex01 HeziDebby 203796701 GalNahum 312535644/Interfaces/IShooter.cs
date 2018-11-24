@@ -8,7 +8,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Interfaces
 {
     interface IShooter
     {
-        Utilities.eShooterType ShooterType { get; set; }
         List<Bullet> GetBulletsList();
+        Action<Bullet> ShotFired { get; set; }
     }
 }

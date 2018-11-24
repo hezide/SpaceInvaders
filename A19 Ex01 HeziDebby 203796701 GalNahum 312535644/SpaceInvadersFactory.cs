@@ -13,27 +13,27 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
         public static PlayerSpaceship CreatePlayerSpaceship(GraphicsDevice i_graphics)
         {
             PlayerSpaceship spaceship = new PlayerSpaceship(i_graphics);
-            spaceship.ShooterType = Utilities.eShooterType.PlayerSpaceship;
+            spaceship.Type = Utilities.eGameObjectType.Spaceship;
             return spaceship;
         }
 
-        public static Enemy CreateEnemy(GraphicsDevice i_graphics, Utilities.eDrawableType eEnemyType,int i_randomSeed)
+        public static Enemy CreateEnemy(GraphicsDevice i_graphics, Utilities.eGameObjectType eEnemyType,int i_randomSeed)
         {
             Enemy enemy = new Enemy(i_graphics, i_randomSeed);;
-            enemy.ShooterType = Utilities.eShooterType.Enemy;
+            //enemy.Type = Utilities.eGameObjectType.Enemy;
 
             switch (eEnemyType)
             {
-                case Utilities.eDrawableType.PinkEnemy:
-                    enemy.Type = Utilities.eDrawableType.PinkEnemy;
+                case Utilities.eGameObjectType.PinkEnemy:
+                    enemy.Type = Utilities.eGameObjectType.PinkEnemy;
                     enemy.Color = Color.Pink;
                     break;
-                case Utilities.eDrawableType.BlueEnemy:
-                    enemy.Type = Utilities.eDrawableType.BlueEnemy;
+                case Utilities.eGameObjectType.BlueEnemy:
+                    enemy.Type = Utilities.eGameObjectType.BlueEnemy;
                     enemy.Color = Color.Blue;
                     break;
-                case Utilities.eDrawableType.YellowEnemy:
-                    enemy.Type = Utilities.eDrawableType.YellowEnemy;
+                case Utilities.eGameObjectType.YellowEnemy:
+                    enemy.Type = Utilities.eGameObjectType.YellowEnemy;
                     enemy.Color = Color.Yellow;
                     break;
                 default:
@@ -44,14 +44,19 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
             return enemy;
         }
 
-        public static Bullet CreateBullet(GraphicsDevice i_graphicsDevice,Utilities.eShooterType i_shooterType)
+        public static Bullet CreateBullet(GraphicsDevice i_graphicsDevice,Utilities.eGameObjectType i_shooterType)
         {
             Bullet bullet = new Bullet(i_graphicsDevice);
-            if(i_shooterType == Utilities.eShooterType.PlayerSpaceship)
+            if (i_shooterType == Utilities.eGameObjectType.Spaceship)
+            {
                 bullet.Color = Color.Red;
-            else if(i_shooterType == Utilities.eShooterType.Enemy)
+                bullet.Owner = Utilities.eGameObjectType.Spaceship;
+            }
+            else if (i_shooterType == Utilities.eGameObjectType.PinkEnemy || i_shooterType == Utilities.eGameObjectType.BlueEnemy || i_shooterType == Utilities.eGameObjectType.YellowEnemy)
+            {
                 bullet.Color = Color.Blue;
-
+                bullet.Owner = i_shooterType;
+            }
             return bullet;
         }
 

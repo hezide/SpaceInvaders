@@ -19,6 +19,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
         public float Velocity { get; set; }
         public Texture2D Texture { get; protected set; }
         public Utilities.eDirection CurrentDirection { get; set; }
+        public Utilities.eGameObjectType Type { get; set; }
         public Color Color { get; set; }
         public Rectangle Rectangle { get; protected set; }
 

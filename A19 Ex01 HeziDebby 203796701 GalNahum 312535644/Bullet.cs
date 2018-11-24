@@ -12,14 +12,8 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
 {
     public class Bullet : GameObject
     {
-    //    public Vector2 CurrentPosition { get; set; }
-    //    public int Velocity { get; set; }
-    //    public Utilities.eDirection CurrentDirection { get; set; }
-    //    public Texture2D Texture { get; private set; }
-    //    public Color Color { get; private set; }
-    //    public Rectangle Rectangle { get; private set; }
         public bool IsVisible { get; private set; }
-
+        public Utilities.eGameObjectType Owner { get; set; }
         public Bullet(GraphicsDevice i_graphicsDevice) : base(i_graphicsDevice)
         {
 

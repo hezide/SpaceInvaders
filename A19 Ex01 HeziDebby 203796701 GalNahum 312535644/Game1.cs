@@ -12,7 +12,8 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
         GraphicsDeviceManager           m_graphics;
         private SpaceInvadersManager    m_spaceInvadersManager;
         private SpriteBatch             m_spriteBatch;
-
+        private Texture2D               m_backgroundTexture;
+        private bool                    m_gameOver;
         public Game1()
         {
             m_graphics = new GraphicsDeviceManager(this);
@@ -24,6 +25,8 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
         {
             Window.Title = "Space Invaders";
             m_spaceInvadersManager = new SpaceInvadersManager(this.GraphicsDevice);
+            m_spaceInvadersManager.GameOver += OnGameOver;
+            m_gameOver = false;
             base.Initialize();
             IsMouseVisible = true;
         }
@@ -34,7 +37,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
             m_graphics.PreferredBackBufferWidth = Utilities.k_ScreenWidth;
             m_graphics.PreferredBackBufferHeight = Utilities.k_ScreenHeight;
             m_graphics.ApplyChanges();
-
+            m_backgroundTexture = Content.Load<Texture2D>(@"Sprites\BG_Space01_1024x768");
             m_spaceInvadersManager.Init(this.Content);
         }
 
@@ -51,16 +54,33 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
                 Exit();
             }
 
-            m_spaceInvadersManager.Update(gameTime);
-
+            if (!m_gameOver)
+            {
+                m_spaceInvadersManager.Update(gameTime);
+            }
             base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
+
+            m_spriteBatch.Begin();
+
+            m_spriteBatch.Draw(m_backgroundTexture, new Vector2(0,0), Color.White);
+
+            m_spriteBatch.End();
+
             m_spaceInvadersManager.Draw(gameTime);
             base.Draw(gameTime);
+        }
+        private void OnGameOver(int score)
+        {
+            m_gameOver = true;
+            MessageBox.Show("Game Over", "Your Score is: " + score, new[] { "OK" });
+            {
+                Exit();
+            }
         }
     }
 }
