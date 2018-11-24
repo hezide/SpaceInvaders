@@ -13,17 +13,14 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
 {
     class SpaceInvadersManager
     {
-        private Enemy[,] m_enemiesMat;
-        private MotherSpaceship m_motherSpaceship; //important to check if there is a spaceship in game before performing actions
-        private PlayerSpaceship m_player;
-        private List<GameObject> m_gameObjectsList;
-        private int m_hitCounter = 0; // HEZI which hit ?
-        private TimeSpan m_randomSpanTime; //could be gametime
-        private TimeSpan m_prevRandomSpanTime;
-        private Random m_randomMotherSpaceship;
-     //   private SpriteBatch m_spriteBatch;
-        private GraphicsDevice m_graphicsDevice;
-        private ContentManager m_contentManager;
+        private Enemy[,]                m_enemiesMat;
+        private MotherSpaceship         m_motherSpaceship; //important to check if there is a spaceship in game before performing actions
+        private PlayerSpaceship         m_player;
+        private List<GameObject>        m_gameObjectsList;
+        private int                     m_enemyHitCounter = 0;
+        private GraphicsDevice          m_graphicsDevice;
+        private ContentManager          m_contentManager;
+        private RandomActionComponent   m_spaceShipRandomNotifier;
 
         public SpaceInvadersManager(GraphicsDevice i_graphicsDevice)
         {
@@ -41,35 +38,23 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
 
             createEnemiesMat(m_contentManager);
 
-            m_randomMotherSpaceship = new Random(); ///
-            setRandomTimeSpan();
-
+            m_spaceShipRandomNotifier = new RandomActionComponent(1, 25);
+            m_spaceShipRandomNotifier.RandomTimeAchived += createMotherSpaceship;
         }
 
         private void createEnemiesMat(ContentManager i_contentManager)
         {
             m_enemiesMat = new Enemy[Utilities.k_EnemyMatRows, Utilities.k_EnemyMatCols];
-
-            //float enemyHeight = i_texturesByType[Utilities.eDrawableType.PinkEnemy].Height;
-            //float enemyWidth = i_texturesByType[Utilities.eDrawableType.PinkEnemy].Width;
-            //float enemyX, enemyY;
-
+            int randomSeedCounter = 0;
             for (int row = 0; row < Utilities.k_EnemyMatRows; row++)
             {
                 for (int col = 0; col < Utilities.k_EnemyMatCols; col++)
                 {
-                    //enemyX = col * enemyWidth + enemyWidth * Utilities.k_EnemyGapMultiplier * col;
-                    //enemyY = (row * enemyHeight + enemyHeight * Utilities.k_EnemyGapMultiplier * row) + Utilities.k_InitialHightMultiplier * enemyHeight;
-
                     Utilities.eDrawableType eEnemyType = getCurrentEnemyType(row);
-                    //    Texture2D texture = i_texturesByType[eEnemyType];
-                    //      Vector2 position = new Vector2(enemyX, enemyY);
 
-                    m_enemiesMat[row, col] = SpaceInvadersFactory.CreateEnemy(m_graphicsDevice, eEnemyType);
+                    m_enemiesMat[row, col] = SpaceInvadersFactory.CreateEnemy(m_graphicsDevice, eEnemyType,++randomSeedCounter);
                     m_enemiesMat[row, col].Initialize(i_contentManager);
                     m_enemiesMat[row, col].InitPosition(row, col);
-                    // m_drawablesList.Add(m_enemiesMat[row, col]);
-                    // m_moveablesList.Add(m_enemiesMat[row, col]);
                     m_gameObjectsList.Add(m_enemiesMat[row, col]);
                 }
             }
@@ -93,7 +78,6 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
 
         public void Draw(GameTime i_gameTime)
         {
-
             foreach (GameObject gameObject in m_gameObjectsList)
             {
                 gameObject.Draw(i_gameTime);
@@ -102,10 +86,9 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
 
         public void Update(GameTime i_gameTime)
         {
-            if (itsTimeForMotherSpaceship(i_gameTime))
-            {
-                createMotherSpaceship();
-            }
+            m_spaceShipRandomNotifier.Update(i_gameTime);
+
+            enemyHitWallCase();
 
             foreach (GameObject gameObject in m_gameObjectsList)
             {
@@ -115,20 +98,46 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
             checkForHits();
         }
 
+        private void enemyHitWallCase()
+        {
+            foreach (Enemy enemy in m_enemiesMat)
+            {
+                WallHitResponse wallHitResponse = enemy.IsWallHit();
+                if (wallHitResponse.m_hit)
+                {
+                    if (wallHitResponse.m_hitDirection == Utilities.eDirection.Down)
+                        gameOver();
+
+                    foreach (Enemy enemyToFixPos in m_enemiesMat)
+                    {
+                        enemyToFixPos.CurrentDirection = Utilities.ToggleDirection(wallHitResponse.m_hitDirection);
+                        enemyToFixPos.StepDown();
+                    }
+                    break;
+                }
+            }
+        }
+
         private void checkForHits()
         {
-            List<GameObject> objectsToDestroy = new List<GameObject>(); ;
+            List<GameObject> objectsToDestroy = new List<GameObject>();
 
             foreach (GameObject gameObject in m_gameObjectsList)
             {
                 if (gameObject is IShooter)
                 {
-                    objectsToDestroy = getListOfObjectsToDestroy(((gameObject) as IShooter).BulletsList, gameObject as IShooter);
+                    //concat the lists gathered so far
+                    objectsToDestroy.AddRange(getListOfObjectsToDestroy(((gameObject) as IShooter).GetBulletsList(), gameObject as IShooter));
                 }
             }
 
             foreach (GameObject gameObject in objectsToDestroy)
             {
+                if(gameObject is Enemy)
+                {
+                    if(++m_enemyHitCounter % 4 == 0)
+                          increaseVelocity();
+                }
                 m_gameObjectsList.Remove(gameObject);
             }
         }
@@ -145,6 +154,9 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
                     {
                         if (gameObject is IDestryoable && gameObject as IShooter != i_shooter)
                         {
+                            //the type comparison prevents enemies to hit themselves
+                            if (gameObject is IShooter && (gameObject as IShooter).ShooterType == i_shooter.ShooterType)
+                                continue;
                             if (bullet.Rectangle.Intersects((gameObject as IDestryoable).Rectangle))
                             {
                                 (gameObject as IDestryoable).GetHit();
@@ -165,7 +177,10 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
 
         private void increaseVelocity()
         {
-            throw new NotImplementedException();
+            foreach (Enemy enemy in m_enemiesMat)
+            {
+                enemy.IncreaseVelocity(Utilities.SpeedIncreaseMultiplier);
+            }
         }
 
         private void createMotherSpaceship()
@@ -192,21 +207,13 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
         {
             bool itsTime = false;
 
-            if (i_gameTime.TotalGameTime - m_prevRandomSpanTime > m_randomSpanTime)
-            {
-                m_prevRandomSpanTime = i_gameTime.TotalGameTime;
-                setRandomTimeSpan();
-                itsTime = true;
-            }
 
             return itsTime;
         }
 
-        private void setRandomTimeSpan()
+        private void gameOver()
         {
-            int spanSeconds = m_randomMotherSpaceship.Next(1, 25); // TODO: contans
-
-            m_randomSpanTime = TimeSpan.FromSeconds(spanSeconds);
+            throw new NotImplementedException();
         }
     }
 }

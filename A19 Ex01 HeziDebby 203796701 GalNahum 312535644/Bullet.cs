@@ -31,7 +31,6 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
 
             CurrentDirection = Utilities.eDirection.Up;
             Velocity = Utilities.k_BulletVelocity;
-            Color = Color.Red;
             IsVisible = true;
         }
 
@@ -49,7 +48,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
 
         public void Move(GameTime i_gameTime)
         {
-            CurrentPosition = new Vector2(CurrentPosition.X, CurrentPosition.Y - (float)Velocity * (float)i_gameTime.ElapsedGameTime.TotalSeconds);
+            CurrentPosition = new Vector2(CurrentPosition.X, Utilities.CalculateNewCoordinate(CurrentPosition.Y,CurrentDirection,Velocity,i_gameTime));
         }
 
         public override void Update(GameTime i_gameTime)

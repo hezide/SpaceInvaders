@@ -11,27 +11,22 @@ using System.Threading.Tasks;
 
 namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
 {
-    public class PlayerSpaceship : GameObject, IShooter
+    public class PlayerSpaceship : GameObject,IShooter, IDestryoable
     {
-     //   public Vector2 CurrentPosition { get; set; }
-      //  public int Velocity { get; set; }
-     //   public Utilities.eDirection CurrentDirection { get; set; }
-     //   public Texture2D Texture { get; private set; }
-     //   public Color Color { get; private set; }
-        public int Souls { get; set; }
-        private MouseState? m_prevMouseState;
-        private KeyboardState m_prevKeyboardState;
-        public List<Bullet> BulletsList { get; private set; }
+        public int                      Souls { get; set; }
+        private MouseState?             m_prevMouseState;
+        private KeyboardState           m_prevKeyboardState;
+        private ShootingLogic           m_shootingLogic;
+        public Utilities.eShooterType   ShooterType { get; set; }
 
         public PlayerSpaceship(GraphicsDevice i_graphicsDevice) : base(i_graphicsDevice)
         {
-            BulletsList = new List<Bullet>();
         }
 
         public override void Initialize(ContentManager i_content)
         {
             base.Initialize(i_content);
-
+            m_shootingLogic = new ShootingLogic(base.GraphicsDevice, base.Content);
             CurrentDirection = Utilities.eDirection.Right;
             Velocity = Utilities.k_SpaceshipVelocity;
             Color = Color.White;
@@ -75,11 +70,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
                 }
                 if (keyboardState != m_prevKeyboardState && m_prevKeyboardState.IsKeyDown(Keys.Space))
                 {
-                    if (BulletsList.Count < 3) // TODO: duplication1
-                    {
-                        Fire();
-                    }
-
+                    m_shootingLogic.Fire(CurrentPosition.X - Texture.Width / 2, CurrentPosition.Y, Utilities.eDirection.Up,ShooterType);
                 }
 
                 m_prevKeyboardState = keyboardState;
@@ -98,10 +89,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
             {
                 if (m_prevMouseState.Value.LeftButton == ButtonState.Pressed && currMouseState.LeftButton == ButtonState.Released)
                 {
-                    if (BulletsList.Count < 3) // TODO: duplication1
-                    {
-                        Fire();
-                    }
+                    m_shootingLogic.Fire(CurrentPosition.X - Texture.Width / 2, CurrentPosition.Y, Utilities.eDirection.Up,ShooterType);
                 }
             }
 
@@ -113,36 +101,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
             updateByKeyboard(i_gameTime);
             updateByMouse(i_gameTime);
             base.Update(i_gameTime);
-            updateBullets(i_gameTime);
-        }
-
-        private void updateBullets(GameTime i_gameTime)
-        {
-            foreach (Bullet bullet in BulletsList)
-            {
-                bullet.Update(i_gameTime);
-            }
-
-            updateBulletsList();
-        }
-
-        private void updateBulletsList()
-        {
-            List<Bullet> bulletsToRemove = new List<Bullet>();
-
-            foreach (Bullet bullet in BulletsList)
-            {
-                if (bullet.CurrentPosition.Y <= base.GraphicsDevice.Viewport.Y || !bullet.IsVisible)
-                {
-                    bulletsToRemove.Add(bullet);
-                }
-
-            }
-
-            foreach (Bullet bullet in bulletsToRemove)
-            {
-                BulletsList.Remove(bullet);
-            }
+            m_shootingLogic.Update(i_gameTime);
         }
 
         public override void Draw(GameTime i_gameTime)
@@ -153,22 +112,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
 
             SpriteBatch.End();
 
-            foreach (Bullet bullet in BulletsList)
-            {
-                bullet.Draw(i_gameTime);
-            }
-        }
-
-        public void Fire()
-        {
-            Bullet bullet = SpaceInvadersFactory.CreateBullet(base.GraphicsDevice);
-
-            bullet.Initialize(Content);
-            BulletsList.Add(bullet);
-
-            Vector2 bulletPosition = new Vector2(CurrentPosition.X - Texture.Width / 2, CurrentPosition.Y);
-
-            bullet.InitPosition(CurrentPosition);
+            m_shootingLogic.Draw(i_gameTime);
         }
 
         private Vector2 getNewPositionByInput(MouseState i_currMouseState)
@@ -193,6 +137,21 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
         public void IsHit(GameObject i_gameObject)
         {
             Souls--;
+        }
+
+        public List<Bullet> GetBulletsList()
+        {
+            return m_shootingLogic.BulletsList;
+        }
+
+        public void GetHit()
+        {
+            Souls--;
+        }
+
+        public bool IsDead()
+        {
+            return Souls == 0;
         }
     }
 }

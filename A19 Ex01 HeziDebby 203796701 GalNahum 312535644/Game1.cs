@@ -9,9 +9,9 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
 {
     public class Game1 : Game
     {
-        GraphicsDeviceManager m_graphics;
-        private SpaceInvadersManager m_spaceInvadersManager;
-        private SpriteBatch m_spriteBatch;
+        GraphicsDeviceManager           m_graphics;
+        private SpaceInvadersManager    m_spaceInvadersManager;
+        private SpriteBatch             m_spriteBatch;
 
         public Game1()
         {
@@ -22,21 +22,25 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
 
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
-            this.Window.Title = "Space Invaders";
+            Window.Title = "Space Invaders";
             m_spaceInvadersManager = new SpaceInvadersManager(this.GraphicsDevice);
             base.Initialize();
             IsMouseVisible = true;
         }
+
         protected override void LoadContent()
         {
             m_spriteBatch = new SpriteBatch(GraphicsDevice);
+            m_graphics.PreferredBackBufferWidth = Utilities.k_ScreenWidth;
+            m_graphics.PreferredBackBufferHeight = Utilities.k_ScreenHeight;
+            m_graphics.ApplyChanges();
+
             m_spaceInvadersManager.Init(this.Content);
         }
 
         protected override void UnloadContent()
         {
-            // TODO: Unload any non ContentManager content here
+            //todo:: need to unload content in all the others maybe
             Content.Unload();
         }
 
@@ -55,7 +59,6 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-            // TODO: Add your drawing code here
             m_spaceInvadersManager.Draw(gameTime);
             base.Draw(gameTime);
         }
