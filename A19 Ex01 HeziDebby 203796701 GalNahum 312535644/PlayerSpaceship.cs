@@ -19,7 +19,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
         private ShootingLogic           m_shootingLogic;
         //public Utilities.eShooterType   ShooterType { get; set; }
         public Action<Bullet>           ShotFired { get; set; }
-
+        private Texture2D               m_heartTexture;
         public PlayerSpaceship(GraphicsDevice i_graphicsDevice) : base(i_graphicsDevice)
         {
         }
@@ -39,7 +39,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
         {
             Vector2 center = new Vector2(base.GraphicsDevice.Viewport.Width / 2, base.GraphicsDevice.Viewport.Height);
 
-            center.X -= Texture.Width / 2;
+            center.X = 0;//-= Texture.Width / 2;
             center.Y -= (Texture.Height / 2) * 1.5f;
 
             return center;
@@ -50,6 +50,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
             base.LoadContent(i_content);
 
             Texture = i_content.Load<Texture2D>(@"Sprites\Ship01_32x32");
+            m_heartTexture = i_content.Load<Texture2D>(@"Sprites\heart");
         }
 
         private void updateByKeyboard(GameTime i_gameTime)
@@ -112,7 +113,10 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
             SpriteBatch.Begin();
 
             SpriteBatch.Draw(Texture, CurrentPosition, Color);
-
+            for(int i=0; i<Souls; i++)
+            {
+                SpriteBatch.Draw(m_heartTexture, new Vector2(Utilities.k_heartStartingLocationX + m_heartTexture.Width*2*i,Utilities.k_heartStartingLocationY), Color.White);
+            }
             SpriteBatch.End();
 
             m_shootingLogic.Draw(i_gameTime);
@@ -150,6 +154,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
         public void GetHit()
         {
             Souls--;
+            CurrentPosition = getInitialPosition();
         }
 
         public bool IsDead()

@@ -92,7 +92,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
         {
             m_spaceShipRandomNotifier.Update(i_gameTime);
 
-            enemyHitWallCase();
+            checkEnemyCollision();
 
             foreach (GameObject gameObject in m_gameObjectsList)
             {
@@ -102,12 +102,18 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
             checkForHits();
         }
 
-        private void enemyHitWallCase()
+        private void checkEnemyCollision()
         {
             foreach (Enemy enemy in m_enemiesMat)
             {
-                bool isWalHit = false; ;
+                bool isWalHit = false;
                 Utilities.eDirection hitDirection = Utilities.eDirection.None;
+
+                if (enemy.Rectangle.Intersects(m_player.Rectangle))
+                {
+                    GameOver(m_scoreManager.CurrentScore);
+                    return;
+                }
                 enemy.IsWallHit(ref isWalHit, ref hitDirection);
 
                 if (isWalHit)
@@ -115,6 +121,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
                     if (hitDirection == Utilities.eDirection.Down)
                     {
                         GameOver(m_scoreManager.CurrentScore);
+                        return;
                     }
 
                     foreach (Enemy enemyToFixPos in m_enemiesMat)
@@ -122,7 +129,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
                         enemyToFixPos.CurrentDirection = Utilities.ToggleDirection(hitDirection);
                         enemyToFixPos.StepDown();
                     }
-                    break;
+                    return;
                 }
             }
         }

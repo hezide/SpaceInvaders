@@ -52,13 +52,17 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
         public static readonly int      k_MotherSpaceshipSouls = 1;
 
         public static readonly int      k_SpaceshipVelocity = 120;
-        public static readonly int      k_EnemyVelocity = 400;
+        public static readonly int      k_EnemyVelocity = 120;
         public static readonly int      k_BulletVelocity = 155;
         public static readonly int      k_MotherSpaceshipVelocity = 110;
         public static readonly float    SpeedIncreaseMultiplier = 1.04f;
 
         public static readonly int      k_ScreenWidth = 1024;
         public static readonly int      k_ScreenHeight = 768;
+
+        public static readonly int      k_heartStartingLocationX = 850;
+        public static readonly int      k_heartStartingLocationY = 10;
+
 
         public static float CalculateNewCoordinate(float i_oldCoord, eDirection i_currentDirection, float i_velocity, GameTime i_gameTime)
         {
