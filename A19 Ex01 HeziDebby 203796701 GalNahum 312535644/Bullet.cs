@@ -10,10 +10,14 @@ using System.Threading.Tasks;
 
 namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
 {
-    public class Bullet : GameObject
+    public class Bullet : GameObject, IDestryoable
     {
         public bool IsVisible { get; private set; }
-        public Utilities.eGameObjectType Owner { get; set; }
+
+        public int Souls { get; private set; }
+
+        //  public Utilities.eGameObjectType Owner { get; set; }
+
         public Bullet(GraphicsDevice i_graphicsDevice) : base(i_graphicsDevice)
         {
 
@@ -22,8 +26,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
         public override void Initialize(ContentManager i_content)
         {
             base.Initialize(i_content);
-
-            CurrentDirection = Utilities.eDirection.Up;
+            Souls = Utilities.k_BulletSouls;
             Velocity = Utilities.k_BulletVelocity;
             IsVisible = true;
         }
@@ -42,22 +45,14 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
 
         public void Move(GameTime i_gameTime)
         {
-            CurrentPosition = new Vector2(CurrentPosition.X, Utilities.CalculateNewCoordinate(CurrentPosition.Y,CurrentDirection,Velocity,i_gameTime));
+            CurrentPosition = new Vector2(CurrentPosition.X, Utilities.CalculateXToMove(CurrentPosition.Y, CurrentDirection, Velocity, i_gameTime));
         }
 
         public override void Update(GameTime i_gameTime)
         {
             Move(i_gameTime);
             base.Update(i_gameTime);
-      //      updateRectangle();
         }
-
-        //private void updateRectangle()
-        //{
-        //    Rectangle rectangle = new Rectangle((int)CurrentPosition.X, (int)CurrentPosition.Y, Texture.Width, Texture.Height);
-
-        //    Rectangle = rectangle;
-        //}
 
         public override void Draw(GameTime i_gameTime)
         {
@@ -71,9 +66,29 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
             }
         }
 
-        public void Hide()
+        public bool Hits(IDestryoable i_destroyable)
+        {
+            return Rectangle.Intersects(i_destroyable.Rectangle);
+        }
+
+        public void Hide() // TODO: check if should be public
         {
             IsVisible = false;
+        }
+
+        public bool IsOutOfSight()
+        {
+            return (!IsVisible || CurrentPosition.Y <= GraphicsDevice.Viewport.Y);
+        }
+
+        public void GetHit()
+        {
+            Souls--;
+        }
+
+        public bool IsDead()
+        {
+            return Souls == 0;
         }
     }
 }

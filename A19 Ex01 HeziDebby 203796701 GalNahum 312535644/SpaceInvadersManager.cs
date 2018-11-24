@@ -41,20 +41,21 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
             createEnemiesMat(m_contentManager);
 
             m_spaceShipRandomNotifier = new RandomActionComponent(1, 25);
-            m_spaceShipRandomNotifier.RandomTimeAchived += createMotherSpaceship;
+            m_spaceShipRandomNotifier.RandomTimeAchieved += createMotherSpaceship;
         }
 
         private void createEnemiesMat(ContentManager i_contentManager)
         {
             m_enemiesMat = new Enemy[Utilities.k_EnemyMatRows, Utilities.k_EnemyMatCols];
             int randomSeedCounter = 0;
+
             for (int row = 0; row < Utilities.k_EnemyMatRows; row++)
             {
                 for (int col = 0; col < Utilities.k_EnemyMatCols; col++)
                 {
                     Utilities.eGameObjectType eEnemyType = getCurrentEnemyType(row);
 
-                    m_enemiesMat[row, col] = SpaceInvadersFactory.CreateEnemy(m_graphicsDevice, eEnemyType,++randomSeedCounter);
+                    m_enemiesMat[row, col] = SpaceInvadersFactory.CreateEnemy(m_graphicsDevice, eEnemyType, ++randomSeedCounter);
                     m_enemiesMat[row, col].Initialize(i_contentManager);
                     m_enemiesMat[row, col].InitPosition(row, col);
                     m_gameObjectsList.Add(m_enemiesMat[row, col]);
@@ -85,7 +86,6 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
                 gameObject.Draw(i_gameTime);
             }
             m_scoreManager.Draw(i_gameTime);
-
         }
 
         public void Update(GameTime i_gameTime)
@@ -99,24 +99,18 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
                 gameObject.Update(i_gameTime);
             }
 
-            checkForHits();
+            updateHits();
         }
 
         private void checkEnemyCollision()
         {
             foreach (Enemy enemy in m_enemiesMat)
             {
-                bool isWalHit = false;
+                bool isWallHit = false;
                 Utilities.eDirection hitDirection = Utilities.eDirection.None;
+                isWallHit = enemy.IsWallHit(ref hitDirection);
 
-                if (enemy.Rectangle.Intersects(m_player.Rectangle))
-                {
-                    GameOver(m_scoreManager.CurrentScore);
-                    return;
-                }
-                enemy.IsWallHit(ref isWalHit, ref hitDirection);
-
-                if (isWalHit)
+                if (isWallHit)
                 {
                     if (hitDirection == Utilities.eDirection.Down)
                     {
@@ -134,58 +128,82 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
             }
         }
 
-        private void checkForHits()
+        private void updateHits()
         {
             List<GameObject> objectsToDestroy = new List<GameObject>();
 
+            // getting all the game objects to destroy
             foreach (GameObject gameObject in m_gameObjectsList)
             {
                 if (gameObject is IShooter)
                 {
                     //concat the lists gathered so far 
-                    objectsToDestroy.AddRange(getListOfObjectsToDestroy(((gameObject) as IShooter).GetBulletsList(), gameObject ));
+                    objectsToDestroy.AddRange(getListOfObjectsToDestroy(gameObject));
+
+                    if (gameObject != m_player)
+                    {
+                        destroyBulletsPlayerHitted(gameObject as IShooter);
+                    }
                 }
             }
 
-            foreach (GameObject gameObject in objectsToDestroy)
+            destroyHittedObjects(objectsToDestroy);
+        }
+
+        private void destroyHittedObjects(List<GameObject> i_objectsToDestroy)
+        {
+            foreach (GameObject gameObject in i_objectsToDestroy)
             {
-                if(gameObject is Enemy)
+                if (gameObject is Enemy)
                 {
-                    if(++m_enemyHitCounter % 4 == 0)
-                          increaseVelocity();
+                    if (++m_enemyHitCounter % 4 == 0) // TODO: readonly
+                    {
+                        increaseVelocity();
+                    }
                 }
 
-                m_gameObjectsList.Remove(gameObject);
+
                 if (gameObject is PlayerSpaceship)
                 {
                     GameOver(m_scoreManager.CurrentScore);
-                    return;
+                   // return;
+                }
+
+                m_gameObjectsList.Remove(gameObject);
+            }
+        }
+
+        private void destroyBulletsPlayerHitted(IShooter i_shooter)
+        {
+            foreach (Bullet playerBullet in m_player.GetBulletsList())
+            {
+                foreach (Bullet enemyBullet in i_shooter.GetBulletsList())
+                {
+                    if (playerBullet.IsVisible && enemyBullet.IsVisible &&
+                        playerBullet.Hits(enemyBullet as IDestryoable))
+                    {
+                        playerBullet.Hide();
+                        enemyBullet.Hide();
+                    }
                 }
             }
         }
 
-        private List<GameObject> getListOfObjectsToDestroy(List<Bullet> i_bulletsList, GameObject i_shooter)
+        private List<GameObject> getListOfObjectsToDestroy(GameObject i_shooterGameObject)
         {
             List<GameObject> objectsToDestroy = new List<GameObject>();
 
-            foreach (Bullet bullet in i_bulletsList)
+            foreach (Bullet bullet in (i_shooterGameObject as IShooter).GetBulletsList())
             {
                 if (bullet.IsVisible)
                 {
                     foreach (GameObject gameObject in m_gameObjectsList)
                     {
-                        if (gameObject is IDestryoable && gameObject  != i_shooter)
+                        if (bulletShouldHit(gameObject, i_shooterGameObject) && bullet.Hits(gameObject as IDestryoable))
                         {
-                            //the type comparison prevents enemies to hit themselves
-                            if (Utilities.IsEnemy(gameObject.Type) && Utilities.IsEnemy(i_shooter.Type))
-                                continue;
-
-                            if (bullet.Rectangle.Intersects((gameObject as IDestryoable).Rectangle))
-                            {
-                                (gameObject as IDestryoable).GetHit();
-                                m_scoreManager.UpdateScore(gameObject.Type);
-                                bullet.Hide();
-                            }
+                            (gameObject as IDestryoable).GetHit();
+                            m_scoreManager.UpdateScore(gameObject.TypeOfGameObject);
+                            bullet.Hide();
 
                             if ((gameObject as IDestryoable).IsDead())
                             {
@@ -197,6 +215,18 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
             }
 
             return objectsToDestroy;
+        }
+
+        private bool bulletShouldHit(GameObject i_gameObject, GameObject i_shooterGameObject)
+        {
+            bool shouldHit = false;
+
+            if (i_gameObject is IDestryoable && !Utilities.IsSameType(i_gameObject, i_shooterGameObject))
+            {
+                shouldHit = true;
+            }
+
+            return shouldHit;
         }
 
         private void increaseVelocity()

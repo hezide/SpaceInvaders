@@ -9,32 +9,35 @@ using System.Threading.Tasks;
 
 namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Interfaces
 {
-    class ShootingLogic
+    public class ShootingLogic
     {
         public List<Bullet>         BulletsList { get; private set; }
-        private Gun                 m_gun;
-        private GraphicsDevice      m_graphicsDevice;
-        private ContentManager      m_content;
+     //   private Gun                 m_gun;
+      //  private GraphicsDevice      m_graphicsDevice;
+      //  private ContentManager      m_content;
 
-        public ShootingLogic(GraphicsDevice i_graphicsDevice,ContentManager i_content)
+        public ShootingLogic()
         {
-            m_graphicsDevice = i_graphicsDevice;
-            m_content = i_content;
+      //      m_graphicsDevice = i_graphicsDevice;
+      //      m_content = i_content;
             BulletsList = new List<Bullet>();
-            m_gun = new Gun(3);
+        //    m_gun = new Gun(3); // HEZI: only the player should have max 3 bullets at a time 
         }
 
-        public Bullet Fire(float i_x, float i_y, Utilities.eDirection i_shootingDirection,Utilities.eGameObjectType i_shooterType)
+        // HEZI: i changed to void because u never user the bullet that returns 
+        public void Fire(GraphicsDevice i_graphicsDevice, ContentManager i_content, Vector2 i_initialPosition, Utilities.eGameObjectType i_shooterType)
         {
-            if (!m_gun.Fire())//cannot fire
-                return null;
-            Bullet bullet = SpaceInvadersFactory.CreateBullet(m_graphicsDevice, i_shooterType);
-            bullet.Initialize(m_content);
-            bullet.CurrentDirection = i_shootingDirection;
+            //    if (!m_gun.Fire())//cannot fire
+            //        return null;
+
+            Bullet bullet = SpaceInvadersFactory.CreateBullet(i_graphicsDevice, i_shooterType);
+            bullet.Initialize(i_content);
+          //  bullet.CurrentDirection = i_shootingDirection;
+            bullet.InitPosition(i_initialPosition);
             BulletsList.Add(bullet);
 
-            bullet.InitPosition(new Vector2(i_x, i_y));
-            return bullet;
+        //    bullet.InitPosition(new Vector2(i_x, i_y));
+        //    return bullet;
         }
 
         private void updateBullets(GameTime i_gameTime)
@@ -53,7 +56,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Interfaces
 
             foreach (Bullet bullet in BulletsList)
             {
-                if (bullet.CurrentPosition.Y <= m_graphicsDevice.Viewport.Y || !bullet.IsVisible)
+                if (bullet.IsOutOfSight())
                 {
                     bulletsToRemove.Add(bullet);
                 }
@@ -62,7 +65,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Interfaces
             foreach (Bullet bullet in bulletsToRemove)
             {
                 BulletsList.Remove(bullet);
-                m_gun.Reload(1);
+         //       m_gun.Reload(1);
             }
         }
 

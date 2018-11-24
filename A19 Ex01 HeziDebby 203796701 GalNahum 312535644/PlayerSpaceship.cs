@@ -11,14 +11,13 @@ using System.Threading.Tasks;
 
 namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
 {
-    public class PlayerSpaceship : GameObject,IShooter, IDestryoable
+    public class PlayerSpaceship : GameObject, IShooter, IDestryoable
     {
-        public int                      Souls { get; set; }
-        private MouseState?             m_prevMouseState;
-        private KeyboardState           m_prevKeyboardState;
-        private ShootingLogic           m_shootingLogic;
+        public int Souls { get; set; }
+        private MouseState? m_prevMouseState;
+        private KeyboardState m_prevKeyboardState;
+        private ShootingLogic m_shootingLogic;
         //public Utilities.eShooterType   ShooterType { get; set; }
-        public Action<Bullet>           ShotFired { get; set; }
         private Texture2D               m_heartTexture;
         public PlayerSpaceship(GraphicsDevice i_graphicsDevice) : base(i_graphicsDevice)
         {
@@ -27,7 +26,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
         public override void Initialize(ContentManager i_content)
         {
             base.Initialize(i_content);
-            m_shootingLogic = new ShootingLogic(base.GraphicsDevice, base.Content);
+            m_shootingLogic = new ShootingLogic();
             CurrentDirection = Utilities.eDirection.Right;
             Velocity = Utilities.k_SpaceshipVelocity;
             Color = Color.White;
@@ -39,7 +38,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
         {
             Vector2 center = new Vector2(base.GraphicsDevice.Viewport.Width / 2, base.GraphicsDevice.Viewport.Height);
 
-            center.X = 0;//-= Texture.Width / 2;
+            center.X = 0;
             center.Y -= (Texture.Height / 2) * 1.5f;
 
             return center;
@@ -72,13 +71,23 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
                 }
                 if (keyboardState != m_prevKeyboardState && m_prevKeyboardState.IsKeyDown(Keys.Space))
                 {
-                    Bullet bullet = m_shootingLogic.Fire(CurrentPosition.X - Texture.Width / 2, CurrentPosition.Y, Utilities.eDirection.Up,Type);
+                    fire();
+
                     //ShotFired.Invoke(bullet);
                 }
 
                 m_prevKeyboardState = keyboardState;
 
                 CurrentPosition = new Vector2(x, CurrentPosition.Y);
+            }
+        }
+
+        private void fire()
+        {
+            if (m_shootingLogic.BulletsList.Count < Utilities.k_Ammo) // TODO: readonly
+            {
+                Vector2 initialPosition = new Vector2(CurrentPosition.X - Texture.Width / 2, CurrentPosition.Y);
+                m_shootingLogic.Fire(GraphicsDevice, Content, initialPosition, TypeOfGameObject);
             }
         }
 
@@ -92,8 +101,8 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
             {
                 if (m_prevMouseState.Value.LeftButton == ButtonState.Pressed && currMouseState.LeftButton == ButtonState.Released)
                 {
-                    Bullet bullet = m_shootingLogic.Fire(CurrentPosition.X - Texture.Width / 2, CurrentPosition.Y, Utilities.eDirection.Up,Type);
-                   // ShotFired.Invoke(bullet);
+                    fire();
+
                 }
             }
 
@@ -126,7 +135,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
         {
             Vector2 newPosition = new Vector2(CurrentPosition.X + getMousePositionDeltaX(i_currMouseState), CurrentPosition.Y);
 
-            return (new Vector2(MathHelper.Clamp(newPosition.X, 0, base.GraphicsDevice.Viewport.Width - Texture.Width), newPosition.Y));
+            return (new Vector2(MathHelper.Clamp(newPosition.X, 0, GraphicsDevice.Viewport.Width - Texture.Width), newPosition.Y));
         }
 
         private float getMousePositionDeltaX(MouseState i_currMouseState)
