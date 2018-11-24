@@ -126,7 +126,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
             {
                 if (gameObject is IShooter)
                 {
-                    //concat the lists gathered so far
+                    //concat the lists gathered so far 
                     objectsToDestroy.AddRange(getListOfObjectsToDestroy(((gameObject) as IShooter).GetBulletsList(), gameObject as IShooter));
                 }
             }
