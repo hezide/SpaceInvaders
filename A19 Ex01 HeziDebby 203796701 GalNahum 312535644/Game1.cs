@@ -34,8 +34,8 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
         protected override void LoadContent()
         {
             m_spriteBatch = new SpriteBatch(GraphicsDevice);
-            m_graphics.PreferredBackBufferWidth = Utilities.k_ScreenWidth;
-            m_graphics.PreferredBackBufferHeight = Utilities.k_ScreenHeight;
+          //  m_graphics.PreferredBackBufferWidth = Utilities.k_ScreenWidth;
+          //  m_graphics.PreferredBackBufferHeight = Utilities.k_ScreenHeight;
             m_graphics.ApplyChanges();
             m_backgroundTexture = Content.Load<Texture2D>(@"Sprites\BG_Space01_1024x768");
             m_spaceInvadersManager.Init(this.Content);
@@ -74,10 +74,12 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
             m_spaceInvadersManager.Draw(gameTime);
             base.Draw(gameTime);
         }
-        private void OnGameOver(int score)
+
+        private void OnGameOver(int i_score)
         {
             m_gameOver = true;
-            MessageBox.Show("Game Over", "Your Score is: " + score, new[] { "OK" });
+
+            MessageBox.Show("Game Over", "Your Score is: " + i_score, new[] { "OK" });
             {
                 Exit();
             }

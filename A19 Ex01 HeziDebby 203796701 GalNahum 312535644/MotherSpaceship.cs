@@ -12,14 +12,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
 {
     public class MotherSpaceship : GameObject, IDestryoable
     {
-  //      public Vector2 CurrentPosition { get; set; }
-  //      public int Velocity { get; set; }
-  //      public Utilities.eDirection CurrentDirection { get; set; }
-  //      public Texture2D Texture { get; private set; }
-  //      public Color Color { get; private set; }
         public int Souls { get; set; }
-
-   //     public Rectangle Rectangle { get; private set; }
 
         public MotherSpaceship(GraphicsDevice i_graphicsDevice) : base(i_graphicsDevice)
         {
@@ -39,7 +32,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
 
         public Vector2 SetToInitialPosition()
         {
-            return (new Vector2(base.GraphicsDevice.Viewport.Bounds.Left - Texture.Width, Texture.Height));
+            return (new Vector2(GraphicsDevice.Viewport.Bounds.Left - Texture.Width, Texture.Height));
         }
 
         protected override void LoadContent(ContentManager i_content)
