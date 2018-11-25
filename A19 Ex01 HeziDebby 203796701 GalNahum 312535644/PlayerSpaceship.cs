@@ -32,12 +32,12 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
             Velocity = Utilities.k_SpaceshipVelocity;
             Color = Color.White;
             Souls = Utilities.k_SpaceshipSouls;
-            SetInitialPosition();
+            CurrentPosition = getInitialPosition();
         }
 
-        public Vector2 SetInitialPosition()
+        private Vector2 getInitialPosition()
         {
-            CurrentPosition = new Vector2(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height);
+            Vector2 center = new Vector2(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height);
 
             center.X -= Texture.Width / 2;
             center.Y -= (Texture.Height / 2) * 1.5f;
