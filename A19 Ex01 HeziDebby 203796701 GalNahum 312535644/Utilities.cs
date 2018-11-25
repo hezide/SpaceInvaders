@@ -39,23 +39,18 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
         public static readonly float SpeedIncreaseMultiplier = 1.04f;
         public static readonly int k_Ammo = 3;
 
-  //      public static readonly int k_ScreenWidth = 1024;
-   //    public static readonly int k_ScreenHeight = 768;
+        public static readonly int k_heartStartingLocationX = 600;
+        public static readonly int k_heartStartingLocationY = 10;
+        public static readonly int k_hitsToIncreaseVelocity = 4;
 
-        public static float CalculateXToMove(float i_oldCoord, eDirection i_currentDirection, float i_velocity, GameTime i_gameTime)
+        public static float CalculateNewCoordinate(float i_oldCoord, eDirection i_currentDirection, float i_velocity, GameTime i_gameTime)
         {
-            //Direction left is -1 and right is +1, this makes the enemies jump e
+            //Direction left is -1 and right is +1, this makes the enemies jump to correct side
             float directionMultiplier;
-
             if (i_currentDirection == Utilities.eDirection.Down || i_currentDirection == Utilities.eDirection.Right)
-            {
                 directionMultiplier = 1f;
-            }
             else
-            {
                 directionMultiplier = -1f;
-            }
-
             return i_oldCoord + directionMultiplier * (i_velocity * (float)i_gameTime.ElapsedGameTime.TotalSeconds);
         }
 
@@ -74,12 +69,6 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
         public static eDirection ToggleDirection(eDirection i_Direction)
         {
             return i_Direction == eDirection.Right ? eDirection.Left : eDirection.Right;
-            //if (i_Direction == eDirection.Left)
-            //    return eDirection.Right;
-            //else if (i_Direction == eDirection.Right)
-            //    return eDirection.Left;
-            //return eDirection.Right;
-
         }
 
         public static bool IsSameType(GameObject i_gameObject1, GameObject i_gameObject2)

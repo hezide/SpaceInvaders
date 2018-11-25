@@ -43,11 +43,8 @@
   <ItemGroup>
     <Compile Include="Bullet.cs" />
     <Compile Include="Enemy.cs" />
-    <Compile Include="EnemiesMat.cs" />
     <Compile Include="Game1.cs" />
-    <Compile Include="GameData.cs" />
     <Compile Include="GameObject.cs" />
-    <Compile Include="Gun.cs" />
     <Compile Include="Interfaces\IShooter.cs" />
     <Compile Include="RandomActionComponent.cs" />
     <Compile Include="ShootingLogic.cs" />

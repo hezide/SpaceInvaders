@@ -32,7 +32,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
 
         public Vector2 SetToInitialPosition()
         {
-            return (new Vector2(GraphicsDevice.Viewport.Bounds.Left - Texture.Width, Texture.Height));
+            return new Vector2(GraphicsDevice.Viewport.Bounds.Left - Texture.Width, Texture.Height);
         }
 
         protected override void LoadContent(ContentManager i_content)
@@ -44,22 +44,14 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
 
         private void move(GameTime i_gameTime)
         {
-            CurrentPosition = new Vector2(CurrentPosition.X + (float)Velocity * (float)i_gameTime.ElapsedGameTime.TotalSeconds, CurrentPosition.Y);
+            CurrentPosition = new Vector2(CurrentPosition.X + Velocity * (float)i_gameTime.ElapsedGameTime.TotalSeconds, CurrentPosition.Y);
         }
 
         public override void Update(GameTime i_gameTime)
         {
             move(i_gameTime);
             base.Update(i_gameTime);
-            //          updateRectangle();
         }
-
-        //private void updateRectangle()
-        //{
-        //    Rectangle rectangle = new Rectangle((int)CurrentPosition.X, (int)CurrentPosition.Y, Texture.Width, Texture.Height);
-
-        //    Rectangle = rectangle;
-        //}
 
         public override void Draw(GameTime i_gameTime)
         {

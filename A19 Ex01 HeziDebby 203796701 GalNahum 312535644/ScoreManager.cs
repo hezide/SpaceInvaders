@@ -14,6 +14,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
         public int          CurrentScore { get; private set; }
         SpriteFont          m_spriteFont;
         SpriteBatch         m_spriteBatch;
+
         public void Initialize(GraphicsDevice i_graphicsDevice,ContentManager i_contentManager)
         {
             m_spriteFont = i_contentManager.Load<SpriteFont>("Score");
@@ -46,8 +47,8 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
                     CurrentScore = 0;
                 }
             }
-
         }
+
         public void Draw(GameTime i_gameTime)
         {
             m_spriteBatch.Begin();

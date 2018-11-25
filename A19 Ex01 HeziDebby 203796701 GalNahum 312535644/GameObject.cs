@@ -39,7 +39,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
             SpriteBatch = new SpriteBatch(GraphicsDevice);
         }
 
-        private void UnloadContent(ContentManager i_content)
+        public void UnloadContent(ContentManager i_content)
         {
             i_content.Unload();
         }
