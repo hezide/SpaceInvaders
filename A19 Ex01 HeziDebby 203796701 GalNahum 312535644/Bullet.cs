@@ -16,8 +16,6 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
 
         public int Souls { get; private set; }
 
-        //  public Utilities.eGameObjectType Owner { get; set; }
-
         public Bullet(GraphicsDevice i_graphicsDevice) : base(i_graphicsDevice)
         {
 
@@ -45,7 +43,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
 
         public void Move(GameTime i_gameTime)
         {
-            CurrentPosition = new Vector2(CurrentPosition.X, Utilities.CalculateXToMove(CurrentPosition.Y, CurrentDirection, Velocity, i_gameTime));
+            CurrentPosition = new Vector2(CurrentPosition.X, Utilities.CalculateNewCoordinate(CurrentPosition.Y, CurrentDirection, Velocity, i_gameTime));
         }
 
         public override void Update(GameTime i_gameTime)

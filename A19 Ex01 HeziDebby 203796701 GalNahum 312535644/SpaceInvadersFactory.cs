@@ -51,13 +51,11 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
             {
                 bullet.Color = Color.Red;
                 bullet.CurrentDirection = Utilities.eDirection.Up;
-         //       bullet.Owner = Utilities.eGameObjectType.Spaceship;
             }
             else if (i_shooterType == Utilities.eGameObjectType.PinkEnemy || i_shooterType == Utilities.eGameObjectType.BlueEnemy || i_shooterType == Utilities.eGameObjectType.YellowEnemy)
             {
                 bullet.Color = Color.Blue;
                 bullet.CurrentDirection = Utilities.eDirection.Down;
-                //        bullet.Owner = i_shooterType;
             }
 
             return bullet;

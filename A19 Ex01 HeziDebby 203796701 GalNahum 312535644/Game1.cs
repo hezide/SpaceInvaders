@@ -13,7 +13,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
         private SpaceInvadersManager    m_spaceInvadersManager;
         private SpriteBatch             m_spriteBatch;
         private Texture2D               m_backgroundTexture;
-        private bool                    m_gameOver;
+        private bool                    m_isGameOver;
         public Game1()
         {
             m_graphics = new GraphicsDeviceManager(this);
@@ -25,40 +25,44 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
         {
             Window.Title = "Space Invaders";
             m_spaceInvadersManager = new SpaceInvadersManager(this.GraphicsDevice);
-            m_spaceInvadersManager.GameOver += OnGameOver;
-            m_gameOver = false;
             base.Initialize();
             IsMouseVisible = true;
+            m_isGameOver = false;
         }
 
         protected override void LoadContent()
         {
             m_spriteBatch = new SpriteBatch(GraphicsDevice);
-          //  m_graphics.PreferredBackBufferWidth = Utilities.k_ScreenWidth;
-          //  m_graphics.PreferredBackBufferHeight = Utilities.k_ScreenHeight;
-            m_graphics.ApplyChanges();
             m_backgroundTexture = Content.Load<Texture2D>(@"Sprites\BG_Space01_1024x768");
             m_spaceInvadersManager.Init(this.Content);
         }
 
         protected override void UnloadContent()
         {
-            //todo:: need to unload content in all the others maybe
+            m_spaceInvadersManager.UnloadContent(Content);
             Content.Unload();
         }
 
         protected override void Update(GameTime gameTime)
         {
+            base.Update(gameTime);
+
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
             {
                 Exit();
             }
-
-            if (!m_gameOver)
+            if(!m_isGameOver)
             {
-                m_spaceInvadersManager.Update(gameTime);
+                if (m_spaceInvadersManager.IsGameOver)
+                {
+                    m_isGameOver = true;
+                    OnGameOver(m_spaceInvadersManager.GetScore());
+                }
+                else
+                {
+                    m_spaceInvadersManager.Update(gameTime);
+                }
             }
-            base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
@@ -77,12 +81,8 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
 
         private void OnGameOver(int i_score)
         {
-            m_gameOver = true;
-
             MessageBox.Show("Game Over", "Your Score is: " + i_score, new[] { "OK" });
-            {
-                Exit();
-            }
+            Exit();
         }
     }
 }

@@ -14,7 +14,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
     class SpaceInvadersManager
     {
         private Enemy[,]                m_enemiesMat;
-        private MotherSpaceship         m_motherSpaceship; //important to check if there is a spaceship in game before performing actions
+        private MotherSpaceship         m_motherSpaceship;
         private PlayerSpaceship         m_player;
         private List<GameObject>        m_gameObjectsList;
         private int                     m_enemyHitCounter = 0;
@@ -22,7 +22,8 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
         private ContentManager          m_contentManager;
         private RandomActionComponent   m_spaceShipRandomNotifier;
         private ScoreManager            m_scoreManager;
-        public Action<int>              GameOver;
+        public bool                     IsGameOver { get; private set; }
+
         public SpaceInvadersManager(GraphicsDevice i_graphicsDevice)
         {
             m_graphicsDevice = i_graphicsDevice;
@@ -61,6 +62,11 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
                     m_gameObjectsList.Add(m_enemiesMat[row, col]);
                 }
             }
+        }
+
+        public int GetScore()
+        {
+            return m_scoreManager.CurrentScore;
         }
 
         private Utilities.eGameObjectType getCurrentEnemyType(int i_row)
@@ -102,6 +108,14 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
             updateHits();
         }
 
+        public void UnloadContent(ContentManager i_content)
+        {
+            foreach (GameObject gameObject in m_gameObjectsList)
+            {
+                gameObject.UnloadContent(i_content);
+            }
+        }
+
         private void checkEnemyCollision()
         {
             foreach (Enemy enemy in m_enemiesMat)
@@ -114,7 +128,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
                 {
                     if (hitDirection == Utilities.eDirection.Down)
                     {
-                        GameOver(m_scoreManager.CurrentScore);
+                        IsGameOver = true;
                         return;
                     }
 
@@ -156,17 +170,16 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
             {
                 if (gameObject is Enemy)
                 {
-                    if (++m_enemyHitCounter % 4 == 0) // TODO: readonly
+                    if (++m_enemyHitCounter % Utilities.k_hitsToIncreaseVelocity == 0)
                     {
                         increaseVelocity();
                     }
                 }
 
-
                 if (gameObject is PlayerSpaceship)
                 {
-                    GameOver(m_scoreManager.CurrentScore);
-                   // return;
+                    IsGameOver = true;
+                   // return;//I'm not removing it because it can cause troubles, it can continue running while the game was over, we need to stop running here
                 }
 
                 m_gameObjectsList.Remove(gameObject);
@@ -251,19 +264,5 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
             }
             // TODO: if hit - remove from list of objects
         }
-
-        private bool isGameOver()
-        {
-            throw new NotImplementedException();
-        }
-
-        private bool itsTimeForMotherSpaceship(GameTime i_gameTime)
-        {
-            bool itsTime = false;
-
-
-            return itsTime;
-        }
-
     }
 }

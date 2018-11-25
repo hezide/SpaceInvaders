@@ -17,6 +17,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
         private double                                  m_secondsFromLastJump;
         private RandomActionComponent                   m_randomShootingNotifier;
         private ShootingLogic                           m_shootingLogic;
+        private Vector2                                 m_lastDrawnPosition;
 
         public Enemy(GraphicsDevice i_graphics,int i_randomSeed) : base(i_graphics)
         {
@@ -36,16 +37,14 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
 
         public void InitPosition(int i_row, int i_col)
         {
-            float x;
-            float y;
             float height = Texture.Height;
             float width = Texture.Width;
 
-            x = i_col * width + width * Utilities.k_EnemyGapMultiplier * i_col;
-            y = (i_row * height + height * Utilities.k_EnemyGapMultiplier * i_row) + Utilities.k_InitialHightMultiplier * height;
+            float x = i_col * width + width * Utilities.k_EnemyGapMultiplier * i_col;
+            float y = (i_row * height + height * Utilities.k_EnemyGapMultiplier * i_row) + Utilities.k_InitialHightMultiplier * height;
 
-            CurrentPosition = new Vector2(x+1, y+1);
-            m_falsePosition = new Vector2(CurrentPosition.X,CurrentPosition.Y);
+            CurrentPosition = new Vector2(x + 1, y + 1);
+            m_lastDrawnPosition = CurrentPosition;
         }
 
         protected override void LoadContent(ContentManager i_content)
@@ -69,7 +68,6 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
         {
             bool isWallHit = false;
 
-            //  if (CurrentPosition.X >= Utilities.k_ScreenWidth - Texture.Width)\
             if (CurrentPosition.X >= GraphicsDevice.Viewport.Width - Texture.Width)
             {
                 isWallHit = true;
@@ -101,13 +99,6 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
             base.Update(i_gameTime);
         }
 
-        private void updateRectangle()
-        {
-            Rectangle rectangle = new Rectangle((int)CurrentPosition.X, (int)CurrentPosition.Y, Texture.Width, Texture.Height);
-
-            Rectangle = rectangle;
-        }
-
         public override void Draw(GameTime i_gameTime)
         {
             m_secondsFromLastJump += i_gameTime.ElapsedGameTime.TotalSeconds;
@@ -118,12 +109,12 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
             if (m_secondsFromLastJump > 0.5)
             {
                 m_secondsFromLastJump = 0;
-                m_falsePosition = new Vector2(CurrentPosition.X,CurrentPosition.Y);
+                m_lastDrawnPosition = CurrentPosition;
                 SpriteBatch.Draw(Texture, CurrentPosition, Color);
             }
             else
             {
-                SpriteBatch.Draw(Texture, m_falsePosition, Color);
+                SpriteBatch.Draw(Texture, m_lastDrawnPosition, Color);
             }
             SpriteBatch.End();
         }
