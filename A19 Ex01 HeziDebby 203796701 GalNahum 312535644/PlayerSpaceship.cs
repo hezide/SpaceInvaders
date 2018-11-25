@@ -81,7 +81,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
         {
             if (m_shootingLogic.BulletsList.Count < Utilities.k_Ammo) 
             {
-                Vector2 initialPosition = new Vector2(CurrentPosition.X - Texture.Width / 2, CurrentPosition.Y);
+                Vector2 initialPosition = new Vector2(CurrentPosition.X + Texture.Width / 2, CurrentPosition.Y);
                 m_shootingLogic.Fire(GraphicsDevice, Content, initialPosition, TypeOfGameObject);
             }
         }

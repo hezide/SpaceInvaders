@@ -121,23 +121,28 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
             foreach (Enemy enemy in m_enemiesMat)
             {
                 bool isWallHit = false;
+                float fixOffset = 0;
                 Utilities.eDirection hitDirection = Utilities.eDirection.None;
-                isWallHit = enemy.IsWallHit(ref hitDirection);
+                isWallHit = enemy.IsWallHit(ref hitDirection ,ref fixOffset);
 
                 if (isWallHit)
                 {
+                    //enemy hit the lower wall or player spaceship
                     if (hitDirection == Utilities.eDirection.Down)
                     {
                         IsGameOver = true;
-                        return;
                     }
 
                     foreach (Enemy enemyToFixPos in m_enemiesMat)
                     {
                         enemyToFixPos.CurrentDirection = Utilities.ToggleDirection(hitDirection);
+                        enemyToFixPos.CurrentPosition = new Vector2(enemyToFixPos.CurrentPosition.X + fixOffset, enemyToFixPos.CurrentPosition.Y);
                         enemyToFixPos.StepDown();
                     }
-                    return;
+                }
+                if(enemy.Rectangle.Intersects(m_player.Rectangle))
+                {
+                    IsGameOver = true;
                 }
             }
         }

@@ -43,7 +43,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
 
         public void Move(GameTime i_gameTime)
         {
-            CurrentPosition = new Vector2(CurrentPosition.X, Utilities.CalculateNewCoordinate(CurrentPosition.Y, CurrentDirection, Velocity, i_gameTime));
+            CurrentPosition = new Vector2(CurrentPosition.X, Utilities.CalculateNewCoordinate(CurrentPosition.Y, CurrentDirection, Velocity, i_gameTime.ElapsedGameTime.TotalSeconds));
         }
 
         public override void Update(GameTime i_gameTime)

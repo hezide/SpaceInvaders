@@ -14,10 +14,9 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
     {
         public int                                      Souls { get; set; }
         public List<Bullet>                             BulletsList { get; private set; }
-        private double                                  m_secondsFromLastJump;
+        private double                                  m_secondsFromLastJump = 0;
         private RandomActionComponent                   m_randomShootingNotifier;
         private ShootingLogic                           m_shootingLogic;
-        private Vector2                                 m_lastDrawnPosition;
 
         public Enemy(GraphicsDevice i_graphics,int i_randomSeed) : base(i_graphics)
         {
@@ -44,7 +43,6 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
             float y = (i_row * height + height * Utilities.k_EnemyGapMultiplier * i_row) + Utilities.k_InitialHightMultiplier * height;
 
             CurrentPosition = new Vector2(x + 1, y + 1);
-            m_lastDrawnPosition = CurrentPosition;
         }
 
         protected override void LoadContent(ContentManager i_content)
@@ -58,13 +56,19 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
 
         private void move(GameTime i_gameTime) 
         {
-            float newX = Utilities.CalculateNewCoordinate(CurrentPosition.X,CurrentDirection, Velocity,i_gameTime);
-            float newY = CurrentPosition.Y;
+            m_secondsFromLastJump += i_gameTime.ElapsedGameTime.TotalSeconds;
 
-            CurrentPosition = new Vector2(newX, newY);
+            if(m_secondsFromLastJump > 0.5)
+            {
+                float newX = Utilities.CalculateNewCoordinate(CurrentPosition.X,CurrentDirection, Velocity, m_secondsFromLastJump);
+                float newY = CurrentPosition.Y;
+                CurrentPosition = new Vector2(newX, newY);
+                m_secondsFromLastJump = 0;
+            }
+
         }
 
-        public bool IsWallHit(ref Utilities.eDirection io_hitDirection)
+        public bool IsWallHit(ref Utilities.eDirection io_hitDirection,ref float fixOffset)
         {
             bool isWallHit = false;
 
@@ -72,11 +76,13 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
             {
                 isWallHit = true;
                 io_hitDirection = Utilities.eDirection.Right;
+                fixOffset = GraphicsDevice.Viewport.Width - Texture.Width - CurrentPosition.X -1;
             }
             else if (CurrentPosition.X <= 0)
             {
                 isWallHit = true;
                 io_hitDirection = Utilities.eDirection.Left;
+                fixOffset = -1*(CurrentPosition.X -1);
             }
             else if (CurrentPosition.Y >= GraphicsDevice.Viewport.Height - Texture.Height)
             {
@@ -101,21 +107,10 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
 
         public override void Draw(GameTime i_gameTime)
         {
-            m_secondsFromLastJump += i_gameTime.ElapsedGameTime.TotalSeconds;
-
             m_shootingLogic.Draw(i_gameTime);
 
             SpriteBatch.Begin();
-            if (m_secondsFromLastJump > 0.5)
-            {
-                m_secondsFromLastJump = 0;
-                m_lastDrawnPosition = CurrentPosition;
-                SpriteBatch.Draw(Texture, CurrentPosition, Color);
-            }
-            else
-            {
-                SpriteBatch.Draw(Texture, m_lastDrawnPosition, Color);
-            }
+            SpriteBatch.Draw(Texture, CurrentPosition, Color);
             SpriteBatch.End();
         }
 
@@ -141,7 +136,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
 
         public void Fire()
         {
-            Vector2 initialPosition = new Vector2(CurrentPosition.X - Texture.Width / 2, CurrentPosition.Y);
+            Vector2 initialPosition = new Vector2(CurrentPosition.X + Texture.Width / 2, CurrentPosition.Y);
             m_shootingLogic.Fire(GraphicsDevice, Content, initialPosition, TypeOfGameObject);
         }
 

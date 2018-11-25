@@ -9,7 +9,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
 {
     public class Utilities
     {
-        public enum eDirection { Up, Down, Left, Right, None };
+        public enum eDirection { Up, Down,  Left, Right , None };
         public enum eGameObjectType { PinkEnemy, BlueEnemy, YellowEnemy, Spaceship, MotherSpaceship, Bullet, Background }
 
         public static readonly int k_InitialHightMultiplier = 3;
@@ -43,7 +43,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
         public static readonly int k_heartStartingLocationY = 10;
         public static readonly int k_hitsToIncreaseVelocity = 4;
 
-        public static float CalculateNewCoordinate(float i_oldCoord, eDirection i_currentDirection, float i_velocity, GameTime i_gameTime)
+        public static float CalculateNewCoordinate(float i_oldCoord, eDirection i_currentDirection, float i_velocity, double i_elaspedSeconds)
         {
             //Direction left is -1 and right is +1, this makes the enemies jump to correct side
             float directionMultiplier;
@@ -51,7 +51,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
                 directionMultiplier = 1f;
             else
                 directionMultiplier = -1f;
-            return i_oldCoord + directionMultiplier * (i_velocity * (float)i_gameTime.ElapsedGameTime.TotalSeconds);
+            return i_oldCoord + directionMultiplier * (i_velocity * (float)i_elaspedSeconds);
         }
 
         public static bool IsEnemy(eGameObjectType i_typeOfGameObject)
