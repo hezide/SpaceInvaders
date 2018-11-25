@@ -13,17 +13,16 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
 {
     class SpaceInvadersManager
     {
-        private Enemy[,] m_enemiesMat;
-        private MotherSpaceship m_motherSpaceship; //important to check if there is a spaceship in game before performing actions
-        private PlayerSpaceship m_player;
-        private List<GameObject> m_gameObjectsList;
-        private int m_enemyHitCounter = 0;
-        private GraphicsDevice m_graphicsDevice;
-        private ContentManager m_contentManager;
-        private RandomActionComponent m_spaceShipRandomNotifier;
-        private ScoreManager m_scoreManager;
-        public Action<int> GameOver;
-
+        private Enemy[,]                m_enemiesMat;
+        private MotherSpaceship         m_motherSpaceship; //important to check if there is a spaceship in game before performing actions
+        private PlayerSpaceship         m_player;
+        private List<GameObject>        m_gameObjectsList;
+        private int                     m_enemyHitCounter = 0;
+        private GraphicsDevice          m_graphicsDevice;
+        private ContentManager          m_contentManager;
+        private RandomActionComponent   m_spaceShipRandomNotifier;
+        private ScoreManager            m_scoreManager;
+        public Action<int>              GameOver;
         public SpaceInvadersManager(GraphicsDevice i_graphicsDevice)
         {
             m_graphicsDevice = i_graphicsDevice;
@@ -86,7 +85,6 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
             {
                 gameObject.Draw(i_gameTime);
             }
-
             m_scoreManager.Draw(i_gameTime);
         }
 
@@ -94,7 +92,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
         {
             m_spaceShipRandomNotifier.Update(i_gameTime);
 
-            enemyHitWallCase();
+            checkEnemyCollision();
 
             foreach (GameObject gameObject in m_gameObjectsList)
             {
@@ -104,7 +102,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
             updateHits();
         }
 
-        private void enemyHitWallCase()
+        private void checkEnemyCollision()
         {
             foreach (Enemy enemy in m_enemiesMat)
             {
@@ -117,6 +115,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
                     if (hitDirection == Utilities.eDirection.Down)
                     {
                         GameOver(m_scoreManager.CurrentScore);
+                        return;
                     }
 
                     foreach (Enemy enemyToFixPos in m_enemiesMat)
@@ -124,7 +123,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
                         enemyToFixPos.CurrentDirection = Utilities.ToggleDirection(hitDirection);
                         enemyToFixPos.StepDown();
                     }
-                    break;
+                    return;
                 }
             }
         }

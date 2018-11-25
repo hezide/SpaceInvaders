@@ -12,15 +12,13 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
 {
     public class Enemy : GameObject, IDestryoable, IShooter
     {
-        public int Souls { get; set; }
-        public List<Bullet> BulletsList { get; private set; }
-        private float m_timeToJump = 0;
-        private RandomActionComponent m_randomShootingNotifier;
-        private ShootingLogic m_shootingLogic;
-        //public Utilities.eShooterType                   ShooterType { get; set; }
-        public Action<Bullet> ShotFired { get; set; }
+        public int                                      Souls { get; set; }
+        public List<Bullet>                             BulletsList { get; private set; }
+        private double                                  m_secondsFromLastJump;
+        private RandomActionComponent                   m_randomShootingNotifier;
+        private ShootingLogic                           m_shootingLogic;
 
-        public Enemy(GraphicsDevice i_graphics, int i_randomSeed) : base(i_graphics)
+        public Enemy(GraphicsDevice i_graphics,int i_randomSeed) : base(i_graphics)
         {
             BulletsList = new List<Bullet>();
             m_randomShootingNotifier = new RandomActionComponent(1, 30, i_randomSeed);
@@ -34,7 +32,6 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
             CurrentDirection = Utilities.eDirection.Right;
             Velocity = Utilities.k_EnemyVelocity;
             Souls = Utilities.k_EnemySouls;
-
         }
 
         public void InitPosition(int i_row, int i_col)
@@ -47,7 +44,8 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
             x = i_col * width + width * Utilities.k_EnemyGapMultiplier * i_col;
             y = (i_row * height + height * Utilities.k_EnemyGapMultiplier * i_row) + Utilities.k_InitialHightMultiplier * height;
 
-            CurrentPosition = new Vector2(x + 1, y + 1);
+            CurrentPosition = new Vector2(x+1, y+1);
+            m_falsePosition = new Vector2(CurrentPosition.X,CurrentPosition.Y);
         }
 
         protected override void LoadContent(ContentManager i_content)
@@ -59,12 +57,10 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
             Texture = Content.Load<Texture2D>(folder + enemy);
         }
 
-        private void move(GameTime i_gameTime) // need to be jump
+        private void move(GameTime i_gameTime) 
         {
-            float newX, newY;
-
-            newX = Utilities.CalculateXToMove(CurrentPosition.X, CurrentDirection, Velocity, i_gameTime);
-            newY = CurrentPosition.Y;
+            float newX = Utilities.CalculateNewCoordinate(CurrentPosition.X,CurrentDirection, Velocity,i_gameTime);
+            float newY = CurrentPosition.Y;
 
             CurrentPosition = new Vector2(newX, newY);
         }
@@ -104,27 +100,33 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
             m_shootingLogic.Update(i_gameTime);
             base.Update(i_gameTime);
         }
-        public override void Draw(GameTime i_gameTime)
+
+        private void updateRectangle()
         {
-            m_shootingLogic.Draw(i_gameTime);
-            base.Draw(i_gameTime);
+            Rectangle rectangle = new Rectangle((int)CurrentPosition.X, (int)CurrentPosition.Y, Texture.Width, Texture.Height);
+
+            Rectangle = rectangle;
         }
 
-        //public override void Draw(GameTime i_gameTime)
-        //{
-        //    if (m_timeToJump >= k_jumpIndicator)
-        //    {
-        //        m_timeToJump -= k_jumpIndicator;
+        public override void Draw(GameTime i_gameTime)
+        {
+            m_secondsFromLastJump += i_gameTime.ElapsedGameTime.TotalSeconds;
 
-        //        SpriteBatch.Begin();
+            m_shootingLogic.Draw(i_gameTime);
 
-        //        SpriteBatch.Draw(Texture, CurrentPosition, Color);
-
-        //        SpriteBatch.End();
-        //    }
-
-        //    m_timeToJump += (float)i_gameTime.ElapsedGameTime.TotalSeconds;
-        //}
+            SpriteBatch.Begin();
+            if (m_secondsFromLastJump > 0.5)
+            {
+                m_secondsFromLastJump = 0;
+                m_falsePosition = new Vector2(CurrentPosition.X,CurrentPosition.Y);
+                SpriteBatch.Draw(Texture, CurrentPosition, Color);
+            }
+            else
+            {
+                SpriteBatch.Draw(Texture, m_falsePosition, Color);
+            }
+            SpriteBatch.End();
+        }
 
         public void GetHit()
         {
@@ -150,7 +152,6 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
         {
             Vector2 initialPosition = new Vector2(CurrentPosition.X - Texture.Width / 2, CurrentPosition.Y);
             m_shootingLogic.Fire(GraphicsDevice, Content, initialPosition, TypeOfGameObject);
-            // ShotFired.Invoke(bullet);
         }
 
         public List<Bullet> GetBulletsList()
