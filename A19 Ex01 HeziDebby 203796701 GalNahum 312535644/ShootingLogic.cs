@@ -18,19 +18,20 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Interfaces
             BulletsList = new List<Bullet>();
         }
 
-        public void Fire(GraphicsDevice i_graphicsDevice, ContentManager i_content, Vector2 i_initialPosition, Utilities.eGameObjectType i_shooterType)
+        public void Fire(GraphicsDevice i_GraphicsDevice, ContentManager i_Content, Vector2 i_initialPosition, Utilities.eGameObjectType i_shooterType)
         {
-            Bullet bullet = SpaceInvadersFactory.CreateBullet(i_graphicsDevice, i_shooterType);
-            bullet.Initialize(i_content);
+            // $G$ XNA-001 (-5) Its better to "recycle" the mothership instead of creating one every for shot..
+            Bullet bullet = SpaceInvadersFactory.CreateBullet(i_GraphicsDevice, i_shooterType);
+            bullet.Initialize(i_Content);
             bullet.InitPosition(i_initialPosition);
             BulletsList.Add(bullet);
         }
 
-        private void updateBullets(GameTime i_gameTime)
+        private void updateBullets(GameTime i_GameTime)
         {
             foreach (Bullet bullet in BulletsList)
             {
-                bullet.Update(i_gameTime);
+                bullet.Update(i_GameTime);
             }
 
             updateBulletsList();
@@ -54,17 +55,17 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Interfaces
             }
         }
 
-        public void Draw(GameTime i_gameTime)
+        public void Draw(GameTime i_GameTime)
         {
             foreach (Bullet bullet in BulletsList)
             {
-                bullet.Draw(i_gameTime);
+                bullet.Draw(i_GameTime);
             }
         }
 
-        public void Update(GameTime i_gameTime)
+        public void Update(GameTime i_GameTime)
         {
-            updateBullets(i_gameTime);
+            updateBullets(i_GameTime);
         }
     }
 }

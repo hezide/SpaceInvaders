@@ -9,14 +9,14 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
 {
     public class Game1 : Game
     {
-        GraphicsDeviceManager           m_graphics;
-        private SpaceInvadersManager    m_spaceInvadersManager;
-        private SpriteBatch             m_spriteBatch;
-        private Texture2D               m_backgroundTexture;
-        private bool                    m_isGameOver;
+        GraphicsDeviceManager           m_Graphics;
+        private SpaceInvadersManager    m_SpaceInvadersManager;
+        private SpriteBatch             m_SpriteBatch;
+        private Texture2D               m_BackgroundTexture;
+        private bool                    m_IsGameOver;
         public Game1()
         {
-            m_graphics = new GraphicsDeviceManager(this);
+            m_Graphics = new GraphicsDeviceManager(this);
 
             Content.RootDirectory = "Content";
         }
@@ -24,22 +24,22 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
         protected override void Initialize()
         {
             Window.Title = "Space Invaders";
-            m_spaceInvadersManager = new SpaceInvadersManager(this.GraphicsDevice);
+            m_SpaceInvadersManager = new SpaceInvadersManager(this.GraphicsDevice);
             base.Initialize();
             IsMouseVisible = true;
-            m_isGameOver = false;
+            m_IsGameOver = false;
         }
 
         protected override void LoadContent()
         {
-            m_spriteBatch = new SpriteBatch(GraphicsDevice);
-            m_backgroundTexture = Content.Load<Texture2D>(@"Sprites\BG_Space01_1024x768");
-            m_spaceInvadersManager.Init(this.Content);
+            m_SpriteBatch = new SpriteBatch(GraphicsDevice);
+            m_BackgroundTexture = Content.Load<Texture2D>(@"Sprites\BG_Space01_1024x768");
+            m_SpaceInvadersManager.Init(this.Content);
         }
 
         protected override void UnloadContent()
         {
-            m_spaceInvadersManager.UnloadContent(Content);
+            m_SpaceInvadersManager.UnloadContent(Content);
             Content.Unload();
         }
 
@@ -51,16 +51,16 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
             {
                 Exit();
             }
-            if(!m_isGameOver)
+            if(!m_IsGameOver)
             {
-                if (m_spaceInvadersManager.IsGameOver)
+                if (m_SpaceInvadersManager.IsGameOver)
                 {
-                    m_isGameOver = true;
-                    OnGameOver(m_spaceInvadersManager.GetScore());
+                    m_IsGameOver = true;
+                    OnGameOver(m_SpaceInvadersManager.GetScore());
                 }
                 else
                 {
-                    m_spaceInvadersManager.Update(gameTime);
+                    m_SpaceInvadersManager.Update(gameTime);
                 }
             }
         }
@@ -69,13 +69,13 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            m_spriteBatch.Begin();
+            m_SpriteBatch.Begin();
 
-            m_spriteBatch.Draw(m_backgroundTexture, new Vector2(0,0), Color.White);
+            m_SpriteBatch.Draw(m_BackgroundTexture, new Vector2(0,0), Color.White);
 
-            m_spriteBatch.End();
+            m_SpriteBatch.End();
 
-            m_spaceInvadersManager.Draw(gameTime);
+            m_SpaceInvadersManager.Draw(gameTime);
             base.Draw(gameTime);
         }
 

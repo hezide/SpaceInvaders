@@ -14,16 +14,16 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
     {
         public int Souls { get; set; }
 
-        public MotherSpaceship(GraphicsDevice i_graphicsDevice) : base(i_graphicsDevice)
+        public MotherSpaceship(GraphicsDevice i_GraphicsDevice) : base(i_GraphicsDevice)
         {
 
         }
 
-        public override void Initialize(ContentManager i_content)
+        public override void Initialize(ContentManager i_Content)
         {
-            base.Initialize(i_content);
+            base.Initialize(i_Content);
 
-            CurrentDirection = Utilities.eDirection.Right;
+       //     CurrentDirection = Utilities.eDirection.Right;
             Velocity = Utilities.k_MotherSpaceshipVelocity;
             Color = Color.Red;
             Souls = Utilities.k_MotherSpaceshipSouls;
@@ -35,25 +35,25 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
             return new Vector2(GraphicsDevice.Viewport.Bounds.Left - Texture.Width, Texture.Height);
         }
 
-        protected override void LoadContent(ContentManager i_content)
+        protected override void LoadContent(ContentManager i_Content)
         {
-            base.LoadContent(i_content);
+            base.LoadContent(i_Content);
 
-            Texture = i_content.Load<Texture2D>(@"Sprites\MotherShip_32x120");
+            Texture = i_Content.Load<Texture2D>(@"Sprites\MotherShip_32x120");
         }
 
-        private void move(GameTime i_gameTime)
+        private void move(GameTime i_GameTime)
         {
-            CurrentPosition = new Vector2(CurrentPosition.X + Velocity * (float)i_gameTime.ElapsedGameTime.TotalSeconds, CurrentPosition.Y);
+            CurrentPosition = new Vector2(CurrentPosition.X + Velocity * (float)i_GameTime.ElapsedGameTime.TotalSeconds, CurrentPosition.Y);
         }
 
-        public override void Update(GameTime i_gameTime)
+        public override void Update(GameTime i_GameTime)
         {
-            move(i_gameTime);
-            base.Update(i_gameTime);
+            move(i_GameTime);
+            base.Update(i_GameTime);
         }
 
-        public override void Draw(GameTime i_gameTime)
+        public override void Draw(GameTime i_GameTime)
         {
             SpriteBatch.Begin();
 
@@ -62,11 +62,12 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
             SpriteBatch.End();
         }
 
+        // TODO: Ex2 code duplication
         public void GetHit()
         {
             Souls--;
         }
-
+        // TODO: Ex2 code duplication
         public bool IsDead()
         {
             return Souls == 0;

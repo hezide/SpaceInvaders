@@ -12,18 +12,19 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
     class ScoreManager
     {
         public int          CurrentScore { get; private set; }
-        SpriteFont          m_spriteFont;
-        SpriteBatch         m_spriteBatch;
+        SpriteFont          m_SpriteFont;
+        SpriteBatch         m_SpriteBatch;
 
-        public void Initialize(GraphicsDevice i_graphicsDevice,ContentManager i_contentManager)
+        public void Initialize(GraphicsDevice i_GraphicsDevice, ContentManager i_ContentManager)
         {
-            m_spriteFont = i_contentManager.Load<SpriteFont>("Score");
-            m_spriteBatch = new SpriteBatch(i_graphicsDevice);
+            // TODO: Ex2
+            m_SpriteFont = i_ContentManager.Load<SpriteFont>("Score");
+            m_SpriteBatch = new SpriteBatch(i_GraphicsDevice);
         }
 
         public void UpdateScore(Utilities.eGameObjectType i_TypeOfHitObject)
         {
-            if(i_TypeOfHitObject == Utilities.eGameObjectType.BlueEnemy)
+            if (i_TypeOfHitObject == Utilities.eGameObjectType.BlueEnemy)
             {
                 CurrentScore += 140;
             }
@@ -49,11 +50,12 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
             }
         }
 
-        public void Draw(GameTime i_gameTime)
+        public void Draw(GameTime i_GameTime)
         {
-            m_spriteBatch.Begin();
-            m_spriteBatch.DrawString(m_spriteFont, "Score is: " + CurrentScore, new Vector2(0, 0), Color.White);
-            m_spriteBatch.End();
+            m_SpriteBatch.Begin();
+            // TODO: Ex2
+            m_SpriteBatch.DrawString(m_SpriteFont, "Score is: " + CurrentScore, new Vector2(0, 0), Color.White);
+            m_SpriteBatch.End();
         }
     }
 }

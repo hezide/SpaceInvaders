@@ -3,15 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+//using Infrastructure.ObjectModel;
 using Microsoft.Xna.Framework;
 
 namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
 {
-    public class Utilities
+    public class Utilities // : Sprite
     {
+        // $G$ DSN-001 (-2) Why these enum are nested in the Utitilties class?!
         public enum eDirection { Up, Down,  Left, Right , None };
         public enum eGameObjectType { PinkEnemy, BlueEnemy, YellowEnemy, Spaceship, MotherSpaceship, Bullet, Background }
 
+        // $G$-DSN-001 (-3) aggregating all these consts in one class, instead of puting each of them in its relevant class, is bad practice.
+
+        // $G$ XNA-999 (-10) Why static readonly and not const?!        
         public static readonly int k_InitialHightMultiplier = 3;
         public static readonly float k_EnemyGapMultiplier = 0.6f;
         public static readonly int k_EnemyMatRows = 5;
@@ -33,16 +38,23 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
 
         public static readonly int k_SpaceshipVelocity = 120;
         public static readonly int k_EnemyVelocity = 120;
-        public static readonly int k_BulletVelocity = 155;
+    //    public static readonly int k_BulletVelocity = 155;
         public static readonly int k_MotherSpaceshipVelocity = 110;
 
         public static readonly float SpeedIncreaseMultiplier = 1.04f;
+        public static readonly float k_EnemyHitWallVelocityMultiplier = 1.08f;
         public static readonly int k_Ammo = 3;
 
         public static readonly int k_heartStartingLocationX = 600;
         public static readonly int k_heartStartingLocationY = 10;
         public static readonly int k_hitsToIncreaseVelocity = 4;
 
+        // ******************************************** //
+     //   public Utilities(string i_AssetName, Game i_Game) : base(i_AssetName, i_Game)
+       // {
+        //}
+
+        // $G$ CSS-013 (0) Bad parameter names (should be in the form of i_PascalCase).
         public static float CalculateNewCoordinate(float i_oldCoord, eDirection i_currentDirection, float i_velocity, double i_elaspedSeconds)
         {
             //Direction left is -1 and right is +1, this makes the enemies jump to correct side
@@ -53,7 +65,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
                 directionMultiplier = -1f;
             return i_oldCoord + directionMultiplier * (i_velocity * (float)i_elaspedSeconds);
         }
-
+        // $G$ CSS-013 (0) Bad parameter names (should be in the form of i_PascalCase).
         public static bool IsEnemy(eGameObjectType i_typeOfGameObject)
         {
             bool isEnemy = false;
@@ -65,12 +77,12 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
 
             return isEnemy;
         }
-
+        // $G$ CSS-013 (0) Bad parameter names (should be in the form of i_PascalCase).
         public static eDirection ToggleDirection(eDirection i_Direction)
         {
             return i_Direction == eDirection.Right ? eDirection.Left : eDirection.Right;
         }
-
+        // $G$ CSS-013 (0) Bad parameter names (should be in the form of i_PascalCase).
         public static bool IsSameType(GameObject i_gameObject1, GameObject i_gameObject2)
         {
             bool typeIsTheSame = false;

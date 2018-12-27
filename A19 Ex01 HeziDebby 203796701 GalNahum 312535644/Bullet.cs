@@ -12,47 +12,52 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
 {
     public class Bullet : GameObject, IDestryoable
     {
+        private readonly float k_BulletVelocity = 155;
+        // $G$ DSN-001 (-2) this property belongs to GameObject
         public bool IsVisible { get; private set; }
-
+        // $G$ DSN-999 (-2) why does a bullet have souls?
         public int Souls { get; private set; }
 
-        public Bullet(GraphicsDevice i_graphicsDevice) : base(i_graphicsDevice)
+        public Bullet(GraphicsDevice i_GraphicsDevice) : base(i_GraphicsDevice)
         {
 
         }
 
-        public override void Initialize(ContentManager i_content)
+        public override void Initialize(ContentManager i_Content)
         {
-            base.Initialize(i_content);
-            Souls = Utilities.k_BulletSouls;
-            Velocity = Utilities.k_BulletVelocity;
+            base.Initialize(i_Content);
+            //      Souls = Utilities.k_BulletSouls;
+            Velocity = k_BulletVelocity;
             IsVisible = true;
         }
 
-        protected override void LoadContent(ContentManager i_content)
+        protected override void LoadContent(ContentManager i_Content)
         {
-            base.LoadContent(i_content);
+            base.LoadContent(i_Content);
 
-            Texture = i_content.Load<Texture2D>(@"Sprites\Bullet");
+            Texture = i_Content.Load<Texture2D>(@"Sprites\Bullet");
         }
 
-        public void InitPosition(Vector2 i_initialPosition)
+        public void InitPosition(Vector2 i_InitialPosition)
         {
-            CurrentPosition = i_initialPosition;
+            CurrentPosition = i_InitialPosition;
         }
 
-        public void Move(GameTime i_gameTime)
+        public void Move(GameTime i_GameTime)
         {
-            CurrentPosition = new Vector2(CurrentPosition.X, Utilities.CalculateNewCoordinate(CurrentPosition.Y, CurrentDirection, Velocity, i_gameTime.ElapsedGameTime.TotalSeconds));
+            CurrentPosition = new Vector2(CurrentPosition.X, Utilities.CalculateNewCoordinate(CurrentPosition.Y, CurrentDirection, Velocity, i_GameTime.ElapsedGameTime.TotalSeconds));
+            //    return i_oldCoord + directionMultiplier * (i_velocity * (float)i_elaspedSeconds);
+            //   float yPosition = CurrentPosition.Y + (Velocity * (float)i_GameTime.ElapsedGameTime.TotalSeconds);
+            //   CurrentPosition = new Vector2(CurrentPosition.X, yPosition);
         }
 
-        public override void Update(GameTime i_gameTime)
+        public override void Update(GameTime i_GameTime)
         {
-            Move(i_gameTime);
-            base.Update(i_gameTime);
+            Move(i_GameTime);
+            base.Update(i_GameTime);
         }
 
-        public override void Draw(GameTime i_gameTime)
+        public override void Draw(GameTime i_GameTime)
         {
             if (IsVisible)
             {
@@ -64,9 +69,16 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
             }
         }
 
-        public bool Hits(IDestryoable i_destroyable)
+        public bool Hits(IDestryoable i_Destroyable)
         {
-            return Rectangle.Intersects(i_destroyable.Rectangle);
+            return (Rectangle.Intersects(i_Destroyable.Rectangle) && pixelBasedCollisionDetect(i_Destroyable));
+        
+        }
+
+        private bool pixelBasedCollisionDetect(IDestryoable i_Destroyable)
+        {
+           
+            return true;
         }
 
         public void Hide() // TODO: check if should be public

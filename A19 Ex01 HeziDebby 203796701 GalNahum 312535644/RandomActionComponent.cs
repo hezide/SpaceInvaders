@@ -9,50 +9,49 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
 {
     public class RandomActionComponent
     {
-        private TimeSpan m_randomSpanTime;
-        private TimeSpan m_prevRandomSpanTime;
-        private Random m_random;
+        private TimeSpan m_RandomSpanTime;
+        private TimeSpan m_PrevRandomSpanTime;
+        private Random m_Random;
         public Action RandomTimeAchieved;
-        private int m_secondsToSpawn;
-        private int m_minTimeSpan;
-        private int m_maxTimeSpan;
+        private int m_SecondsToSpawn;
+        private int m_MinTimeSpan;
+        private int m_MaxTimeSpan;
 
-        public RandomActionComponent(int i_minTimeSpan, int i_maxTimeSpan, int i_seed)
+        public RandomActionComponent(int i_MinTimeSpan, int i_MaxTimeSpan, int i_seed)
         {
-            m_random = new Random(i_seed);
-            initialize(i_minTimeSpan, i_maxTimeSpan);
-
+            m_Random = new Random(i_seed);
+            initialize(i_MinTimeSpan, i_MaxTimeSpan);
         }
 
-        public RandomActionComponent(int i_minTimeSpan, int i_maxTimeSpan)
+        public RandomActionComponent(int i_MinTimeSpan, int i_MaxTimeSpan)
         {
-            m_random = new Random();
-            initialize(i_minTimeSpan, i_maxTimeSpan);
+            m_Random = new Random();
+            initialize(i_MinTimeSpan, i_MaxTimeSpan);
         }
 
-        private void initialize(int i_minTimeSpan, int i_maxTimeSpan)
+        private void initialize(int i_MinTimeSpan, int i_MaxTimeSpan)
         {
-            m_minTimeSpan = i_minTimeSpan;
-            m_maxTimeSpan = i_maxTimeSpan;
+            m_MinTimeSpan = i_MinTimeSpan;
+            m_MaxTimeSpan = i_MaxTimeSpan;
             randomize();
         }
 
         private void randomize()
         {
-            m_secondsToSpawn = m_random.Next(m_minTimeSpan, m_maxTimeSpan); // TODO: contans Gal, what?
+            m_SecondsToSpawn = m_Random.Next(m_MinTimeSpan, m_MaxTimeSpan); // TODO: contans Gal, what?
             setRandomTimeSpan();
         }
 
         private void setRandomTimeSpan()
         {
-            m_randomSpanTime = TimeSpan.FromSeconds(m_secondsToSpawn);
+            m_RandomSpanTime = TimeSpan.FromSeconds(m_SecondsToSpawn);
         }
 
-        public void Update(GameTime i_gameTime)
+        public void Update(GameTime i_GameTime)
         {
-            if (i_gameTime.TotalGameTime - m_prevRandomSpanTime > m_randomSpanTime)
+            if (i_GameTime.TotalGameTime - m_PrevRandomSpanTime > m_RandomSpanTime)
             {
-                m_prevRandomSpanTime = i_gameTime.TotalGameTime;
+                m_PrevRandomSpanTime = i_GameTime.TotalGameTime;
                 RandomTimeAchieved.Invoke();
                 randomize();
             }

@@ -3,29 +3,28 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+//using Infrastructure;
 
 namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
 {
+    //  public class PlayerSpaceship : GameObject, IShooter, IDestryoable
     public class PlayerSpaceship : GameObject, IShooter, IDestryoable
     {
         public int Souls { get; set; }
-        private MouseState? m_prevMouseState;
-        private KeyboardState m_prevKeyboardState;
-        private ShootingLogic m_shootingLogic;
-        private Texture2D               m_heartTexture;
-        public PlayerSpaceship(GraphicsDevice i_graphicsDevice) : base(i_graphicsDevice)
+        private MouseState? m_PrevMouseState;
+        private KeyboardState m_PrevKeyboardState;
+        private ShootingLogic m_ShootingLogic;
+        private Texture2D               m_HeartTexture;
+
+        public PlayerSpaceship(GraphicsDevice i_GraphicsDevice) : base(i_GraphicsDevice)
         {
         }
 
-        public override void Initialize(ContentManager i_content)
+        public override void Initialize(ContentManager i_Content)
         {
-            base.Initialize(i_content);
-            m_shootingLogic = new ShootingLogic();
+            base.Initialize(i_Content);
+            m_ShootingLogic = new ShootingLogic();
             CurrentDirection = Utilities.eDirection.Right;
             Velocity = Utilities.k_SpaceshipVelocity;
             Color = Color.White;
@@ -42,36 +41,38 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
             return initial;
         }
 
-        protected override void LoadContent(ContentManager i_content)
+        protected override void LoadContent(ContentManager i_Content)
         {
-            base.LoadContent(i_content);
+            base.LoadContent(i_Content);
 
-            Texture = i_content.Load<Texture2D>(@"Sprites\Ship01_32x32");
-            m_heartTexture = i_content.Load<Texture2D>(@"Sprites\heart");
+            Texture = i_Content.Load<Texture2D>(@"Sprites\Ship01_32x32");
+            m_HeartTexture = i_Content.Load<Texture2D>(@"Sprites\heart");
         }
 
-        private void updateByKeyboard(GameTime i_gameTime)
+        private void updateByKeyboard(GameTime i_GameTime)
         {
             KeyboardState keyboardState = Keyboard.GetState();
             float x = CurrentPosition.X;
 
             {
-                if (m_prevKeyboardState.IsKeyDown(Keys.Right))
+                if (m_PrevKeyboardState.IsKeyDown(Keys.Right))
                 {
-                    CurrentDirection = Utilities.eDirection.Right;
-                    x += (float)Velocity * (float)i_gameTime.ElapsedGameTime.TotalSeconds;
+          //          CurrentDirection = Utilities.eDirection.Right;
+                    x += Velocity * (float)i_GameTime.ElapsedGameTime.TotalSeconds;
                 }
-                if (m_prevKeyboardState.IsKeyDown(Keys.Left))
+
+                if (m_PrevKeyboardState.IsKeyDown(Keys.Left))
                 {
-                    CurrentDirection = Utilities.eDirection.Left;
-                    x -= (float)Velocity * (float)i_gameTime.ElapsedGameTime.TotalSeconds;
+          //          CurrentDirection = Utilities.eDirection.Left;
+                    x -= Velocity * (float)i_GameTime.ElapsedGameTime.TotalSeconds;
                 }
-                if (keyboardState != m_prevKeyboardState && m_prevKeyboardState.IsKeyDown(Keys.Space))
+                // $G$ SFN-003 (-2) Spaceship should shoot uppon 'Enter'
+                if (keyboardState != m_PrevKeyboardState && m_PrevKeyboardState.IsKeyDown(Keys.Space))
                 {
                     fire();
                 }
 
-                m_prevKeyboardState = keyboardState;
+                m_PrevKeyboardState = keyboardState;
 
                 CurrentPosition = new Vector2(x, CurrentPosition.Y);
             }
@@ -79,49 +80,50 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
 
         private void fire()
         {
-            if (m_shootingLogic.BulletsList.Count < Utilities.k_Ammo) 
+            if (m_ShootingLogic.BulletsList.Count < Utilities.k_Ammo) 
             {
                 Vector2 initialPosition = new Vector2(CurrentPosition.X + Texture.Width / 2, CurrentPosition.Y);
-                m_shootingLogic.Fire(GraphicsDevice, Content, initialPosition, TypeOfGameObject);
+
+                m_ShootingLogic.Fire(GraphicsDevice, Content, initialPosition, TypeOfGameObject);
             }
         }
 
-        private void updateByMouse(GameTime i_gameTime)
+        private void updateByMouse(GameTime i_GameTime)
         {
             MouseState currMouseState = Mouse.GetState();
             CurrentPosition = getNewPositionByInput(currMouseState);
 
-            if (m_prevMouseState != null)
+            if (m_PrevMouseState != null)
             {
-                if (m_prevMouseState.Value.LeftButton == ButtonState.Pressed && currMouseState.LeftButton == ButtonState.Released)
+                if (m_PrevMouseState.Value.LeftButton == ButtonState.Pressed && currMouseState.LeftButton == ButtonState.Released)
                 {
                     fire();
                 }
             }
 
-            m_prevMouseState = currMouseState;
+            m_PrevMouseState = currMouseState;
         }
 
-        public override void Update(GameTime i_gameTime)
+        public override void Update(GameTime i_GameTime)
         {
-            updateByKeyboard(i_gameTime);
-            updateByMouse(i_gameTime);
-            base.Update(i_gameTime);
-            m_shootingLogic.Update(i_gameTime);
+            updateByKeyboard(i_GameTime);
+            updateByMouse(i_GameTime);
+            base.Update(i_GameTime);
+            m_ShootingLogic.Update(i_GameTime);
         }
 
-        public override void Draw(GameTime i_gameTime)
+        public override void Draw(GameTime i_GameTime)
         {
             SpriteBatch.Begin();
 
             SpriteBatch.Draw(Texture, CurrentPosition, Color);
             for(int i = 0; i < Souls; i++)
             {
-                SpriteBatch.Draw(m_heartTexture, new Vector2(Utilities.k_heartStartingLocationX + m_heartTexture.Width * 2 * i,Utilities.k_heartStartingLocationY), Color.White);
+                SpriteBatch.Draw(m_HeartTexture, new Vector2(Utilities.k_heartStartingLocationX + m_HeartTexture.Width * 2 * i,Utilities.k_heartStartingLocationY), Color.White);
             }
             SpriteBatch.End();
 
-            m_shootingLogic.Draw(i_gameTime);
+            m_ShootingLogic.Draw(i_GameTime);
         }
 
         private Vector2 getNewPositionByInput(MouseState i_currMouseState)
@@ -135,22 +137,22 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
         {
             float x = 0;
 
-            if (m_prevMouseState != null)
+            if (m_PrevMouseState != null)
             {
-                x = (i_currMouseState.X - m_prevMouseState.Value.X);
+                x = (i_currMouseState.X - m_PrevMouseState.Value.X);
             }
 
             return x;
         }
 
-        public void IsHit(GameObject i_gameObject)
-        {
-            Souls--;
-        }
+  //      public void IsHit(GameObject i_gameObject)
+   //     {
+    //        Souls--;
+    //    }
 
         public List<Bullet> GetBulletsList()
         {
-            return m_shootingLogic.BulletsList;
+            return m_ShootingLogic.BulletsList;
         }
 
         public void GetHit()

@@ -7,33 +7,38 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Infrastructure.ObjectModel;
 
 namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
 {
     public class Enemy : GameObject, IDestryoable, IShooter
     {
-        public int                                      Souls { get; set; }
-        public List<Bullet>                             BulletsList { get; private set; }
-        private double                                  m_secondsFromLastJump = 0;
-        private RandomActionComponent                   m_randomShootingNotifier;
-        private ShootingLogic                           m_shootingLogic;
+        public int Souls { get; set; }
+        public List<Bullet> BulletsList { get; private set; }
+        private double m_SecondsFromLastJump = 0;
+        private RandomActionComponent m_RandomShootingNotifier;
+        private ShootingLogic m_ShootingLogic;
+        private readonly float k_EnemyVelocity = 120;
 
-        public Enemy(GraphicsDevice i_graphics,int i_randomSeed) : base(i_graphics)
+        // $G$ CSS-013 (0) Bad parameter names (should be in the form of i_PascalCase).
+        public Enemy(GraphicsDevice i_graphics, int i_randomSeed) : base(i_graphics)
         {
             BulletsList = new List<Bullet>();
-            m_randomShootingNotifier = new RandomActionComponent(1, 30, i_randomSeed);
-            m_randomShootingNotifier.RandomTimeAchieved += Fire;
+            m_RandomShootingNotifier = new RandomActionComponent(1, 30, i_randomSeed);
+            m_RandomShootingNotifier.RandomTimeAchieved += Fire;
         }
 
+        // $G$ CSS-013 (0) Bad parameter names (should be in the form of i_PascalCase).
         public override void Initialize(ContentManager i_content)
         {
             base.Initialize(i_content);
-            m_shootingLogic = new ShootingLogic();
+            m_ShootingLogic = new ShootingLogic();
             CurrentDirection = Utilities.eDirection.Right;
-            Velocity = Utilities.k_EnemyVelocity;
+            Velocity = k_EnemyVelocity;
             Souls = Utilities.k_EnemySouls;
         }
 
+        // $G$ CSS-013 (0) Bad parameter names (should be in the form of i_PascalCase).
         public void InitPosition(int i_row, int i_col)
         {
             float height = Texture.Height;
@@ -45,30 +50,58 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
             CurrentPosition = new Vector2(x + 1, y + 1);
         }
 
+        // $G$ CSS-013 (0) Bad parameter names (should be in the form of i_PascalCase).
         protected override void LoadContent(ContentManager i_content)
         {
             base.LoadContent(i_content);
 
             string folder = @"Sprites\";
             string enemy = String.Format("Enemy0{0}01_32x32", (int)TypeOfGameObject + 1);
+            // $G$ XNA-002 (-5) Instead of concatanating folder and asset name, you should have used Content.RootFolder
             Texture = Content.Load<Texture2D>(folder + enemy);
         }
 
-        private void move(GameTime i_gameTime) 
+        private void move(GameTime i_GameTime)
         {
-            m_secondsFromLastJump += i_gameTime.ElapsedGameTime.TotalSeconds;
+            m_SecondsFromLastJump += i_GameTime.ElapsedGameTime.TotalSeconds;
 
-            if(m_secondsFromLastJump > 0.5)
+            if (m_SecondsFromLastJump > 0.5)
             {
-                float newX = Utilities.CalculateNewCoordinate(CurrentPosition.X,CurrentDirection, Velocity, m_secondsFromLastJump);
-                float newY = CurrentPosition.Y;
-                CurrentPosition = new Vector2(newX, newY);
-                m_secondsFromLastJump = 0;
+                // float xPosition = CurrentPosition.X + (Velocity * (float)m_SecondsFromLastJump);
+                float xPosition = Utilities.CalculateNewCoordinate(CurrentPosition.X, CurrentDirection, Velocity, m_SecondsFromLastJump);
+                CurrentPosition = new Vector2(xPosition, CurrentPosition.Y);
+                m_SecondsFromLastJump = 0;
             }
 
         }
 
-        public bool IsWallHit(ref Utilities.eDirection io_hitDirection,ref float fixOffset)
+        //public bool IsHittingBoundris()
+        //{
+        //    return ((CurrentPosition.X >= GraphicsDevice.Viewport.Width - Texture.Width) ||
+        //            (CurrentPosition.X <= 0) ||
+        //            (CurrentPosition.Y >= GraphicsDevice.Viewport.Height - Texture.Height));
+        //}
+
+        //public float CalcOffset()
+        //{
+        //    float offset = 0;
+
+        ////    Velocity *= -1;
+
+        //    if (CurrentPosition.X >= GraphicsDevice.Viewport.Width - Texture.Width)
+        //    {
+        //        offset = GraphicsDevice.Viewport.Width - Texture.Width - CurrentPosition.X - 1;
+        //    }
+        //    else if (CurrentPosition.X <= 0)
+        //    {
+        //        offset = -1 * (CurrentPosition.X - 1);
+        //    }
+
+        //    return offset;
+        //}
+
+        // $G$ CSS-015 (-2) Bad parameter names (should be in the form of io_PascalCase).
+        public bool IsWallHit(ref Utilities.eDirection io_hitDirection, ref float fixOffset)
         {
             bool isWallHit = false;
 
@@ -76,13 +109,13 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
             {
                 isWallHit = true;
                 io_hitDirection = Utilities.eDirection.Right;
-                fixOffset = GraphicsDevice.Viewport.Width - Texture.Width - CurrentPosition.X -1;
+                fixOffset = GraphicsDevice.Viewport.Width - Texture.Width - CurrentPosition.X - 1;
             }
             else if (CurrentPosition.X <= 0)
             {
                 isWallHit = true;
                 io_hitDirection = Utilities.eDirection.Left;
-                fixOffset = -1*(CurrentPosition.X -1);
+                fixOffset = -1 * (CurrentPosition.X - 1);
             }
             else if (CurrentPosition.Y >= GraphicsDevice.Viewport.Height - Texture.Height)
             {
@@ -97,17 +130,19 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
             return isWallHit;
         }
 
+        // $G$ CSS-013 (0) Bad parameter names (should be in the form of i_PascalCase).
         public override void Update(GameTime i_gameTime)
         {
             move(i_gameTime);
-            m_randomShootingNotifier.Update(i_gameTime);
-            m_shootingLogic.Update(i_gameTime);
+            m_RandomShootingNotifier.Update(i_gameTime);
+            m_ShootingLogic.Update(i_gameTime);
             base.Update(i_gameTime);
         }
 
+        // $G$ CSS-013 (0) Bad parameter names (should be in the form of i_PascalCase).
         public override void Draw(GameTime i_gameTime)
         {
-            m_shootingLogic.Draw(i_gameTime);
+            m_ShootingLogic.Draw(i_gameTime);
 
             SpriteBatch.Begin();
             SpriteBatch.Draw(Texture, CurrentPosition, Color);
@@ -129,6 +164,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
             CurrentPosition = new Vector2(CurrentPosition.X, CurrentPosition.Y + ((Texture.Height - 1) / 2));
         }
 
+        // $G$ CSS-013 (0) Bad parameter names (should be in the form of i_PascalCase).
         public void IncreaseVelocity(float i_velocityMultiplier)
         {
             Velocity *= i_velocityMultiplier;
@@ -137,12 +173,12 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
         public void Fire()
         {
             Vector2 initialPosition = new Vector2(CurrentPosition.X + Texture.Width / 2, CurrentPosition.Y);
-            m_shootingLogic.Fire(GraphicsDevice, Content, initialPosition, TypeOfGameObject);
+            m_ShootingLogic.Fire(GraphicsDevice, Content, initialPosition, TypeOfGameObject);
         }
 
         public List<Bullet> GetBulletsList()
         {
-            return m_shootingLogic.BulletsList;
+            return m_ShootingLogic.BulletsList;
         }
     }
 }

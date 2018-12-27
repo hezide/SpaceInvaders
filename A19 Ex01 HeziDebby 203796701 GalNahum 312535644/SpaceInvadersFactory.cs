@@ -10,16 +10,16 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
 {
     public static class SpaceInvadersFactory
     {
-        public static PlayerSpaceship CreatePlayerSpaceship(GraphicsDevice i_graphics)
+        public static PlayerSpaceship CreatePlayerSpaceship(GraphicsDevice i_GraphicsDevice)
         {
-            PlayerSpaceship spaceship = new PlayerSpaceship(i_graphics);
+            PlayerSpaceship spaceship = new PlayerSpaceship(i_GraphicsDevice);
             spaceship.TypeOfGameObject = Utilities.eGameObjectType.Spaceship;
             return spaceship;
         }
 
-        public static Enemy CreateEnemy(GraphicsDevice i_graphics, Utilities.eGameObjectType eEnemyType,int i_randomSeed)
+        public static Enemy CreateEnemy(GraphicsDevice i_GraphicsDevice, Utilities.eGameObjectType eEnemyType, int i_RandomSeed)
         {
-            Enemy enemy = new Enemy(i_graphics, i_randomSeed);;
+            Enemy enemy = new Enemy(i_GraphicsDevice, i_RandomSeed);;
 
             switch (eEnemyType)
             {
@@ -43,27 +43,27 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
             return enemy;
         }
 
-        public static Bullet CreateBullet(GraphicsDevice i_graphicsDevice, Utilities.eGameObjectType i_shooterType)
+        public static Bullet CreateBullet(GraphicsDevice i_GraphicsDeviceDevice, Utilities.eGameObjectType i_shooterType)
         {
-            Bullet bullet = new Bullet(i_graphicsDevice);
+            Bullet bullet = new Bullet(i_GraphicsDeviceDevice);
 
             if (i_shooterType == Utilities.eGameObjectType.Spaceship)
             {
                 bullet.Color = Color.Red;
-                bullet.CurrentDirection = Utilities.eDirection.Up;
+       //         bullet.CurrentDirection = Utilities.eDirection.Up;
             }
             else if (i_shooterType == Utilities.eGameObjectType.PinkEnemy || i_shooterType == Utilities.eGameObjectType.BlueEnemy || i_shooterType == Utilities.eGameObjectType.YellowEnemy)
             {
                 bullet.Color = Color.Blue;
-                bullet.CurrentDirection = Utilities.eDirection.Down;
+       //         bullet.CurrentDirection = Utilities.eDirection.Down;
             }
 
             return bullet;
         }
 
-        public static MotherSpaceship CreateMotherSpaceship(GraphicsDevice i_graphicsDevice)
+        public static MotherSpaceship CreateMotherSpaceship(GraphicsDevice i_GraphicsDeviceDevice)
         {
-            return new MotherSpaceship(i_graphicsDevice);
+            return new MotherSpaceship(i_GraphicsDeviceDevice);
         }
     }
 }
