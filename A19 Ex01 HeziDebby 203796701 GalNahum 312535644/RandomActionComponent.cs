@@ -9,23 +9,32 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
 {
     public class RandomActionComponent
     {
+        private Game Game { get; set; }
         private TimeSpan m_RandomSpanTime;
         private TimeSpan m_PrevRandomSpanTime;
         private Random m_Random;
         public Action RandomTimeAchieved;
         private int m_SecondsToSpawn;
-        private int m_MinTimeSpan;
-        private int m_MaxTimeSpan;
+        private int m_MinTimeSpan = 1; // default value
+        private int m_MaxTimeSpan = 20; // default value
 
-        public RandomActionComponent(int i_MinTimeSpan, int i_MaxTimeSpan, int i_seed)
+        public RandomActionComponent()
         {
-            m_Random = new Random(i_seed);
+            m_Random = new Random();
+            randomize();
+        }
+
+        public RandomActionComponent(int i_MinTimeSpan, int i_MaxTimeSpan, int i_Seed)
+        {
+            m_Random = new Random(i_Seed);
+
             initialize(i_MinTimeSpan, i_MaxTimeSpan);
         }
 
         public RandomActionComponent(int i_MinTimeSpan, int i_MaxTimeSpan)
         {
             m_Random = new Random();
+
             initialize(i_MinTimeSpan, i_MaxTimeSpan);
         }
 
@@ -38,12 +47,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
 
         private void randomize()
         {
-            m_SecondsToSpawn = m_Random.Next(m_MinTimeSpan, m_MaxTimeSpan); // TODO: contans Gal, what?
-            setRandomTimeSpan();
-        }
-
-        private void setRandomTimeSpan()
-        {
+            m_SecondsToSpawn = m_Random.Next(m_MinTimeSpan, m_MaxTimeSpan);
             m_RandomSpanTime = TimeSpan.FromSeconds(m_SecondsToSpawn);
         }
 

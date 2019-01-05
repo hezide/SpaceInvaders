@@ -1,6 +1,7 @@
 ﻿//*** Guy Ronen © 2008-2011 ***//
 using System;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Infrastructure.ServiceInterfaces
 {
@@ -22,6 +23,8 @@ namespace Infrastructure.ServiceInterfaces
     {
         Rectangle Bounds { get; }
         Vector2 Velocity { get; }
+        Texture2D Texture { get; }
+        bool CollisionByPixels { get; set; }// TODO: check if required
     }
     // -- end of TODO 07
 

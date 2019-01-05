@@ -14,7 +14,7 @@ namespace Infrastructure.Managers
 
         public CollisionsManager(Game i_Game) : 
             base(i_Game, int.MaxValue)
-        {} 
+        {}
 
         protected override void RegisterAsService()
         {

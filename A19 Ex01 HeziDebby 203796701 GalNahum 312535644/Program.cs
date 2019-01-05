@@ -14,7 +14,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
         [STAThread]
         static void Main()
         {
-            using (var game = new Game1())
+            using (var game = new SpaceInvaders())
                 game.Run();
         }
     }

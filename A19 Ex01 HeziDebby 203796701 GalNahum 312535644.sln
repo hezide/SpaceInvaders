@@ -4,6 +4,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 15.0.28010.2036
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "A19 Ex01 HeziDebby 203796701 GalNahum 312535644", "A19 Ex01 HeziDebby 203796701 GalNahum 312535644\A19 Ex01 HeziDebby 203796701 GalNahum 312535644.csproj", "{E27DF9BD-48CC-4D59-9671-9D828BF3C84B}"
+	ProjectSection(ProjectDependencies) = postProject
+		{BA2FC29B-8640-463C-B7C0-1D1AED9C67BF} = {BA2FC29B-8640-463C-B7C0-1D1AED9C67BF}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{BA2FC29B-8640-463C-B7C0-1D1AED9C67BF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,6 +24,12 @@ Global
 		{E27DF9BD-48CC-4D59-9671-9D828BF3C84B}.Release|x64.ActiveCfg = Release|x86
 		{E27DF9BD-48CC-4D59-9671-9D828BF3C84B}.Release|x86.ActiveCfg = Release|x86
 		{E27DF9BD-48CC-4D59-9671-9D828BF3C84B}.Release|x86.Build.0 = Release|x86
+		{BA2FC29B-8640-463C-B7C0-1D1AED9C67BF}.Debug|x64.ActiveCfg = Debug|x86
+		{BA2FC29B-8640-463C-B7C0-1D1AED9C67BF}.Debug|x86.ActiveCfg = Debug|x86
+		{BA2FC29B-8640-463C-B7C0-1D1AED9C67BF}.Debug|x86.Build.0 = Debug|x86
+		{BA2FC29B-8640-463C-B7C0-1D1AED9C67BF}.Release|x64.ActiveCfg = Release|x86
+		{BA2FC29B-8640-463C-B7C0-1D1AED9C67BF}.Release|x86.ActiveCfg = Release|x86
+		{BA2FC29B-8640-463C-B7C0-1D1AED9C67BF}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

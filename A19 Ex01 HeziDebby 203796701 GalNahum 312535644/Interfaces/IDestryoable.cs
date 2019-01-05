@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects;
+using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,10 +10,10 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Interfaces
 {
     public interface IDestryoable
     {
-        int Souls { get; }
-        Rectangle Rectangle { get; } // maybe in gameObject - have duplications in defining
+        int NumberOfSouls { get; set; }
+        //Rectangle Rectangle { get; } // maybe in gameObject - have duplications in defining
 
-        void GetHit();
-        bool IsDead();
+        void Destroy();
+        //bool IsDead();
     }
 }
