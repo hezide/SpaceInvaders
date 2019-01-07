@@ -13,25 +13,39 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
     {
         public enum eActivationKey { Left, Right, Shoot };
 
+       // private readonly string r_Name;
         private const string k_AssetName = @"Sprites\Ship01_32x32";
         private const int k_MaxAmmo = 3;
         private const float k_Velocity = 145;
 
         public SoulsComponent SoulsComponent { get; set; }
+        public Gun Gun { get; private set; }
 
         //  public InputActivator m_InputActivator { get; set; }
         // TODO: consider encapsulating the folowing in a class
         IInputManager m_InputManager;
         public List<Keys> ActivationKeysList { private get; set; }
         public bool ActivateByMouse { private get; set; }
-
-        private Gun Gun;
+        // TODO: this way, i count on who ever activating the player to remember setting a score manager
+        // TODO: lets try and see that is works, after it does ->
+        // lets create a public method on sprite of add listenres then only scroeManager will know player
+        //public ScoreManager ScoreManager { get; set; }
 
         public PlayerSpaceship(Game i_Game) : base(k_AssetName, i_Game)
         {
+          //  r_Name = i_Name;
             SoulsComponent = new SoulsComponent(k_AssetName, Game);
             Gun = new Gun(k_MaxAmmo, i_Game, this.GetType());
+        //    ScoreManager = i_ScoreManager;
         }
+
+        //public PlayerSpaceship(Game i_Game) : base(k_AssetName, i_Game)
+        //{
+        //  //  r_Name = "Player";
+        //    SoulsComponent = new SoulsComponent(k_AssetName, Game);
+        //    Gun = new Gun(k_MaxAmmo, i_Game, this.GetType());
+        //   // ScoreManager = new ScoreManager(i_Game, r_Name);
+        //}
 
         public override void Initialize()
         {
@@ -42,10 +56,12 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
 
             int bulletsDirectionMultiplier = -1;
             Gun.Initialize(Color.Red, bulletsDirectionMultiplier);
+            //Gun.AddCollisionListener(ScoreManager.CollisionHandler);
 
             setInitialPosition();
             initAnimations();
-            
+
+            //Collision += ScoreManager.CollisionHandler;
         }
 
         private void initAnimations()
@@ -184,22 +200,22 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
 
             if (SoulsComponent.NumberOfSouls > 0)
             {
-                //this.Animations.Restart();
                 this.Animations["Blinker"].Restart();
-            }   //
-            else//
+            }   
+            else
             {
                 this.Animations["Spinner"].Enabled = true;
                 this.Animations["Fader"].Enabled = true;
                 this.Gun.Enable = false;
-                //this.Animations["Spinner"].Restart();
-                //this.Animations["Fader"].Restart();
             }
-        }
 
-        public override void Draw(GameTime gameTime)
+            OnCollision(this, EventArgs.Empty);
+        }
+        // TODO: here and on gun(with foreach) - is this the right place ?
+        public void AddCollisionListener(EventHandler i_CollisionHandler)
         {
-            base.Draw(gameTime);
+            this.Collision += new EventHandler<EventArgs>(i_CollisionHandler);
+            this.Gun.AddCollisionListener(i_CollisionHandler);
         }
     }
 }

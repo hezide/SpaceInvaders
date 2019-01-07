@@ -63,7 +63,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
             }
         }
 
-        protected override void DoOnBoundaryHit(Sprite i_Sprite)
+        protected override void DoOnBoundaryHit(Sprite i_Sprite, OffsetEventArgs i_EventArgs)
         {
             i_Sprite.Velocity *= k_DirectionChangeMultiplier;
         }

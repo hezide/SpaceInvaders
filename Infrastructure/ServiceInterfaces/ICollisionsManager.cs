@@ -24,7 +24,7 @@ namespace Infrastructure.ServiceInterfaces
         Rectangle Bounds { get; }
         Vector2 Velocity { get; }
         Texture2D Texture { get; }
-        bool CollisionByPixels { get; set; }// TODO: check if required
+        bool PixelsCollidable { get; set; }// TODO: check if required
     }
     // -- end of TODO 07
 

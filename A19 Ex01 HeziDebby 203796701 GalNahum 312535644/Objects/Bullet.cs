@@ -6,11 +6,21 @@ using System;
 
 namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
 {
-    public class Bullet : Sprite, ICollidable2D
+    public class Bullet : Sprite, ICollidable2D, IExplodable
     {
         private const string k_AssetName = @"Sprites\Bullet";
         private const float k_Velocity = 155;
         public Type OwnerType; // TODO: should i put default value ?
+
+        public int ExplosionRange
+        {
+            get
+            {
+                int direction = Velocity.Y > 0 ? 1 : -1;
+
+                return (int)(Height * 0.7 * direction);
+            }
+        }
 
         public Bullet(Game i_Game) : base(k_AssetName, i_Game)
         {
@@ -58,21 +68,48 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
             return collided;
         }
 
-        public void Explode(int i_XToExplode, int i_YToExplode, Sprite i_SpriteToExplode)
-        {
-            int direction = this.Velocity.Y < 0 ? -1 : 1;
-            int destinateY = (i_YToExplode + (int)(i_YToExplode * 0.7)) * direction;
-            int currentY = i_YToExplode;
+        //public override void OnPixelsCollision(int i_CollidedX, int i_CollidedY)
+        //{
+        //    int direction = this.Velocity.Y < 0 ? -1 : 1;
+        //    int destinateY = (i_CollidedY + direction * (int)(Height * 0.7));
+        //    int currentY = i_CollidedY;
 
-            while (currentY != destinateY)
-            {
-                //  base.OnPixelsCollision(i_X, currentY, i_Source);
+        //    base.OnPixelsCollision(i_CollidedX, i_CollidedY);
 
-                currentY += destinateY < currentY ? -1 : 1;
-            }
-        }
+        //    while (currentY != destinateY)
+        //    {
+        //        //  base.OnPixelsCollision(i_X, currentY, i_Source);
+        //        //if (i_spritetoexplode.getpixel(i_xtoexplode, i_ytoexplode, i_spritetoexplode.bounds) >= 0)
+        //        //{
+        //        //    i_spritetoexplode.onpixelscollision(i_xtoexplode, currenty);
+
+        //        //}
+
+
+        //        currentY += destinateY < currentY ? -1 : 1;
+        //    }
+        //}
+
+        //public void Explode(int i_XToExplode, int i_YToExplode, Sprite i_SpriteToExplode)
+        //{
+        //    int direction = this.Velocity.Y < 0 ? -1 : 1;
+        //    int destinateY = (i_YToExplode + direction * (int)(Height * 0.7));
+        //    int currentY = i_YToExplode;
+
+        //    while (currentY != destinateY)
+        //    {
+        //        //  base.OnPixelsCollision(i_X, currentY, i_Source);
+        //        if (i_SpriteToExplode.GetPixel(i_XToExplode, i_YToExplode, i_SpriteToExplode.Bounds) >= 0)
+        //        {
+        //            i_SpriteToExplode.OnPixelsCollision(i_XToExplode, currentY);
+
+        //        }
+
+        //        currentY += destinateY < currentY ? -1 : 1;
+        //    }
+        //}
     }
-
+}
     //public void PixelsBasedCollision(int i_X, int i_Y, ICollidable2D i_Source)
     //{
     //    int direction = this.Velocity.Y < 0 ? -1 : 1;
@@ -137,7 +174,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
 
 
 
-}
+
 //}
 //public class Bullet : GameObject, IDestryoable
 //{

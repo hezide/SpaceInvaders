@@ -48,13 +48,14 @@
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="Managers\CollisionsManager.cs" />
     <Compile Include="Managers\InputManager.cs" />
-    <Compile Include="ObjectModel\AnimatableSprite.cs" />
     <Compile Include="ObjectModel\Animators\CompositeAnimator.cs" />
     <Compile Include="ObjectModel\Animators\ConcreteAnimators\BlinkAnimator.cs" />
     <Compile Include="ObjectModel\Animators\ConcreteAnimators\CellAnimator.cs" />
     <Compile Include="ObjectModel\Animators\ConcreteAnimators\FadeOutAnimator.cs" />
+    <Compile Include="ObjectModel\Animators\ConcreteAnimators\JumpAnimator.cs" />
     <Compile Include="ObjectModel\Animators\ConcreteAnimators\ShrinkAnimator.cs" />
     <Compile Include="ObjectModel\Animators\ConcreteAnimators\SpinAnimator.cs" />
+    <Compile Include="ObjectModel\Animators\ConcreteAnimators\WaypointsAnimator.cs" />
     <Compile Include="ObjectModel\Animators\SpriteAnimator.cs" />
     <Compile Include="ObjectModel\GameService.cs" />
     <Compile Include="ObjectModel\LoadableDrawbleComponent.cs" />
@@ -62,8 +63,10 @@
     <Compile Include="ObjectModel\RegisteredComponent.cs" />
     <Compile Include="ObjectModel\Sprite.cs" />
     <Compile Include="ObjectModel\SpritesCollection.cs" />
+    <Compile Include="ObjectModel\TextComponent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServiceInterfaces\ICollisionsManager.cs" />
+    <Compile Include="ServiceInterfaces\IExplodable.cs" />
     <Compile Include="ServiceInterfaces\IInputManager.cs" />
     <Compile Include="ServiceInterfaces\IPixelCollidable.cs" />
   </ItemGroup>

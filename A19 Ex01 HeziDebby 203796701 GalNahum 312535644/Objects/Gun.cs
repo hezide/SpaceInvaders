@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
 {// TODO: should this be in infrastructure ?
+    // TODO: is this sprite collection ?
     public class Gun
     {
         public List<Bullet> BulletsList { get; private set; }
@@ -22,12 +23,14 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
 
         private void allocateBullets(Game i_Game, Type i_OwnerType)
         {
-            Bullet bulletToAdd;
+           // Bullet bulletToAdd;
 
             for (int i = 0; i < Ammo; i++)
             {
-                bulletToAdd = new Bullet(i_Game) { OwnerType = i_OwnerType };
-                BulletsList.Add(bulletToAdd);
+                BulletsList.Add(new Bullet(i_Game) { OwnerType = i_OwnerType });
+
+                //bulletToAdd = new Bullet(i_Game) { OwnerType = i_OwnerType };
+                //BulletsList.Add(bulletToAdd);
             }
         }
 
@@ -62,6 +65,14 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
                         bullet.Visible = true;
                     }
                 }
+            }
+        }
+
+        public void AddCollisionListener(EventHandler i_CollisionHandler)
+        {
+            foreach(Bullet bullet in BulletsList)
+            {
+                bullet.Collision += new EventHandler<EventArgs>(i_CollisionHandler);
             }
         }
     }

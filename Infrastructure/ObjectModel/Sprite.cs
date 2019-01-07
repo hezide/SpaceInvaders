@@ -4,6 +4,7 @@ using Infrastructure.ServiceInterfaces;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Collections.Generic;
 
 namespace Infrastructure.ObjectModel
 {
@@ -230,6 +231,15 @@ namespace Infrastructure.ObjectModel
             set { m_Velocity = value; }
         }
 
+        public event EventHandler<EventArgs> Collision;
+        protected virtual void OnCollision(object sender, EventArgs args)
+        {
+            if (Collision != null)
+            {
+                Collision.Invoke(sender, args);
+            }
+        }
+
         public Sprite(string i_AssetName, Game i_Game, int i_UpdateOrder, int i_DrawOrder)
             : base(i_AssetName, i_Game, i_UpdateOrder, i_DrawOrder)
         { }
@@ -343,7 +353,6 @@ namespace Infrastructure.ObjectModel
                 m_SpriteBatch.Begin();
             }
 
-            //           m_SpriteBatch.Draw(m_Texture, m_Position, m_TintColor);
             DrawWithParameters();
 
             if (!m_UseSharedBatch)
@@ -390,29 +399,183 @@ namespace Infrastructure.ObjectModel
         public virtual bool CheckCollision(ICollidable i_Source)
         {
             bool collided = false;
+
             ICollidable2D source = i_Source as ICollidable2D;
 
-            if (source != null)
+            Rectangle intersection = boundsIntersection(source);
+            collided = intersection != Rectangle.Empty;
+
+            if (collided &&
+                PixelsCollidable)
+
             {
-                collided = checkCollisionByBounds(source);
-                // TODO: change the name CollisionByPixels
-                if (collided && CollisionByPixels) // || source.CollisionByPixels))
-                // TODO: checks twise the pixels (for both objects) - try to optimize !
-                {
-                    collided = pixelBasedCollisionDetection(source);
-                }
-                else if (collided && source.CollisionByPixels)
-                {
-                    collided = false;
-                }
+                collided = pixelsIntersects(source, intersection);
+            }
+            else if (collided && source.PixelsCollidable)
+            {
+                collided = false;
             }
 
             return collided;
+
+       
         }
 
-        private bool checkCollisionByBounds(ICollidable2D i_Source)
+        private List<Point> m_IntersectionPoints;
+
+        private bool pixelsIntersects(ICollidable2D i_Source, Rectangle i_Intersection)
         {
-            return i_Source.Bounds.Intersects(this.Bounds) || i_Source.Bounds.Contains(this.Bounds);
+            Color[] sourcePixels = getPixelsData(i_Source); // TODO: this method is a helper of sprite. got nothing to do with sprite
+            List<Point> intersections = new List<Point>();
+
+            for (int y = i_Intersection.Top; y < i_Intersection.Bottom; y++)
+            {
+                for (int x = i_Intersection.Left; x < i_Intersection.Right; x++)
+                {
+                    if (this.Pixels[getPixel(x, y, this.Bounds)].A != 0 &&
+                         sourcePixels[getPixel(x, y, i_Source.Bounds)].A != 0)
+                    {
+                        intersections.Add(new Point(x, y));
+                    }
+                }
+            }
+
+            m_IntersectionPoints = intersections;
+
+            return m_IntersectionPoints.Count > 0;
+        }
+    
+        protected virtual void OnPixelsCollision(ICollidable i_Collidable)
+        {
+            foreach (Point point in m_IntersectionPoints)
+            {
+                int pixelIdx = point.X - this.Bounds.Left + ((point.Y - this.Bounds.Top) * this.Bounds.Width);
+                this.Pixels[pixelIdx].A = 0;
+            }
+
+            this.Texture.SetData<Color>(this.Pixels);
+        }
+
+        protected virtual void Explode(int i_ExplosionRange)
+        {
+            foreach (Point point in m_IntersectionPoints)
+            {
+                   transperantPixelsInRange(point, i_ExplosionRange);
+            }
+
+            this.Texture.SetData<Color>(this.Pixels);
+        }
+
+        private void transperantPixelsInRange(Point i_Point, int i_ExplosionRange)
+        {
+            int direction = i_ExplosionRange > 0 ? 1 : -1;
+            int destinateY = i_Point.Y + i_ExplosionRange;
+            int currentY = i_Point.Y;
+
+            while (currentY != destinateY)
+            {
+                int pixelIdx = getPixel(i_Point.X, currentY, this.Bounds);
+
+                if (pixelIdx < Pixels.Length && pixelIdx >= 0)
+                {
+                    transparentPixel(pixelIdx);
+                    //this.Pixels[pixelIdx].A = 0;
+                }
+
+                currentY += destinateY < currentY ? -1 : 1;
+            }
+        }
+
+        /*
+        public void Explode(int i_XToExplode, int i_YToExplode, Sprite i_SpriteToExplode)
+{
+   int direction = this.Velocity.Y < 0 ? -1 : 1;
+   int destinateY = (i_YToExplode + direction * (int)(Height * 0.7));
+   int currentY = i_YToExplode;
+
+   while (currentY != destinateY)
+   {
+       //  base.OnPixelsCollision(i_X, currentY, i_Source);
+       if (i_SpriteToExplode.GetPixel(i_XToExplode, i_YToExplode, i_SpriteToExplode.Bounds) >= 0)
+       {
+           i_SpriteToExplode.OnPixelsCollision(i_XToExplode, currentY);
+
+       }
+
+       currentY += destinateY < currentY ? -1 : 1;
+   }
+}
+    */
+        //   return (i_X - i_Bounds.Left) + ((i_Y - i_Bounds.Top) * i_Bounds.Width);
+        // 
+
+        //private bool isPixelsIntersection(ICollidable2D i_Source)
+        //{
+        //    bool isPixelIntersect = false;
+
+        //    while (!isPixelIntersect)
+        //    {
+
+        //    }
+
+        //    return false;
+        //}
+
+        //{
+        //    bool collided = false;
+        //    ICollidable2D source = i_Source as ICollidable2D;
+
+        //    if (source != null)
+        //    {
+        //        collided = checkBoundsCollision(source);
+
+        //        if (collided && this.CollisionByPixels)
+        //        {
+        //            collided = checkPixelBasedCollision(source);
+        //        }
+        //        else if (collided && source.CollisionByPixels)
+        //        {
+        //            collided = false;
+        //        }
+        //    }
+
+        //    /*
+        //     pseudo
+        //     if ( source is ipixelCollidable)
+        //     collided = iPixelCollidable.checkPixelBased(i_source)
+        //     */
+
+        //    return collided;
+        //}
+
+        //public virtual bool CheckCollision(ICollidable i_Source)
+        //{
+        //    bool collided = false;
+        //    ICollidable2D source = i_Source as ICollidable2D;
+
+        //    if (source != null)
+        //    {
+        //        collided = checkCollisionByBounds(source);
+        //        // TODO: change the name CollisionByPixels
+        //        if (collided && this is IPixelCollidable) //CollisionByPixels) // || source.CollisionByPixels))
+        //        // TODO: checks twise the pixels (for both objects) - try to optimize !
+        //        {
+        //            //  collided = pixelBasedCollisionDetection(source);
+        //            collided = (this as IPixelCollidable).Collided()
+        //        }
+        //        else if (collided && source is IPixelCollidable) //.CollisionByPixels)
+        //        {
+        //            collided = false;
+        //        }
+        //    }
+
+        //    return collided;
+        //}
+
+        private Rectangle boundsIntersection(ICollidable2D i_Source)
+        {
+            //  return i_Source.Bounds.Intersects(this.Bounds) || i_Source.Bounds.Contains(this.Bounds);
+            return Rectangle.Intersect(this.Bounds, i_Source.Bounds);
         }
 
         private Color[] m_Pixels;
@@ -436,80 +599,22 @@ namespace Infrastructure.ObjectModel
         }
 
         private bool m_CollisionByPixels = false;
-        public bool CollisionByPixels
+        public bool PixelsCollidable
         {
             get { return m_CollisionByPixels; }
             set { m_CollisionByPixels = value; }
         }
 
-        private bool pixelBasedCollisionDetection(ICollidable2D i_Source)
+    
+
+        private void transparentPixel(int i_PixelIdx)
         {
-            bool collided = false;
-            Color[] sourcePixels;
+           // int pixelIndex = getPixel(i_X, i_Y, this.Bounds);
 
-            sourcePixels = getPixelsData(i_Source);
-
-            // *** overlapping bounds ***
-            int top = Math.Max(this.Bounds.Top, i_Source.Bounds.Top);
-            int bottom = Math.Min(this.Bounds.Bottom, i_Source.Bounds.Bottom);
-            int left = Math.Max(this.Bounds.Left, i_Source.Bounds.Left);
-            int right = Math.Min(this.Bounds.Right, i_Source.Bounds.Right);
-
-            for (int y = top; y < bottom; y++)
-            {
-                for (int x = left; x < right; x++)
-                {
-                    if (!isTransparent(this.Pixels, x, y, this.Bounds) &&
-                        !isTransparent(sourcePixels, x, y, i_Source.Bounds))
-                    //if (this.Pixels[getPixel(x, y, this.Bounds)].A != 0 &&
-                    //    sourcePixels[(x - i_Source.Bounds.Left) + ((y - i_Source.Bounds.Top) * i_Source.Bounds.Width)].A != 0)
-                    {
-                        collided = true;
-
-                    //    i_Source.PixelsBasedCollision(x, y, this as ICollidable2D);
-                        OnPixelsCollision(x, y, i_Source);
-
-                        //if (i_Source is Sprite)
-                        //{
-                        //    (i_Source as Sprite).OnPixelsCollision(x, y, i_Source);
-                        //}
-
-                        //this.transparentPixel(x, y);
-                        // this.Pixels[(x - this.Bounds.Left) + ((y - this.Bounds.Top) * this.Bounds.Width)].A = 0;
-                    }
-                }
-            }
-
-            return collided;
-
-            //for (int row = 0; row < i_Source.Texture.Width; row++)
+            //if (pixelIndex >= 0 && pixelIndex < Pixels.Length) // TODO: throws exception out of bounds
             //{
-            //    for (int col = 0; col < i_Source.Texture.Height; col++)
-            //    { // *** if non transparent pixels collided ***
-            //if (this.Pixels[row + col * this.Texture.Width].A != 0 &&
-            //    i_Source.Pixels[row + col * i_Source.Texture.Width].A != 0)
-            //{ // *** change the collided i_Source pixels to transparent ***
-            //    Pixels[row + col * this.Texture.Width] = new Color(0, 0, 0, 0);
-            //  //  Pixels[row + col * this.Texture.Width].A = 0;
-            //    collided = true;
+            this.Pixels[i_PixelIdx].A = 0;
             //}
-
-
-            //   }
-            // }
-
-            //            return collided;
-        }
-        // TODO: barriers -> override
-        protected virtual void OnPixelsCollision(int i_X, int i_Y, ICollidable2D i_Source)
-        {
-            // *** default behavior ***
-            transparentPixel(i_X, i_Y);
-        }
-
-        private void transparentPixel(int i_X, int i_Y)
-        {
-            this.Pixels[getPixel(i_X, i_Y, this.Bounds)].A = 0;
         }
 
         private bool isTransparent(Color[] i_Pixels, int i_X, int i_Y, Rectangle i_Bounds)
@@ -545,15 +650,21 @@ namespace Infrastructure.ObjectModel
         public virtual void Collided(ICollidable i_Collidable)
         {
             // defualt behavior
-            if (CollisionByPixels)
+            if (this.PixelsCollidable)
             {
-                this.Texture.SetData<Color>(Pixels);
+                OnPixelsCollision(i_Collidable);
+                //this.Texture.SetData<Color>(Pixels);
             }
             else
             {
                 this.Visible = false;
             }
+
+            OnCollision(i_Collidable, EventArgs.Empty);
         }
+
+
+        #endregion //Collision Handlers
 
         protected Texture2D GetTextureClone()
         {
@@ -563,7 +674,6 @@ namespace Infrastructure.ObjectModel
 
             return texture;
         }
-        #endregion //Collision Handlers
         // TODO: should be on Sprite ? maybe should encapsulate in a different class ...
         // *** sprites hit boundaries behavior ***
         private bool m_BoundaryHitAffects = false;
@@ -573,7 +683,7 @@ namespace Infrastructure.ObjectModel
             set { m_BoundaryHitAffects = value; }
         }
 
-        public event EventHandler<EventArgs> HitBoundaryEvent;
+        public event EventHandler<OffsetEventArgs> HitBoundaryEvent;
 
         protected virtual bool HitBoundary()
         {
@@ -582,7 +692,7 @@ namespace Infrastructure.ObjectModel
                 Bounds.Left <= GraphicsDevice.Viewport.Bounds.Left : false;
         }
 
-        protected virtual void OnBoundaryHit(object i_Sender, EventArgs i_EventArgs)
+        protected virtual void OnBoundaryHit(object i_Sender, OffsetEventArgs i_EventArgs)
         {
             if (HitBoundaryEvent != null)
             {
@@ -594,14 +704,35 @@ namespace Infrastructure.ObjectModel
         {
             if (HitBoundary())
             {
-                OnBoundaryHit(this, EventArgs.Empty);
+                float offset = Position.X - MathHelper.Clamp(Position.X, 0, GraphicsDevice.Viewport.Width - Width);
+
+                //float offset2 = MathHelper.Clamp(Position.X, 0, GraphicsDevice.Viewport.Width - Width);
+                //Position = new Vector2()
+                Position = new Vector2(Position.X - offset, Position.Y);
+
+                OnBoundaryHit(this, new OffsetEventArgs(offset));
             }
         }
+        //    Position = new Vector2(MathHelper.Clamp(Position.X, 0, GraphicsDevice.Viewport.Width - Texture.Width), Position.Y);
+
 
         public Sprite ShallowClone()
         {
             return this.MemberwiseClone() as Sprite;
         }
+    }
 
+    public class OffsetEventArgs : EventArgs
+    {
+        public float Offset { get; set; }
+
+        public OffsetEventArgs() : base()
+        {
+        }
+
+        public OffsetEventArgs(float i_Offset) : base()
+        {
+            Offset = i_Offset;
+        }
     }
 }

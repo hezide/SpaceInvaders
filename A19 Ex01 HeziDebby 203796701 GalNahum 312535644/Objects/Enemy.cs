@@ -1,18 +1,16 @@
-﻿using A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Interfaces;
-using Infrastructure.ObjectModel;
+﻿using Infrastructure.ObjectModel;
 using Infrastructure.ObjectModel.Animators.ConcreteAnimators;
 using Infrastructure.ServiceInterfaces;
 using Microsoft.Xna.Framework;
 using System;
-using System.Collections.Generic;
 
 namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
 {
     public class Enemy : Sprite, ICollidable2D //, IShooter
     {
-        // TODO: change to sprite shit .....
-       // private const string k_AssetName = @"Sprites\Enemy0101_32x32";
-        private int k_NumOfFrames = 2;
+        private const int k_TextureWidthDivider = 2;
+        private const int k_TextureHeightDivider = 3;
+        private const int k_NumOfFrames = 2;
 
         private const int k_Velocity = 120;
         private const int k_MaxAmmo = 1;
@@ -20,16 +18,10 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
 
         private Gun Gun;
         public int Seed { get; set; } // TODO: not initialized
-        // TODO: delete this overload
-        //public Enemy(Game i_Game) : base(k_AssetName, i_Game)
-        //{
-        //    m_TintColor = Color.Pink;
-        //    Gun = new Gun(k_MaxAmmo, i_Game, this.GetType());
-        //}
 
         public Enemy(string i_AssetName, Game i_Game) : base(i_AssetName, i_Game)
         {
-            m_TintColor = Color.White;
+            m_TintColor = Color.Red;
             Gun = new Gun(k_MaxAmmo, i_Game, this.GetType());
         }
 
@@ -43,21 +35,56 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
             m_RandomShootingNotifier = new RandomActionComponent(1, 30, Seed);
             m_RandomShootingNotifier.RandomTimeAchieved += Shoot;
 
-         //   initAnimations();
+            initAnimations();
         }
 
         private void initAnimations()
         {
-            CellAnimator celAnimation = new CellAnimator(TimeSpan.FromSeconds(0.5), k_NumOfFrames, TimeSpan.Zero);
+            CellAnimator celAnimation = new CellAnimator(TimeSpan.FromSeconds(1), k_NumOfFrames, (int)CellIdx.Y, TimeSpan.Zero);
+            BlinkAnimator blinker = new BlinkAnimator(TimeSpan.FromSeconds(0.5), TimeSpan.Zero);
+            //      WaypointsAnimator waypoints = new WaypointsAnimator(this.Velocity.X, TimeSpan.Zero, false, ) 
+            // JumpAnimator jumper = new JumpAnimator(new Vector2(this.Width / 2, this.Position.Y), animationLength, TimeSpan.Zero);
+
+            float spinsPerSecond = MathHelper.TwoPi * 6;
+            TimeSpan animationLength = TimeSpan.FromSeconds(1.2);
+
+            SpinAnimator spinner = new SpinAnimator("Spinner", spinsPerSecond, animationLength);
+            ShrinkAnimator shrinker = new ShrinkAnimator("Shrinker", animationLength);
+
+            spinner.Finished += new EventHandler(onDyingAnimationFinish);
+
             this.Animations.Add(celAnimation);
+            this.Animations.Add(blinker);
+            this.Animations.Add(spinner);
+            this.Animations.Add(shrinker);
+
             this.Animations.Enabled = true;
+            this.Animations["Spinner"].Enabled = false;
+            this.Animations["Shrinker"].Enabled = false;
         }
 
-        private int m_EnemyCellIdx = 0;
-        public int EnemyCellIdx
+        private void onDyingAnimationFinish(object sender, EventArgs e)
         {
-            get { return m_EnemyCellIdx; }
-            set { m_EnemyCellIdx = value; }
+            this.Dispose(true);
+            this.Animations.Pause();
+            this.Visible = false;
+        }
+
+        private Vector2 m_CellIdx = Vector2.Zero;
+        public Vector2 CellIdx
+        {
+            get { return m_CellIdx; }
+            set { m_CellIdx = value; }
+        }
+
+        protected override void InitBounds()
+        {
+            m_WidthBeforeScale = Texture.Width / k_TextureWidthDivider;
+            m_HeightBeforeScale = Texture.Height / k_TextureHeightDivider;
+
+            InitSourceRectangle();
+
+            InitOrigins();
         }
 
         protected override void InitSourceRectangle()
@@ -65,55 +92,45 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
             base.InitSourceRectangle();
 
             this.SourceRectangle = new Rectangle(
-                0,
-                0,
-                (int)(m_SourceRectangle.Width / 6),
-                (int)m_HeightBeforeScale);
-        } // TODO: need to set x position to width * cell index -> the beginig of the cell i want
+                (int)CellIdx.Y * m_SourceRectangle.Height,
+                (int)CellIdx.X * m_SourceRectangle.Width,
+                (int)(m_WidthBeforeScale),
+                (int)(m_HeightBeforeScale));
+        }
 
         protected override void InitOrigins()
         {
-            base.InitOrigins();
-
-            this.RotationOrigin = this.SourceRectangleCenter;
+            this.RotationOrigin = SourceRectangleCenter;
         }
-
-        //protected override void InitBounds()
-        //{
-        //    base.InitBounds();
-        //    m_WidthBeforeScale = Texture.Width / 6;
-        //    m_HeightBeforeScale = Texture.Height;
-        //    m_Position = Vector2.Zero;
-
-        //    InitSourceRectangle();
-        //    m_Width /= 6;
-        //    m_Height = Texture.Height;
-        //}
 
         public override void Collided(ICollidable i_Collidable)
         {
             //base.Collided(i_Collidable);
-            IsCollided = true;
+            IsCollided = true; // TODO: check this boolean .... what it does
+
+            if (i_Collidable is ICollidable2D &&
+                !(i_Collidable as ICollidable2D).PixelsCollidable)
+            {
+                this.Animations["Spinner"].Enabled = true;
+                this.Animations["Shrinker"].Enabled = true;
+            }
+
         }
 
         public override void Update(GameTime gameTime)
         {
-            //if (IsCollided)
-            //{
-                //   Velocity = Vector2.Zero;
-                // Shrink(0.9f);
-          //  }
-         //   else
-          //  {
-                m_RandomShootingNotifier.Update(gameTime);
-          //  }
+            m_RandomShootingNotifier.Update(gameTime);
 
             base.Update(gameTime);
+
+            //  Position = new Vector2(MathHelper.Clamp(Position.X, 0, GraphicsDevice.Viewport.Width - Width), Position.Y);
+
+            // TODO: implement clamp for position so that if position is greater then screen bounds
         }
 
         public override void Draw(GameTime gameTime)
         {
-                base.Draw(gameTime);
+            base.Draw(gameTime);
         }
         // TODO: implement jump on blink
         //public override bool Blink(GameTime gameTime)
@@ -137,6 +154,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
 
             return collided;
         }
+
     }
 }
 //protected override bool HitBoundary()

@@ -23,9 +23,16 @@ namespace Infrastructure.ObjectModel.Animators.ConcreteAnimators
             m_Loop = i_AnimationLength == TimeSpan.Zero;
         }
 
+        public CellAnimator(TimeSpan i_CellTime, int i_NumOfCells, int i_CurrentCell, TimeSpan i_AnimationLength)
+            : this (i_CellTime, i_NumOfCells, i_AnimationLength)
+        {
+            m_CurrCellIdx = i_CurrentCell;
+        }
+
         private void goToNextFrame()
         {
             m_CurrCellIdx++;
+
             if (m_CurrCellIdx >= r_NumOfCells)
             {
                 if (m_Loop)
@@ -50,9 +57,9 @@ namespace Infrastructure.ObjectModel.Animators.ConcreteAnimators
             if (m_CellTime != TimeSpan.Zero)
             {
                 m_TimeLeftForCell -= i_GameTime.ElapsedGameTime;
+
                 if (m_TimeLeftForCell.TotalSeconds <= 0)
                 {
-                    /// we have elapsed, so blink
                     goToNextFrame();
                     m_TimeLeftForCell = m_CellTime;
                 }

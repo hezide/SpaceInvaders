@@ -7,7 +7,7 @@ namespace Infrastructure.ObjectModel.Animators.ConcreteAnimators
     {
         private TimeSpan m_SpinLength;
         private TimeSpan m_TimeLeftForNextSpin;
-        private readonly float m_SpinAngular;
+        private readonly float m_AngularVelocity;
 
         //public TimeSpan SpinLength
         //{
@@ -16,10 +16,10 @@ namespace Infrastructure.ObjectModel.Animators.ConcreteAnimators
         //}
 
         // CTORs
-        public SpinAnimator(string i_Name, float i_SpinAngular, TimeSpan i_AnimationLength)
+        public SpinAnimator(string i_Name, float i_AngularVelocity, TimeSpan i_AnimationLength)
             : base(i_Name, i_AnimationLength)
         {
-            m_SpinAngular = i_SpinAngular;
+            m_AngularVelocity = i_AngularVelocity;
             m_SpinLength = i_AnimationLength;
             m_TimeLeftForNextSpin = i_AnimationLength;
         }
@@ -46,7 +46,7 @@ namespace Infrastructure.ObjectModel.Animators.ConcreteAnimators
 
         protected override void DoFrame(GameTime i_GameTime)
         {
-            BoundSprite.AngularVelocity = m_SpinAngular;
+            BoundSprite.AngularVelocity = m_AngularVelocity;
           //  BoundSprite.Rotation += m_SpinAngular * (float)i_GameTime.ElapsedGameTime.TotalSeconds;
             m_TimeLeftForNextSpin -= i_GameTime.ElapsedGameTime;
 

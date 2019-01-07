@@ -11,7 +11,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
 
         public Barrier(Game i_Game) : base(k_AssetName, i_Game)
         {
-            CollisionByPixels = true;
+            PixelsCollidable = true;
         }
 
         public override void Initialize()
@@ -27,10 +27,21 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
             DrawNonPremultiplied();
         }
 
-        protected override void OnPixelsCollision(int i_X, int i_Y, ICollidable2D i_Source)
+        public override void Collided(ICollidable i_Collidable)
         {
-            base.OnPixelsCollision(i_X, i_Y, i_Source);
+            if (i_Collidable is IExplodable)
+            {
+                Explode((i_Collidable as IExplodable).ExplosionRange);
+            }
+            else
+            {
+                OnPixelsCollision(i_Collidable);
+            }
         }
+        //protected override void OnPixelsCollision(int i_X, int i_Y, ICollidable2D i_Source)
+        //{
+        //    base.OnPixelsCollision(i_X, i_Y, i_Source);
+        //}
         //public override void Collided(ICollidable i_Collidable)
         //{
         //    base.Collided(i_Collidable);

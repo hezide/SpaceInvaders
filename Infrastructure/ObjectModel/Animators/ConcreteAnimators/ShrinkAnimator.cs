@@ -9,11 +9,16 @@ namespace Infrastructure.ObjectModel.Animators.ConcreteAnimators
         private TimeSpan m_ShrinkLength;
         private readonly float m_ScaleFactor;
 
-        public ShrinkAnimator(TimeSpan i_ShrinkLength)
-            : base("Shrink", i_ShrinkLength)
+        public ShrinkAnimator(string i_Name, TimeSpan i_ShrinkLength)
+            : base (i_Name, i_ShrinkLength)
         {
             this.m_ShrinkLength = i_ShrinkLength;
             m_ScaleFactor = (float)(1 / i_ShrinkLength.TotalSeconds); // should be scale / shrinkLength
+        }
+
+        public ShrinkAnimator(TimeSpan i_ShrinkLength)
+            : this("Shrink", i_ShrinkLength)
+        {
         }
 
         protected override void DoFrame(GameTime i_GameTime)

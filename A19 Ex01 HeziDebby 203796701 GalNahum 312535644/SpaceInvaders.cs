@@ -3,6 +3,7 @@ using Infrastructure.Managers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
 using System.Collections.Generic;
 
 namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
@@ -19,7 +20,8 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
         private EnemiesMat m_Enemies;
         private Barriers m_Barriers; 
         private MotherShip m_MotherSpaceship;
-        private RandomActionComponent m_MotherSpaceShipRandomNotifier;
+        private RandomActionComponent m_MotherShipRandomNotifier;
+        private List<ScoreManager> m_ScoreManagers;
         // TODO: habndle backround design
         private Texture2D               m_BackgroundTexture;
         //   private bool                    m_IsGameOver;
@@ -36,8 +38,14 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
             m_Enemies = new EnemiesMat(this);
             m_Barriers = new Barriers(this);
             m_MotherSpaceship = new MotherShip(this);
-            m_MotherSpaceShipRandomNotifier = new RandomActionComponent();
-            m_MotherSpaceShipRandomNotifier.RandomTimeAchieved += notifier_GoMotherSpaceship;
+            m_MotherShipRandomNotifier = new RandomActionComponent();
+            m_MotherShipRandomNotifier.RandomTimeAchieved += notifier_GoMotherSpaceship;
+
+            m_ScoreManagers = new List<ScoreManager>
+            {
+                { new ScoreManager("P1", this) { TintColor = Color.Blue} },
+                { new ScoreManager("P2", this) { TintColor = Color.LimeGreen} }
+            };
 
             Content.RootDirectory = "Content";
         }
@@ -53,38 +61,47 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
             // *** initializing activation inputs ***
             m_Player1.ActivateByMouse = true;
             m_Player1.ActivationKeysList = new List<Keys> { Keys.H, Keys.K, Keys.U };
+
             m_Player2.ActivationKeysList = new List<Keys> { Keys.A, Keys.D, Keys.W };
             // *** initializing non default players positions ***
             m_Player2.Position = new Vector2(m_Player1.Position.X + m_Player1.Width, m_Player2.Position.Y);
-            m_Player2.TintColor = Color.LightGreen;
+            m_Player2.TintColor = Color.LimeGreen;
+            
             // *** initializing souls components positions ***
-
             m_Player2.SoulsComponent.Position = new Vector2(m_Player2.SoulsComponent.Position.X, m_Player2.SoulsComponent.Position.Y + m_Player2.SoulsComponent.Height + 6);
             m_Player2.SoulsComponent.TintColor = m_Player2.TintColor;
             //   m_IsGameOver = false;
 
+            initScoreManagers(); // TODO: is score managers list is sprite collection ?
+
             m_Enemies.Initialize();
 
             m_Barriers.Initialize(GraphicsDevice.Viewport.Width, m_Player1.Position.Y);
+        }
+        // TODO: change the name
+        private void initScoreManagers()
+        {
+            m_Player1.AddCollisionListener(m_ScoreManagers[0].CollisionHandler);
+            m_Player2.AddCollisionListener(m_ScoreManagers[1].CollisionHandler);
+
+            m_ScoreManagers[1].Position = new Vector2(m_ScoreManagers[1].Position.X, m_ScoreManagers[0].Bounds.Height);
         }
 
         protected override void LoadContent()
         {
             m_SpriteBatch = new SpriteBatch(GraphicsDevice);
             m_BackgroundTexture = Content.Load<Texture2D>(@"Sprites\BG_Space01_1024x768");
-    //        m_SpaceInvadersManager.Init(this.Content);
         }
 
         protected override void UnloadContent()
         {
-   //         m_SpaceInvadersManager.UnloadContent(Content);
             Content.Unload();
         }
 
         protected override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-            m_MotherSpaceShipRandomNotifier.Update(gameTime);
+            m_MotherShipRandomNotifier.Update(gameTime);
 
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
             {

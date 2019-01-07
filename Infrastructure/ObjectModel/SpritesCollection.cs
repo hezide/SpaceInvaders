@@ -25,7 +25,23 @@ namespace Infrastructure.ObjectModel
         {
             SetPositions(i_InitialX, i_InitialY);
             setBoundaryNotifiers();
+         //   setLitenerOnDisposed();
         }
+
+        //private void setLitenerOnDisposed()
+        //{
+        //    foreach (Sprite sprite in Sprites)
+        //    {
+        //        sprite.Disposed += notifier_OnDisposed;
+        //    }
+        //}
+
+        // TODO: is this the best way ? every time an enemy is dead your checking them all .. isnt it the same as before ?
+        // TODO: probably need to save the edges sprites as reffernced to when they are dead .. or add as listener only to them
+            //private void notifier_OnDisposed(object i_Sender, EventArgs i_EventArgs)
+        //{
+        //    setBoundaryNotifiers();
+        //}
 
         protected abstract void SetPositions(float i_InitialX, float i_InitialY);
 
@@ -69,16 +85,16 @@ namespace Infrastructure.ObjectModel
             i_BoundSprite.HitBoundaryEvent += notifier_onBoundaryHit;
         }
 
-        private void notifier_onBoundaryHit(object i_Sender, EventArgs i_EventArgs)
+        private void notifier_onBoundaryHit(object i_Sender, OffsetEventArgs i_EventArgs)
         {
             m_GroupDirection *= k_DirectionChangeMultiplier;
 
             foreach (Sprite sprite in Sprites)
             {
-                DoOnBoundaryHit(sprite);
+                DoOnBoundaryHit(sprite, i_EventArgs);
             }
         }
 
-        protected abstract void DoOnBoundaryHit(Sprite i_Sprite);
+        protected abstract void DoOnBoundaryHit(Sprite i_Sprite, OffsetEventArgs i_EventArgs);
     }
 }
