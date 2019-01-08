@@ -395,6 +395,7 @@ namespace Infrastructure.ObjectModel
             set { m_IsCollided = value; }
         }
 
+        public PixelBasedCollisionComponent PixelBasedCollisionComponent { get; set; }
         // TODO 14: Implement a basic collision detection between two ICollidable2D objects:
         public virtual bool CheckCollision(ICollidable i_Source)
         {
@@ -405,49 +406,50 @@ namespace Infrastructure.ObjectModel
             Rectangle intersection = boundsIntersection(source);
             collided = intersection != Rectangle.Empty;
 
-            if (collided &&
-                PixelsCollidable)
+            if (collided && this is ICllidableByPixels)
+            //PixelsCollidable)
 
             {
-                collided = pixelsIntersects(source, intersection);
+                collided = (this as ICllidableByPixels).PixelBasedCollisionComponent.PixelsIntersects(source, intersection);
+                // collided = pixelsIntersects(source, intersection);
             }
-            else if (collided && source.PixelsCollidable)
+            else if (collided && (source is ICllidableByPixels))
+            //source.PixelsCollidable)
             {
                 collided = false;
             }
 
             return collided;
-
-       
         }
 
-        private List<Point> m_IntersectionPoints;
+        //  private List<Point> m_IntersectionPoints;
+        public List<Point> IntersectionPoints { get; set; }
 
-        private bool pixelsIntersects(ICollidable2D i_Source, Rectangle i_Intersection)
-        {
-            Color[] sourcePixels = getPixelsData(i_Source); // TODO: this method is a helper of sprite. got nothing to do with sprite
-            List<Point> intersections = new List<Point>();
+        //private bool pixelsIntersects(ICollidable2D i_Source, Rectangle i_Intersection)
+        //{
+        //    Color[] sourcePixels = getPixelsData(i_Source); // TODO: this method is a helper of sprite. got nothing to do with sprite
+        //    List<Point> intersections = new List<Point>();
 
-            for (int y = i_Intersection.Top; y < i_Intersection.Bottom; y++)
-            {
-                for (int x = i_Intersection.Left; x < i_Intersection.Right; x++)
-                {
-                    if (this.Pixels[getPixel(x, y, this.Bounds)].A != 0 &&
-                         sourcePixels[getPixel(x, y, i_Source.Bounds)].A != 0)
-                    {
-                        intersections.Add(new Point(x, y));
-                    }
-                }
-            }
+        //    for (int y = i_Intersection.Top; y < i_Intersection.Bottom; y++)
+        //    {
+        //        for (int x = i_Intersection.Left; x < i_Intersection.Right; x++)
+        //        {
+        //            if (this.Pixels[getPixel(x, y, this.Bounds)].A != 0 &&
+        //                 sourcePixels[getPixel(x, y, i_Source.Bounds)].A != 0)
+        //            {
+        //                intersections.Add(new Point(x, y));
+        //            }
+        //        }
+        //    }
 
-            m_IntersectionPoints = intersections;
+        //    m_IntersectionPoints = intersections;
 
-            return m_IntersectionPoints.Count > 0;
-        }
+        //    return m_IntersectionPoints.Count > 0;
+        //}
     
-        protected virtual void OnPixelsCollision(ICollidable i_Collidable)
+        public virtual void OnPixelsCollision(ICollidable i_Collidable)
         {
-            foreach (Point point in m_IntersectionPoints)
+            foreach (Point point in IntersectionPoints)
             {
                 int pixelIdx = point.X - this.Bounds.Left + ((point.Y - this.Bounds.Top) * this.Bounds.Width);
                 this.Pixels[pixelIdx].A = 0;
@@ -458,7 +460,7 @@ namespace Infrastructure.ObjectModel
 
         protected virtual void Explode(int i_ExplosionRange)
         {
-            foreach (Point point in m_IntersectionPoints)
+            foreach (Point point in IntersectionPoints)
             {
                    transperantPixelsInRange(point, i_ExplosionRange);
             }
@@ -598,12 +600,12 @@ namespace Infrastructure.ObjectModel
             }
         }
 
-        private bool m_CollisionByPixels = false;
-        public bool PixelsCollidable
-        {
-            get { return m_CollisionByPixels; }
-            set { m_CollisionByPixels = value; }
-        }
+        //private bool m_CollisionByPixels = false;
+        //public bool PixelsCollidable
+        //{
+        //    get { return m_CollisionByPixels; }
+        //    set { m_CollisionByPixels = value; }
+        //}
 
     
 
@@ -650,7 +652,7 @@ namespace Infrastructure.ObjectModel
         public virtual void Collided(ICollidable i_Collidable)
         {
             // defualt behavior
-            if (this.PixelsCollidable)
+            if (this is ICllidableByPixels)
             {
                 OnPixelsCollision(i_Collidable);
                 //this.Texture.SetData<Color>(Pixels);
@@ -688,8 +690,10 @@ namespace Infrastructure.ObjectModel
         protected virtual bool HitBoundary()
         {
             return this.Visible ?
-                Bounds.Right >= GraphicsDevice.Viewport.Bounds.Right ||
-                Bounds.Left <= GraphicsDevice.Viewport.Bounds.Left : false;
+            //Bounds.Right >= GraphicsDevice.Viewport.Bounds.Right ||
+            //Bounds.Left <= GraphicsDevice.Viewport.Bounds.Left : false;
+            Position.X + Width >= GraphicsDevice.Viewport.Bounds.Right ||
+            Position.X <= GraphicsDevice.Viewport.Bounds.Left : false;
         }
 
         protected virtual void OnBoundaryHit(object i_Sender, OffsetEventArgs i_EventArgs)
@@ -704,11 +708,17 @@ namespace Infrastructure.ObjectModel
         {
             if (HitBoundary())
             {
-                float offset = Position.X - MathHelper.Clamp(Position.X, 0, GraphicsDevice.Viewport.Width - Width);
+            //    float offset = Position.X - MathHelper.Clamp(Position.X, 0, GraphicsDevice.Viewport.Width - Width);
+                float offset = Position.X - MathHelper.Clamp(Position.X, GraphicsDevice.Viewport.Bounds.Left, GraphicsDevice.Viewport.Bounds.Right - Width);
 
-                //float offset2 = MathHelper.Clamp(Position.X, 0, GraphicsDevice.Viewport.Width - Width);
+             //   Vector2 newPosition = new Vector2(Position.X - offset, Position.Y);
+
+            //    offset += Bounds.X - MathHelper.Clamp(Bounds.X, GraphicsDevice.Viewport.Bounds.Left, GraphicsDevice.Viewport.Bounds.Right - Width);
+                //    float offset2 = Position.X - Bounds.Right;
+                //    float offset3 = Position.X - Bounds.Left; ;
                 //Position = new Vector2()
-                Position = new Vector2(Position.X - offset, Position.Y);
+                // Position = new Vector2(MathHelper.Clamp(Position.X, GraphicsDevice.Viewport.Bounds.Left, GraphicsDevice.Viewport.Bounds.Right - Width), Position.Y);
+             //   this.Position = newPosition;
 
                 OnBoundaryHit(this, new OffsetEventArgs(offset));
             }
@@ -725,6 +735,7 @@ namespace Infrastructure.ObjectModel
     public class OffsetEventArgs : EventArgs
     {
         public float Offset { get; set; }
+        //public static readonly float Empty = 0;
 
         public OffsetEventArgs() : base()
         {

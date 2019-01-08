@@ -3,7 +3,6 @@ using Infrastructure.Managers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System;
 using System.Collections.Generic;
 
 namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
@@ -13,17 +12,17 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
         readonly GraphicsDeviceManager m_Graphics;
         // private SpaceInvadersManager m_SpaceInvadersManager;
         private SpriteBatch m_SpriteBatch;
-        private InputManager m_InputManager;
-        private CollisionsManager m_CollisionsManager;
+        private readonly InputManager m_InputManager;
+        private readonly CollisionsManager m_CollisionsManager;
         private PlayerSpaceship m_Player1;
         private PlayerSpaceship m_Player2;
-        private EnemiesMat m_Enemies;
-        private Barriers m_Barriers; 
+        private EnemiesGroup m_Enemies;
+        private Barriers m_Barriers;
         private MotherShip m_MotherSpaceship;
         private RandomActionComponent m_MotherShipRandomNotifier;
-        private List<ScoreManager> m_ScoreManagers;
+        private readonly List<ScoreManager> m_ScoreManagers;
         // TODO: habndle backround design
-        private Texture2D               m_BackgroundTexture;
+        private Texture2D m_BackgroundTexture;
         //   private bool                    m_IsGameOver;
 
         public SpaceInvaders()
@@ -35,7 +34,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
             m_InputManager = new InputManager(this);
             m_CollisionsManager = new CollisionsManager(this);
 
-            m_Enemies = new EnemiesMat(this);
+            m_Enemies = new EnemiesGroup(this);
             m_Barriers = new Barriers(this);
             m_MotherSpaceship = new MotherShip(this);
             m_MotherShipRandomNotifier = new RandomActionComponent();
@@ -54,7 +53,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
         {
             base.Initialize();
             Window.Title = "Space Invaders";
-            
+
             IsMouseVisible = true;
 
             this.Services.AddService(typeof(SpriteBatch), m_SpriteBatch);
@@ -66,7 +65,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
             // *** initializing non default players positions ***
             m_Player2.Position = new Vector2(m_Player1.Position.X + m_Player1.Width, m_Player2.Position.Y);
             m_Player2.TintColor = Color.LimeGreen;
-            
+
             // *** initializing souls components positions ***
             m_Player2.SoulsComponent.Position = new Vector2(m_Player2.SoulsComponent.Position.X, m_Player2.SoulsComponent.Position.Y + m_Player2.SoulsComponent.Height + 6);
             m_Player2.SoulsComponent.TintColor = m_Player2.TintColor;
@@ -107,6 +106,11 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
             {
                 Exit();
             }
+
+            if (IsGameOver())
+            {
+                OnGameOver();
+            }
             //   if(!m_IsGameOver)
             //   {
             //if (m_SpaceInvadersManager.IsGameOver)
@@ -119,6 +123,12 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
             //    m_SpaceInvadersManager.Update(gameTime);
             //}
             //   }
+        }
+
+        private bool IsGameOver()
+        {
+            return (m_Player1.SoulsComponent.NumberOfSouls == 0 && m_Player2.SoulsComponent.NumberOfSouls == 0);
+            //|| m_Enemies.Bounds.Bottom == m_Player1.Height)
         }
 
         protected override void Draw(GameTime gameTime)
@@ -148,10 +158,20 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
             }
         }
 
-        private void OnGameOver(int i_score)
+        private void OnGameOver()
         {
-            MessageBox.Show("Game Over", "Your Score is: " + i_score, new[] { "OK" });
+            string finalScore = string.Format(@"
+{0}
+{1}
+The winner is: {2}", m_ScoreManagers[0].TextToString(), m_ScoreManagers[1].TextToString(), getWinner());
+
+            MessageBox.Show("Game Over", finalScore, new[] { "OK" });
             Exit();
+        }
+
+        private string getWinner()
+        {
+            return m_ScoreManagers[0].Score > m_ScoreManagers[1].Score ? m_ScoreManagers[0].Name : m_ScoreManagers[1].Name;
         }
     }
 }

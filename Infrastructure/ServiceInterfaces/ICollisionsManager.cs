@@ -1,5 +1,7 @@
 ﻿//*** Guy Ronen © 2008-2011 ***//
 using System;
+using System.Collections.Generic;
+using Infrastructure.ObjectModel;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -24,9 +26,16 @@ namespace Infrastructure.ServiceInterfaces
         Rectangle Bounds { get; }
         Vector2 Velocity { get; }
         Texture2D Texture { get; }
-        bool PixelsCollidable { get; set; }// TODO: check if required
+    //    bool PixelsCollidable { get; set; }// TODO: check if required
     }
     // -- end of TODO 07
+    public interface ICllidableByPixels : ICollidable2D
+    {
+        PixelBasedCollisionComponent PixelBasedCollisionComponent { get; set; }
+        List<Point> IntersectionPoints { get; set; }
+        Color[] Pixels { get; }
+        void OnPixelsCollision(ICollidable i_Collidable);
+    }
 
     // TODO 08: Define the 3D specific interface for 3D collidable objects:
     public interface ICollidable3D : ICollidable

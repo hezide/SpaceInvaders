@@ -1,10 +1,11 @@
 ﻿using Infrastructure.ObjectModel;
 using Microsoft.Xna.Framework;
+using System;
 using System.Linq;
 
 namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
 {
-    public class EnemiesMat : SpritesCollection
+    public class EnemiesGroup : SpritesCollection
     {
         private const string k_AssetName = @"Sprites\EnemiesSpriteShit96x64";
         private const int k_Rows = 5;
@@ -14,7 +15,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
 
         public Enemy[,] Enemies { get; set; }
 
-        public EnemiesMat(Game i_Game) : base(i_Game)
+        public EnemiesGroup(Game i_Game) : base(i_Game)
         {
             base.Sprites = Enemies.Cast<Sprite>().ToList();
         }
@@ -22,6 +23,8 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
         protected override void AllocateSpritesCollection()
         {
             Enemies = new Enemy[k_Rows, k_Cols];
+            //***
+            //Bounds = new Rectangle();
         }
 
         protected override void AllocateSprites(Game i_Game)
@@ -79,6 +82,18 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
         //    activateBoundaryEnemy(rightBoundEnemy);
         //}
 
+        //protected Rectangle Bounds { get; set; }
+
+        //protected virtual void InitBounds()
+        //{
+        //    int x = Enemies[0, 0].Bounds.X;
+        //    int y = Enemies[0, 0].Bounds.Y;
+        //    int height = Enemies[0, 0].Bounds.Height * k_Rows; // bug ! you didnt added the offset(spaces)
+        //    int width = Enemies[0, 0].Bounds.Width * k_Cols;
+
+        //    Bounds = new Rectangle(x, y, width, height);
+        //}
+
         protected override void SetPositions(float i_InitialX, float i_InitialY)
         {
             float x = i_InitialX;
@@ -98,20 +113,53 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
 
         protected override void DoOnBoundaryHit(Sprite i_Sprite, OffsetEventArgs i_EventArgs)
         {
-        //    fixOffset(i_Sprite, i_EventArgs.Offset);
+            // Vector2 offset = new Vector2();
+
+            //for (int row = 0; row < k_Rows; row++)
+            //{
+            //    for (int col = 0; col < k_Cols; col++)
+            //    {
+            //        offset = calcOffset(row, col);
+            //        Enemies[row, col].Velocity *= k_DirectionChangeMultiplier;
+            //    }
+            //}
+            // each offset should be the last sprite position + 51.2 px unless its on the edge ...
+           // fixOffset(i_Sprite, i_EventArgs.Offset);
             stepDown(i_Sprite);
             i_Sprite.Velocity *= k_DirectionChangeMultiplier;
+
         }
+
         // TODO: consider as an extension method
         private void stepDown(Sprite i_Sprite)
         {
             i_Sprite.Position = new Vector2(i_Sprite.Position.X, i_Sprite.Position.Y + ((i_Sprite.Height - 1) / 2));
+
         }
 
         private void fixOffset(Sprite i_Sprite, float i_Offset)
         {
+            //if (i_Sprite.Position.X >= i_Sprite.GraphicsDevice.Viewport.Width - i_Sprite.Width)
+            //{
+            //    float offset = i_Sprite.GraphicsDevice.Viewport.Width - i_Sprite.Width - i_Sprite.Position.X - 1;
+            //    i_Sprite.Position = new Vector2(i_Sprite.Position.X + offset, i_Sprite.Position.Y);
+
+            //}
+            //else if (i_S)
             i_Sprite.Position = new Vector2(i_Sprite.Position.X - i_Offset, i_Sprite.Position.Y);
         }
+        //            if (CurrentPosition.X >= GraphicsDevice.Viewport.Width - Texture.Width)
+        //            {
+        //                isWallHit = true;
+        //                io_hitDirection = Utilities.eDirection.Right;
+        //                fixOffset = GraphicsDevice.Viewport.Width - Texture.Width - CurrentPosition.X - 1;
+        //            }
+        //            else if (CurrentPosition.X <= 0)
+        //            {
+        //                isWallHit = true;
+        //                io_hitDirection = Utilities.eDirection.Left;
+        //                fixOffset = -1 * (CurrentPosition.X - 1);
+        //            }
 
     }
 }

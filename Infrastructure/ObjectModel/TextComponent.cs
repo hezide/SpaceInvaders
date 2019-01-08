@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Infrastructure.ObjectModel
-{
+{// TODO: add interface for polymorphizem
     public class TextComponent : LoadableDrawableComponent
     {
         protected SpriteFont m_SpriteFont;
@@ -36,7 +36,7 @@ namespace Infrastructure.ObjectModel
                 (int)Position.X,
                 (int)Position.Y,
                 (int)m_StringToDraw.Length,
-                (int)m_SpriteFont.MeasureString(GetStringToDraw()).Y);
+                (int)m_SpriteFont.MeasureString(TextToString()).Y);
             }
         }
 
@@ -64,7 +64,7 @@ namespace Infrastructure.ObjectModel
         {
             m_SpriteBatch.Begin();
 
-            m_SpriteBatch.DrawString(m_SpriteFont, GetStringToDraw(), Position, TintColor);
+            m_SpriteBatch.DrawString(m_SpriteFont, TextToString(), Position, TintColor);
 
             m_SpriteBatch.End();
         }
@@ -75,7 +75,7 @@ namespace Infrastructure.ObjectModel
         protected override void DrawBoundingBox()
         {}
 
-        protected virtual string GetStringToDraw()
+        public virtual string TextToString()
         {
             return m_StringToDraw;
         }

@@ -23,6 +23,11 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
             }
         }
 
+        public string Name
+        {
+            get { return r_Name; }
+        }
+
         public ScoreManager(string i_Name, Game i_Game) : base(k_AssetName, i_Game)
         {
             r_Name = i_Name;
@@ -64,7 +69,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
             m_Score = MathHelper.Clamp(m_Score, 0, int.MaxValue);
         }
 
-        protected override string GetStringToDraw()
+        public override string TextToString()
         {
             return $"{r_Name}: {Score}";
         }

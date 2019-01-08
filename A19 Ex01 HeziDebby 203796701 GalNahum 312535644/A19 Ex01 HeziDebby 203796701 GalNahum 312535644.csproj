@@ -49,7 +49,7 @@
   <ItemGroup>
     <Compile Include="Objects\Barriers.cs" />
     <Compile Include="Objects\Bullet.cs" />
-    <Compile Include="Objects\EnemiesMat.cs" />
+    <Compile Include="Objects\EnemiesGroup.cs" />
     <Compile Include="Objects\Enemy.cs" />
     <Compile Include="Objects\Gun.cs" />
     <Compile Include="Objects\InputActivator.cs" />

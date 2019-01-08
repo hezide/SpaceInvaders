@@ -15,6 +15,7 @@ namespace Infrastructure.ObjectModel
         {
             AllocateSpritesCollection();
             AllocateSprites(i_Game);
+            m_SpritesOnBoundaries = new List<Sprite>();
         }
 
         protected abstract void AllocateSpritesCollection();
@@ -25,7 +26,7 @@ namespace Infrastructure.ObjectModel
         {
             SetPositions(i_InitialX, i_InitialY);
             setBoundaryNotifiers();
-         //   setLitenerOnDisposed();
+            //   setLitenerOnDisposed();
         }
 
         //private void setLitenerOnDisposed()
@@ -38,7 +39,7 @@ namespace Infrastructure.ObjectModel
 
         // TODO: is this the best way ? every time an enemy is dead your checking them all .. isnt it the same as before ?
         // TODO: probably need to save the edges sprites as reffernced to when they are dead .. or add as listener only to them
-            //private void notifier_OnDisposed(object i_Sender, EventArgs i_EventArgs)
+        //private void notifier_OnDisposed(object i_Sender, EventArgs i_EventArgs)
         //{
         //    setBoundaryNotifiers();
         //}
@@ -54,6 +55,16 @@ namespace Infrastructure.ObjectModel
         //    return x;
         //}
 
+        //protected struct CollectionBounds
+        //{
+        //    Sprite LeftBoundSprite;
+        //    Sprite RightBoundSprite;
+
+        //}
+        // TODO: havent checked 
+        protected List<Sprite> m_SpritesOnBoundaries;
+     //   protected Rectangle Bounds { get; set; }
+
         private void setBoundaryNotifiers()
         {
             Sprite leftBoundSprite = null;
@@ -63,17 +74,23 @@ namespace Infrastructure.ObjectModel
             {
                 if (sprite.Visible &&
                     ((leftBoundSprite == null) ||
-                    (leftBoundSprite.Bounds.Left > sprite.Bounds.Left)))
+                    (leftBoundSprite.Bounds.Left > sprite.Bounds.Left)
+                    && !m_SpritesOnBoundaries.Contains(sprite)))
                 {
+                   // Bounds.Left = sprite.Bounds.Left;
                     leftBoundSprite = sprite;
                 }
                 if (sprite.Visible &&
                     ((rightBoundSprite == null) ||
-                    (rightBoundSprite.Bounds.Right < sprite.Bounds.Right)))
+                    (rightBoundSprite.Bounds.Right < sprite.Bounds.Right)
+                    && !m_SpritesOnBoundaries.Contains(sprite)))
                 {
                     rightBoundSprite = sprite;
                 }
             }
+
+            //m_SpritesOnBoundaries.Add(rightBoundSprite);
+            //m_SpritesOnBoundaries.Add(leftBoundSprite);
 
             activateBoundarySprite(leftBoundSprite);
             activateBoundarySprite(rightBoundSprite);
@@ -81,18 +98,41 @@ namespace Infrastructure.ObjectModel
 
         private void activateBoundarySprite(Sprite i_BoundSprite)
         {
-            i_BoundSprite.BoundaryHitAffects = true;
-            i_BoundSprite.HitBoundaryEvent += notifier_onBoundaryHit;
+            if (i_BoundSprite != null)
+            {
+                i_BoundSprite.BoundaryHitAffects = true;
+                i_BoundSprite.HitBoundaryEvent += notifier_OnBoundaryHit;
+                i_BoundSprite.Disposed += notifier_OnBoundSpriteDisposed;
+                m_SpritesOnBoundaries.Add(i_BoundSprite);
+            }
         }
 
-        private void notifier_onBoundaryHit(object i_Sender, OffsetEventArgs i_EventArgs)
+        private void notifier_OnBoundSpriteDisposed(object i_Sender, EventArgs i_EventArgs)
+        {
+            if (m_SpritesOnBoundaries.Contains(i_Sender as Sprite))
+            {
+                m_SpritesOnBoundaries.Remove(i_Sender as Sprite);
+            }
+
+            setBoundaryNotifiers();
+        }
+
+        private void notifier_OnBoundaryHit(object i_Sender, OffsetEventArgs i_EventArgs)
         {
             m_GroupDirection *= k_DirectionChangeMultiplier;
 
             foreach (Sprite sprite in Sprites)
             {
+                //          if (i_Sender as Sprite != sprite)
+                //        {
                 DoOnBoundaryHit(sprite, i_EventArgs);
+                //}
+                //else
+                //{
+                //    DoOnBoundaryHit(sprite, new OffsetEventArgs { Offset = 0 });
+                //}
             }
+            //     DoOnBoundaryHit(i_Sender as Sprite, i_EventArgs);
         }
 
         protected abstract void DoOnBoundaryHit(Sprite i_Sprite, OffsetEventArgs i_EventArgs);

@@ -37,16 +37,18 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
 
             initAnimations();
         }
-
+        // TODO: set compositeAnimator for dyingAnimaions etc
         private void initAnimations()
         {
-            CellAnimator celAnimation = new CellAnimator(TimeSpan.FromSeconds(1), k_NumOfFrames, (int)CellIdx.Y, TimeSpan.Zero);
-            BlinkAnimator blinker = new BlinkAnimator(TimeSpan.FromSeconds(0.5), TimeSpan.Zero);
+            TimeSpan animationLength = TimeSpan.FromSeconds(0.5);
+
+           CellAnimator celAnimation = new CellAnimator(animationLength, k_NumOfFrames, (int)CellIdx.Y, TimeSpan.Zero);
+           // BlinkAnimator blinker = new BlinkAnimator(TimeSpan.FromSeconds(0.5), TimeSpan.Zero);
             //      WaypointsAnimator waypoints = new WaypointsAnimator(this.Velocity.X, TimeSpan.Zero, false, ) 
-            // JumpAnimator jumper = new JumpAnimator(new Vector2(this.Width / 2, this.Position.Y), animationLength, TimeSpan.Zero);
+             JumpAnimator jumper = new JumpAnimator(new Vector2(this.Width / 2, this.Position.Y), GraphicsDevice.Viewport.Bounds, animationLength, TimeSpan.Zero);
 
             float spinsPerSecond = MathHelper.TwoPi * 6;
-            TimeSpan animationLength = TimeSpan.FromSeconds(1.2);
+            animationLength = TimeSpan.FromSeconds(1.2);
 
             SpinAnimator spinner = new SpinAnimator("Spinner", spinsPerSecond, animationLength);
             ShrinkAnimator shrinker = new ShrinkAnimator("Shrinker", animationLength);
@@ -54,7 +56,8 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
             spinner.Finished += new EventHandler(onDyingAnimationFinish);
 
             this.Animations.Add(celAnimation);
-            this.Animations.Add(blinker);
+            //  this.Animations.Add(blinker);
+            this.Animations.Add(jumper);
             this.Animations.Add(spinner);
             this.Animations.Add(shrinker);
 
@@ -63,7 +66,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
             this.Animations["Shrinker"].Enabled = false;
         }
 
-        private void onDyingAnimationFinish(object sender, EventArgs e)
+        private void onDyingAnimationFinish(object i_Sender, EventArgs i_EventArgs)
         {
             this.Dispose(true);
             this.Animations.Pause();
@@ -108,8 +111,9 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
             //base.Collided(i_Collidable);
             IsCollided = true; // TODO: check this boolean .... what it does
 
-            if (i_Collidable is ICollidable2D &&
-                !(i_Collidable as ICollidable2D).PixelsCollidable)
+            //if (i_Collidable is ICollidable2D &&
+            //    !(i_Collidable as ICollidable2D).PixelsCollidable)
+            if (!(i_Collidable is ICllidableByPixels))
             {
                 this.Animations["Spinner"].Enabled = true;
                 this.Animations["Shrinker"].Enabled = true;
@@ -118,25 +122,11 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
         }
 
         public override void Update(GameTime gameTime)
-        {
+        { // TODO: check if i can add as game service (Iupdatable ? )
             m_RandomShootingNotifier.Update(gameTime);
 
             base.Update(gameTime);
-
-            //  Position = new Vector2(MathHelper.Clamp(Position.X, 0, GraphicsDevice.Viewport.Width - Width), Position.Y);
-
-            // TODO: implement clamp for position so that if position is greater then screen bounds
         }
-
-        public override void Draw(GameTime gameTime)
-        {
-            base.Draw(gameTime);
-        }
-        // TODO: implement jump on blink
-        //public override bool Blink(GameTime gameTime)
-        //{
-        //    return base.Blink(gameTime);
-        //}
 
         public void Shoot()
         {

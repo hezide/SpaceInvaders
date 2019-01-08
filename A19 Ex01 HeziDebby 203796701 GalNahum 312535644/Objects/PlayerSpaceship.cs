@@ -90,7 +90,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
             // this.Animations.Pause();
         }
 
-        private void onHitAnimationFinish(object sender, EventArgs e)
+        private void onHitAnimationFinish(object i_Sender, EventArgs i_EventArgs)
         {
             if (SoulsComponent.NumberOfSouls > 0)
             {

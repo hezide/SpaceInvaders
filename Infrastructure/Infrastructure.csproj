@@ -59,7 +59,7 @@
     <Compile Include="ObjectModel\Animators\SpriteAnimator.cs" />
     <Compile Include="ObjectModel\GameService.cs" />
     <Compile Include="ObjectModel\LoadableDrawbleComponent.cs" />
-    <Compile Include="ObjectModel\PixelCollisionManager.cs" />
+    <Compile Include="ObjectModel\PixelBasedCollisionComponent.cs" />
     <Compile Include="ObjectModel\RegisteredComponent.cs" />
     <Compile Include="ObjectModel\Sprite.cs" />
     <Compile Include="ObjectModel\SpritesCollection.cs" />
@@ -68,7 +68,6 @@
     <Compile Include="ServiceInterfaces\ICollisionsManager.cs" />
     <Compile Include="ServiceInterfaces\IExplodable.cs" />
     <Compile Include="ServiceInterfaces\IInputManager.cs" />
-    <Compile Include="ServiceInterfaces\IPixelCollidable.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">
