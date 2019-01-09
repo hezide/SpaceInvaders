@@ -102,6 +102,8 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
             base.Update(gameTime);
             m_MotherShipRandomNotifier.Update(gameTime);
 
+            m_Enemies.Update(gameTime); // TODO: dont want to see this in the code .......
+
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
             {
                 Exit();

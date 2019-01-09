@@ -231,6 +231,23 @@ namespace Infrastructure.ObjectModel
             set { m_Velocity = value; }
         }
 
+        // TODO: check that works well, change every toglle of velocity in the code to direction toggle
+        protected Vector2 m_Direction = Vector2.Zero;
+        public Vector2 Direction
+        {
+            get
+            {
+                return Velocity == Vector2.Zero ?
+                        m_Direction
+                        : Velocity / new Vector2(Math.Abs(Velocity.X), Math.Abs(Velocity.Y));
+            }
+            set
+            {
+                Velocity *= value;
+                m_Direction = value;
+            }
+        }
+
         public event EventHandler<EventArgs> Collision;
         protected virtual void OnCollision(object sender, EventArgs args)
         {
@@ -687,13 +704,23 @@ namespace Infrastructure.ObjectModel
 
         public event EventHandler<OffsetEventArgs> HitBoundaryEvent;
 
-        protected virtual bool HitBoundary()
+        public virtual bool HitBoundary()
         {
-            return this.Visible ?
-            //Bounds.Right >= GraphicsDevice.Viewport.Bounds.Right ||
-            //Bounds.Left <= GraphicsDevice.Viewport.Bounds.Left : false;
-            Position.X + Width >= GraphicsDevice.Viewport.Bounds.Right ||
-            Position.X <= GraphicsDevice.Viewport.Bounds.Left : false;
+            bool ret = false;
+            //return this.Visible ?
+            ////Bounds.Right >= GraphicsDevice.Viewport.Bounds.Right ||
+            ////Bounds.Left <= GraphicsDevice.Viewport.Bounds.Left : false;
+
+            if (this.Visible) // TODO: this is for debugging only
+            {
+                if (Bounds.Right >= GraphicsDevice.Viewport.Bounds.Right ||
+                    Bounds.Left <= GraphicsDevice.Viewport.Bounds.Left)
+                {
+                    ret = true;
+                }
+            }
+
+            return ret;
         }
 
         protected virtual void OnBoundaryHit(object i_Sender, OffsetEventArgs i_EventArgs)

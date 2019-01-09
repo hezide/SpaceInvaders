@@ -12,12 +12,19 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
         private const int k_TextureHeightDivider = 3;
         private const int k_NumOfFrames = 2;
 
-        private const int k_Velocity = 120;
+        // private const int k_Velocity = 120;
+        private const int k_Velocity = 0;
         private const int k_MaxAmmo = 1;
         private RandomActionComponent m_RandomShootingNotifier;
 
         private Gun Gun;
-        public int Seed { get; set; } // TODO: not initialized
+
+        private int m_Seed = 0;
+        public int Seed
+        {
+            get { return m_Seed; }
+            set { m_Seed = value; }
+        }
 
         public Enemy(string i_AssetName, Game i_Game) : base(i_AssetName, i_Game)
         {
@@ -29,6 +36,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
         {
             base.Initialize();
             Velocity = new Vector2(k_Velocity, 0);
+            m_Direction = new Vector2(1, 0); 
 
             Gun.Initialize(Color.Blue);
 
@@ -45,7 +53,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
            CellAnimator celAnimation = new CellAnimator(animationLength, k_NumOfFrames, (int)CellIdx.Y, TimeSpan.Zero);
            // BlinkAnimator blinker = new BlinkAnimator(TimeSpan.FromSeconds(0.5), TimeSpan.Zero);
             //      WaypointsAnimator waypoints = new WaypointsAnimator(this.Velocity.X, TimeSpan.Zero, false, ) 
-             JumpAnimator jumper = new JumpAnimator(new Vector2(this.Width / 2, this.Position.Y), GraphicsDevice.Viewport.Bounds, animationLength, TimeSpan.Zero);
+         //    JumpAnimator jumper = new JumpAnimator("Jumper", new Vector2(this.Width / 2, this.Position.Y), GraphicsDevice.Viewport.Bounds, animationLength, TimeSpan.Zero);
 
             float spinsPerSecond = MathHelper.TwoPi * 6;
             animationLength = TimeSpan.FromSeconds(1.2);
@@ -57,7 +65,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
 
             this.Animations.Add(celAnimation);
             //  this.Animations.Add(blinker);
-            this.Animations.Add(jumper);
+          //  this.Animations.Add(jumper);
             this.Animations.Add(spinner);
             this.Animations.Add(shrinker);
 
@@ -100,6 +108,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
                 (int)(m_WidthBeforeScale),
                 (int)(m_HeightBeforeScale));
         }
+
 
         protected override void InitOrigins()
         {
@@ -144,7 +153,6 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
 
             return collided;
         }
-
     }
 }
 //protected override bool HitBoundary()
