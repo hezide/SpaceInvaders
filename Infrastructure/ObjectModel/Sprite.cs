@@ -231,52 +231,12 @@ namespace Infrastructure.ObjectModel
             set { m_Velocity = value; }
         }
 
-        // TODO: check that works well, change every toglle of velocity in the code to direction toggle
-        protected Vector2 m_Direction = Vector2.One; //TODO: this is default value of x right and y down- check how effects
-        public Vector2 Direction
-        {
-            get
-            {
-                Vector2 direction = m_Direction;
-                if (Velocity != Vector2.Zero)
-                {
-                    float xDivider = Velocity.X == 0 ? 1 : Velocity.X;
-                    float yDivider = Velocity.Y == 0 ? 1 : Velocity.Y;
-
-                    direction = Velocity / new Vector2(Math.Abs(xDivider), Math.Abs(yDivider)); // TODO: change 
-
-                }// TODO: bug -> if x || y are 0 -> result is NaN
-
-                return direction;
-            }
-            set
-            {// BUG !if i have movement on z 
-                toggleVelocityByDirection(value);
-              //  Velocity *= value; // TODO: think - direction could be 
-                m_Direction = value;
-            }
-        }
-        // TODO: bug ! not working as i want
-        private void toggleVelocityByDirection(Vector2 i_Direction)
-        {
-            if (i_Direction.X > 0 && m_Direction.X < 0
-                || i_Direction.X < 0 && m_Direction.X > 0)
-            {
-                m_Velocity.X *= -1f;
-            }
-            if (i_Direction.Y > 0 && m_Direction.Y > 0
-                || i_Direction.Y < 0 && m_Direction.Y > 0)
-            {
-                m_Velocity.Y *= -1f;
-            }
-        }
-
         public event EventHandler<EventArgs> Collision;
-        protected virtual void OnCollision(object sender, EventArgs args)
+        protected virtual void OnCollision(object i_Sender, EventArgs i_Args)
         {
             if (Collision != null)
             {
-                Collision.Invoke(sender, args);
+                Collision.Invoke(i_Sender, i_Args);
             }
         }
 
@@ -318,8 +278,8 @@ namespace Infrastructure.ObjectModel
         {
             m_SourceRectangle = new Rectangle(0, 0, (int)m_WidthBeforeScale, (int)m_HeightBeforeScale);
         }
-
-        private bool m_UseSharedBatch = true;
+        //TODO: changed sharedSpriteBatch to protected, maybe better by draw order
+        protected bool m_UseSharedBatch = true;
 
         protected SpriteBatch m_SpriteBatch;
         public SpriteBatch SpriteBatch
@@ -415,23 +375,15 @@ namespace Infrastructure.ObjectModel
             m_SpriteBatch.End();
         }
 
-        // TODO 04:
         protected override void DrawBoundingBox()
         {
             // not implemented yet
         }
-        // -- end of TODO 04
 
         #region Collision Handlers 
-        private bool m_IsCollided = false;
-        public bool IsCollided
-        {
-            get { return m_IsCollided; }
-            set { m_IsCollided = value; }
-        }
 
         public PixelBasedCollisionComponent PixelBasedCollisionComponent { get; set; }
-        // TODO 14: Implement a basic collision detection between two ICollidable2D objects:
+
         public virtual bool CheckCollision(ICollidable i_Source)
         {
             bool collided = false;
@@ -443,7 +395,6 @@ namespace Infrastructure.ObjectModel
 
             if (collided && this is ICllidableByPixels)
             //PixelsCollidable)
-
             {
                 collided = (this as ICllidableByPixels).PixelBasedCollisionComponent.PixelsIntersects(source, intersection);
                 // collided = pixelsIntersects(source, intersection);
@@ -486,11 +437,16 @@ namespace Infrastructure.ObjectModel
         {
             foreach (Point point in IntersectionPoints)
             {
-                int pixelIdx = point.X - this.Bounds.Left + ((point.Y - this.Bounds.Top) * this.Bounds.Width);
-                this.Pixels[pixelIdx].A = 0;
+                DoOnPixelsCollision(point);
             }
 
             this.Texture.SetData<Color>(this.Pixels);
+        }
+
+        protected virtual void DoOnPixelsCollision(Point i_Point)
+        {
+            int pixelIdx = i_Point.X - this.Bounds.Left + ((i_Point.Y - this.Bounds.Top) * this.Bounds.Width);
+            this.Pixels[pixelIdx].A = 0;
         }
 
         protected virtual void Explode(int i_ExplosionRange)
@@ -515,7 +471,8 @@ namespace Infrastructure.ObjectModel
 
                 if (pixelIdx < Pixels.Length && pixelIdx >= 0)
                 {
-                    transparentPixel(pixelIdx);
+                    DoOnPixelsCollision(new Point(i_Point.X, currentY));
+                    //transparentPixel(pixelIdx);
                     //this.Pixels[pixelIdx].A = 0;
                 }
 
@@ -697,7 +654,7 @@ namespace Infrastructure.ObjectModel
                 this.Visible = false;
             }
 
-            OnCollision(i_Collidable, EventArgs.Empty);
+            OnCollision(i_Collidable, EventArgs.Empty); // TODO: isnt the sender is this ? or both ?
         }
 
 
@@ -741,41 +698,47 @@ namespace Infrastructure.ObjectModel
             return ret;
         }
 
-        //protected virtual void OnBoundaryHit(object i_Sender, OffsetEventArgs i_EventArgs)
-        //{
-        //    if (HitBoundaryEvent != null)
-        //    {
-        //        HitBoundaryEvent.Invoke(i_Sender, i_EventArgs);
-        //    }
-        //}
-
-        //protected virtual void BoundaryCheckAndInvoke()
-        //{
-        //    if (HitBoundary())
-        //    {
-        //    //    float offset = Position.X - MathHelper.Clamp(Position.X, 0, GraphicsDevice.Viewport.Width - Width);
-        //        float offset = Position.X - MathHelper.Clamp(Position.X, GraphicsDevice.Viewport.Bounds.Left, GraphicsDevice.Viewport.Bounds.Right - Width);
-
-        //     //   Vector2 newPosition = new Vector2(Position.X - offset, Position.Y);
-
-        //    //    offset += Bounds.X - MathHelper.Clamp(Bounds.X, GraphicsDevice.Viewport.Bounds.Left, GraphicsDevice.Viewport.Bounds.Right - Width);
-        //        //    float offset2 = Position.X - Bounds.Right;
-        //        //    float offset3 = Position.X - Bounds.Left; ;
-        //        //Position = new Vector2()
-        //        // Position = new Vector2(MathHelper.Clamp(Position.X, GraphicsDevice.Viewport.Bounds.Left, GraphicsDevice.Viewport.Bounds.Right - Width), Position.Y);
-        //     //   this.Position = newPosition;
-
-        //        OnBoundaryHit(this, new OffsetEventArgs(offset));
-        //    }
-        //}
-        //    Position = new Vector2(MathHelper.Clamp(Position.X, 0, GraphicsDevice.Viewport.Width - Texture.Width), Position.Y);
-
 
         public Sprite ShallowClone()
         {
             return this.MemberwiseClone() as Sprite;
         }
+
+        protected override void Dispose(bool i_Disposing)
+        {
+            base.Dispose(i_Disposing);
+            this.Visible = false;
+        }
     }
+    //protected virtual void OnBoundaryHit(object i_Sender, OffsetEventArgs i_EventArgs)
+    //{
+    //    if (HitBoundaryEvent != null)
+    //    {
+    //        HitBoundaryEvent.Invoke(i_Sender, i_EventArgs);
+    //    }
+    //}
+
+    //protected virtual void BoundaryCheckAndInvoke()
+    //{
+    //    if (HitBoundary())
+    //    {
+    //    //    float offset = Position.X - MathHelper.Clamp(Position.X, 0, GraphicsDevice.Viewport.Width - Width);
+    //        float offset = Position.X - MathHelper.Clamp(Position.X, GraphicsDevice.Viewport.Bounds.Left, GraphicsDevice.Viewport.Bounds.Right - Width);
+
+    //     //   Vector2 newPosition = new Vector2(Position.X - offset, Position.Y);
+
+    //    //    offset += Bounds.X - MathHelper.Clamp(Bounds.X, GraphicsDevice.Viewport.Bounds.Left, GraphicsDevice.Viewport.Bounds.Right - Width);
+    //        //    float offset2 = Position.X - Bounds.Right;
+    //        //    float offset3 = Position.X - Bounds.Left; ;
+    //        //Position = new Vector2()
+    //        // Position = new Vector2(MathHelper.Clamp(Position.X, GraphicsDevice.Viewport.Bounds.Left, GraphicsDevice.Viewport.Bounds.Right - Width), Position.Y);
+    //     //   this.Position = newPosition;
+
+    //        OnBoundaryHit(this, new OffsetEventArgs(offset));
+    //    }
+    //}
+    //    Position = new Vector2(MathHelper.Clamp(Position.X, 0, GraphicsDevice.Viewport.Width - Texture.Width), Position.Y);
+
 
     //public class OffsetEventArgs : EventArgs
     //{

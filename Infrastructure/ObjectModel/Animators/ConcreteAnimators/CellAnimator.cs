@@ -6,15 +6,16 @@ namespace Infrastructure.ObjectModel.Animators.ConcreteAnimators
 {
     public class CellAnimator : SpriteAnimator
     {
+        private readonly int r_NumOfCells = 1;
+        private int m_CurrCellIdx = 0;
+        private bool m_Loop = true;
         private TimeSpan m_CellTime;
         private TimeSpan m_TimeLeftForCell;
-        private bool m_Loop = true;
-        private int m_CurrCellIdx = 0;
-        private readonly int r_NumOfCells = 1;
 
+        // TODO: overload with name
         // CTORs
         public CellAnimator(TimeSpan i_CellTime, int i_NumOfCells, TimeSpan i_AnimationLength)
-            : base("CelAnimation", i_AnimationLength)
+            : base("CellAnimation", i_AnimationLength)
         {
             this.m_CellTime = i_CellTime;
             this.m_TimeLeftForCell = i_CellTime;
@@ -70,6 +71,12 @@ namespace Infrastructure.ObjectModel.Animators.ConcreteAnimators
                 this.BoundSprite.SourceRectangle.Top,
                 this.BoundSprite.SourceRectangle.Width,
                 this.BoundSprite.SourceRectangle.Height);
+        }
+
+        public void UpdateCellTime(TimeSpan i_CellTime)
+        {
+            this.m_CellTime = i_CellTime;
+            this.m_TimeLeftForCell = i_CellTime;
         }
     }
 }

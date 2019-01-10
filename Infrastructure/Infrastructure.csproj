@@ -55,7 +55,6 @@
     <Compile Include="ObjectModel\Animators\ConcreteAnimators\JumpAnimator.cs" />
     <Compile Include="ObjectModel\Animators\ConcreteAnimators\ShrinkAnimator.cs" />
     <Compile Include="ObjectModel\Animators\ConcreteAnimators\SpinAnimator.cs" />
-    <Compile Include="ObjectModel\Animators\ConcreteAnimators\WaypointsAnimator.cs" />
     <Compile Include="ObjectModel\Animators\SpriteAnimator.cs" />
     <Compile Include="ObjectModel\GameService.cs" />
     <Compile Include="ObjectModel\LoadableDrawbleComponent.cs" />

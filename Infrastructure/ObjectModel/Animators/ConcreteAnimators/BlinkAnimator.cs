@@ -26,8 +26,6 @@ namespace Infrastructure.ObjectModel.Animators.ConcreteAnimators
         public BlinkAnimator(TimeSpan i_BlinkLength, TimeSpan i_AnimationLength)
             : this("Blink", i_BlinkLength, i_AnimationLength)
         {
-            //this.m_BlinkLength = i_BlinkLength;
-            //this.m_TimeLeftForNextBlink = i_BlinkLength;
         }
 
         protected override void DoFrame(GameTime i_GameTime)

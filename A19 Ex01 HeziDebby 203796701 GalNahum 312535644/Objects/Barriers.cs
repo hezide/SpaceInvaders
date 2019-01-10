@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
 {
-    public class Barriers : SpritesCollection<Barrier>//<Barrier>
+    public class Barriers : SpritesCollection<Barrier>
     {
         private const int k_NumberOfBarriers = 4;
 
@@ -42,53 +42,3 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
         }
     }
 }
-    //{
-    //    private const int k_NumberOfBarriers = 4;
-    //    public List<Barrier> BarriersList { get; private set; }
-
-    //    public Barriers(Game i_Game)
-    //    {
-    //        BarriersList = new List<Barrier>();
-    //        initBarriers(i_Game);
-    //    }
-
-    //    private void initBarriers(Game i_Game)
-    //    {
-    //        Barrier barrierToAdd;
-
-    //        for (int i = 0; i < k_NumberOfBarriers; i++)
-    //        {
-    //            barrierToAdd = new Barrier(i_Game);
-    //            barrierToAdd.BoundaryHitAffects = true;
-    //            barrierToAdd.HitBoundaryAction += onBoundaryHit;
-    //            BarriersList.Add(barrierToAdd);
-    //        }
-    //    }
-
-    //    private void onBoundaryHit()
-    //    {
-    //        // *** changing barriers direction ***
-    //        foreach (Barrier barrier in BarriersList)
-    //        {
-    //            barrier.Velocity *= -1;
-    //        }
-    //    }
-
-    //    public void SetPositions(float i_FullScreenWidth, float i_HeightOffset)
-    //    {
-    //        // TODO: calculation ?
-    //        float x = i_FullScreenWidth / (BarriersList.Count) + BarriersList[0].Width * 1.5f;
-    //        float y = 0;
-
-    //        foreach (Barrier barrier in BarriersList)
-    //        {
-    //            //   barrier.Velocity = k_Velocitiy;
-    //            y = i_HeightOffset - barrier.Height * 2;
-
-    //            barrier.Position = new Vector2(x, y);
-
-    //            x += barrier.Width * 2;
-    //        }
-    //    }
-    //}
-//}

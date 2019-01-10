@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
-{// TODO: should this be in infrastructure ?
+{
     // TODO: is this sprite collection ?
     public class Gun
     {
@@ -23,14 +23,9 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
 
         private void allocateBullets(Game i_Game, Type i_OwnerType)
         {
-           // Bullet bulletToAdd;
-
             for (int i = 0; i < Ammo; i++)
             {
                 BulletsList.Add(new Bullet(i_Game) { OwnerType = i_OwnerType });
-
-                //bulletToAdd = new Bullet(i_Game) { OwnerType = i_OwnerType };
-                //BulletsList.Add(bulletToAdd);
             }
         }
 

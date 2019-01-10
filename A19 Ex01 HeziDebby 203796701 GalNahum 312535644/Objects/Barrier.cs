@@ -1,11 +1,12 @@
 ﻿using Infrastructure.ObjectModel;
 using Infrastructure.ServiceInterfaces;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
 {
     public class Barrier : Sprite, ICllidableByPixels
-    {
+    { // TODO: after pixels dying need to update the bounds - currently stil hitting the boundary by origin bounds
         private const string k_AssetName = @"Sprites\Barrier_44x32";
         private const float k_Velocitiy = 45;
 
@@ -17,8 +18,10 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
         public override void Initialize()
         {
             base.Initialize();
+            // TODO: *** for unshared sprite batch
+            //m_SpriteBatch = new SpriteBatch(GraphicsDevice);
+
             Velocity = new Vector2(k_Velocitiy, 0);
-            //BoundaryHitAffects = true;
             Texture = GetTextureClone();
         }
 

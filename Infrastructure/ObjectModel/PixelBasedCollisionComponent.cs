@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace Infrastructure.ObjectModel
 {
     public class PixelBasedCollisionComponent
-    {
+    {// TODO: check code duplications leftover from sprite
         private ICllidableByPixels m_Collidable;
 
         public PixelBasedCollisionComponent(ICllidableByPixels i_Collidable)
@@ -34,8 +34,8 @@ namespace Infrastructure.ObjectModel
             {
                 for (int x = i_Intersection.Left; x < i_Intersection.Right; x++)
                 {
-                    if (m_Collidable.Pixels[getPixel(x, y, m_Collidable.Bounds)].A != 0 &&
-                         sourcePixels[getPixel(x, y, i_Source.Bounds)].A != 0)
+                    if (!isTransparent(m_Collidable.Pixels, x, y, m_Collidable.Bounds) && 
+                        !isTransparent(sourcePixels, x, y, i_Source.Bounds))
                     {
                         intersections.Add(new Point(x, y));
                     }
@@ -82,24 +82,24 @@ namespace Infrastructure.ObjectModel
             return sourcePixels;
         }
 
-        public void TransperantPixelsInRange(Point i_Point, int i_ExplosionRange)
-        {
-            int direction = i_ExplosionRange > 0 ? 1 : -1;
-            int destinateY = i_Point.Y + i_ExplosionRange;
-            int currentY = i_Point.Y;
+        //public void TransperantPixelsInRange(Point i_Point, int i_ExplosionRange)
+        //{
+        //    int direction = i_ExplosionRange > 0 ? 1 : -1;
+        //    int destinateY = i_Point.Y + i_ExplosionRange;
+        //    int currentY = i_Point.Y;
 
-            while (currentY != destinateY)
-            {
-                int pixelIdx = getPixel(i_Point.X, currentY, m_Collidable.Bounds);
+        //    while (currentY != destinateY)
+        //    {
+        //        int pixelIdx = getPixel(i_Point.X, currentY, m_Collidable.Bounds);
 
-                if (pixelIdx < m_Collidable.Pixels.Length && pixelIdx >= 0)
-                {
-                    transparentPixel(pixelIdx);
-                }
+        //        if (pixelIdx < m_Collidable.Pixels.Length && pixelIdx >= 0)
+        //        {
+        //            transparentPixel(pixelIdx);
+        //        }
 
-                currentY += destinateY < currentY ? -1 : 1;
-            }
-        }
+        //        currentY += destinateY < currentY ? -1 : 1;
+        //    }
+        //}
 
     }
 }

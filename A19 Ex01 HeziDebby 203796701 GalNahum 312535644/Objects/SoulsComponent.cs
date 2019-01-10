@@ -22,6 +22,9 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
         public override void Initialize()
         {
             base.Initialize();
+            // TODO: *** for unshared sprite batch
+            //m_SpriteBatch = new SpriteBatch(GraphicsDevice);
+            //m_UseSharedBatch = false;
 
             Scales = new Vector2(0.5f);
 
@@ -38,7 +41,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
 
         private void setInitialPosition()
         {
-            float x = GraphicsDevice.Viewport.Width - (Width * 1.5f * NumberOfSouls);
+            float x = GraphicsDevice.Viewport.Width - Width * 1.5f;
             float y = Position.Y + Height;
 
             Position = new Vector2(x, y);
@@ -68,14 +71,10 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
             {
                 DrawWithParameters();
 
-                Position = new Vector2(Position.X + 1.5f * Width, Position.Y);
+                Position = new Vector2(Position.X - 1.5f * Width, Position.Y);
             }
 
             Position = initialPosition;
         }
     }
 }
-/*
-         //       DestinationRectangle = new Rectangle(DestinationRectangle.X + Width + offset, (int)PosOfOriginInScreen.Y, Width, Height);
- 
-     */

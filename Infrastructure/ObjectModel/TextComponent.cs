@@ -55,8 +55,8 @@ namespace Infrastructure.ObjectModel
         protected override void LoadContent()
         {
             base.LoadContent();
-            m_SpriteBatch = new SpriteBatch(Game.GraphicsDevice);
 
+            m_SpriteBatch = new SpriteBatch(Game.GraphicsDevice);
             m_SpriteFont = Game.Content.Load<SpriteFont>(AssetName);
         }
 

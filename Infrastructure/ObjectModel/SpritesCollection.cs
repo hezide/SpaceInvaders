@@ -10,7 +10,7 @@ namespace Infrastructure.ObjectModel
         protected readonly Vector2 r_DirectionChangeMultiplier;
 
         public List<T> Sprites { get; protected set; }
-        protected Vector2 m_GroupDirection; // right
+        protected Vector2 m_GroupDirection;
 
         public SpritesCollection(Game i_Game)
         {
@@ -21,7 +21,6 @@ namespace Infrastructure.ObjectModel
 
         // TODO: should i have a size property only for basic implementation here ?
         protected abstract void AllocateSprites(Game i_Game);
-
 
         public virtual void Initialize(float i_InitialX = 0, float i_InitialY = 0)
         {
@@ -43,9 +42,9 @@ namespace Infrastructure.ObjectModel
 
         protected virtual void DoOnBoundaryHit(GameTime i_GameTime)
         {
-            foreach (Sprite sprite in Sprites) // TODO: change to T 
+            foreach (T item in Sprites) // TODO: change to T 
             {
-                sprite.Direction *= r_DirectionChangeMultiplier;
+                item.Velocity *= r_DirectionChangeMultiplier;
             }
         }
 

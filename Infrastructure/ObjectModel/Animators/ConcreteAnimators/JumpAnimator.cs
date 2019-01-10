@@ -37,7 +37,7 @@ namespace Infrastructure.ObjectModel.Animators.ConcreteAnimators
         {
             m_TimeLeftForNextJump -= i_GameTime.ElapsedGameTime;
 
-            Vector2 jumpDestination = m_JumpDestination * BoundSprite.Direction;
+            Vector2 jumpDestination = m_JumpDestination; // * BoundSprite.Direction; // TODO get direction as input
             Vector2 maxDistance = BoundSprite.Position + jumpDestination;
 
             if (maxDistance.X >= m_JumpBounds.Right - BoundSprite.Width)
