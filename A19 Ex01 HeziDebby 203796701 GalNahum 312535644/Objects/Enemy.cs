@@ -109,7 +109,6 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
                 (int)(m_HeightBeforeScale));
         }
 
-
         protected override void InitOrigins()
         {
             this.RotationOrigin = SourceRectangleCenter;

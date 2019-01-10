@@ -13,13 +13,6 @@
 
 #---------------------------------- Content ---------------------------------#
 
-#begin File.spritefont
-/importer:FontDescriptionImporter
-/processor:FontDescriptionProcessor
-/processorParam:PremultiplyAlpha=True
-/processorParam:TextureFormat=Compressed
-/build:File.spritefont;Score.spritefont
-
 #begin Fonts/Comic Sans MS.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor

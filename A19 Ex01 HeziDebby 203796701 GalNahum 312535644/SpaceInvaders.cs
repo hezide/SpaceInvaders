@@ -24,7 +24,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
         // TODO: habndle backround design
         private Texture2D m_BackgroundTexture;
         //   private bool                    m_IsGameOver;
-
+        // TODO: fix score - positions + need to be game service + scores are hard coded 
         public SpaceInvaders()
         {
             m_Graphics = new GraphicsDeviceManager(this);
@@ -47,7 +47,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
             };
 
             Content.RootDirectory = "Content";
-        }
+        } // TODO: check sprite batch
 
         protected override void Initialize()
         {
@@ -55,8 +55,8 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
             Window.Title = "Space Invaders";
 
             IsMouseVisible = true;
-
-            this.Services.AddService(typeof(SpriteBatch), m_SpriteBatch);
+            // TODO: insert to methods ?
+        //    this.Services.AddService(typeof(SpriteBatch), m_SpriteBatch);// TODO: whats going on with the sprite batch ???
             // *** initializing activation inputs ***
             m_Player1.ActivateByMouse = true;
             m_Player1.ActivationKeysList = new List<Keys> { Keys.H, Keys.K, Keys.U };
@@ -79,7 +79,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
         }
         // TODO: change the name
         private void initScoreManagers()
-        {
+        {// TODO: discusting. change 
             m_Player1.AddCollisionListener(m_ScoreManagers[0].CollisionHandler);
             m_Player2.AddCollisionListener(m_ScoreManagers[1].CollisionHandler);
 
@@ -102,7 +102,8 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
             base.Update(gameTime);
             m_MotherShipRandomNotifier.Update(gameTime);
 
-            m_Enemies.Update(gameTime); // TODO: dont want to see this in the code .......
+            m_Enemies.Update(gameTime); // TODO: i dont want to see this in the code .......
+            m_Barriers.Update(gameTime);
 
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
             {
@@ -139,7 +140,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
 
             m_SpriteBatch.Begin();
 
-            m_SpriteBatch.Draw(m_BackgroundTexture, new Vector2(0, 0), Color.White);
+            m_SpriteBatch.Draw(m_BackgroundTexture, new Vector2(0, 0), Color.White); // TODO: background class
 
             m_SpriteBatch.End();
 

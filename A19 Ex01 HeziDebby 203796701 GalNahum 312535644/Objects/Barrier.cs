@@ -18,7 +18,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
         {
             base.Initialize();
             Velocity = new Vector2(k_Velocitiy, 0);
-            BoundaryHitAffects = true;
+            //BoundaryHitAffects = true;
             Texture = GetTextureClone();
         }
 

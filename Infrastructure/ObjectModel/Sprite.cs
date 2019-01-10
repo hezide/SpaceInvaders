@@ -232,19 +232,42 @@ namespace Infrastructure.ObjectModel
         }
 
         // TODO: check that works well, change every toglle of velocity in the code to direction toggle
-        protected Vector2 m_Direction = Vector2.Zero;
+        protected Vector2 m_Direction = Vector2.One; //TODO: this is default value of x right and y down- check how effects
         public Vector2 Direction
         {
             get
             {
-                return Velocity == Vector2.Zero ?
-                        m_Direction
-                        : Velocity / new Vector2(Math.Abs(Velocity.X), Math.Abs(Velocity.Y));
+                Vector2 direction = m_Direction;
+                if (Velocity != Vector2.Zero)
+                {
+                    float xDivider = Velocity.X == 0 ? 1 : Velocity.X;
+                    float yDivider = Velocity.Y == 0 ? 1 : Velocity.Y;
+
+                    direction = Velocity / new Vector2(Math.Abs(xDivider), Math.Abs(yDivider)); // TODO: change 
+
+                }// TODO: bug -> if x || y are 0 -> result is NaN
+
+                return direction;
             }
             set
-            {
-                Velocity *= value;
+            {// BUG !if i have movement on z 
+                toggleVelocityByDirection(value);
+              //  Velocity *= value; // TODO: think - direction could be 
                 m_Direction = value;
+            }
+        }
+        // TODO: bug ! not working as i want
+        private void toggleVelocityByDirection(Vector2 i_Direction)
+        {
+            if (i_Direction.X > 0 && m_Direction.X < 0
+                || i_Direction.X < 0 && m_Direction.X > 0)
+            {
+                m_Velocity.X *= -1f;
+            }
+            if (i_Direction.Y > 0 && m_Direction.Y > 0
+                || i_Direction.Y < 0 && m_Direction.Y > 0)
+            {
+                m_Velocity.Y *= -1f;
             }
         }
 
@@ -344,11 +367,6 @@ namespace Infrastructure.ObjectModel
         public override void Update(GameTime gameTime)
         {
             float totalSeconds = (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-            if (BoundaryHitAffects)
-            {
-                BoundaryCheckAndInvoke();
-            }
 
             this.Position += this.Velocity * totalSeconds;
             this.Rotation += this.AngularVelocity * totalSeconds;
@@ -695,14 +713,14 @@ namespace Infrastructure.ObjectModel
         }
         // TODO: should be on Sprite ? maybe should encapsulate in a different class ...
         // *** sprites hit boundaries behavior ***
-        private bool m_BoundaryHitAffects = false;
-        public bool BoundaryHitAffects
-        {
-            get { return m_BoundaryHitAffects; }
-            set { m_BoundaryHitAffects = value; }
-        }
+        //private bool m_BoundaryHitAffects = false;
+        //public bool BoundaryHitAffects
+        //{
+        //    get { return m_BoundaryHitAffects; }
+        //    set { m_BoundaryHitAffects = value; }
+        //}
 
-        public event EventHandler<OffsetEventArgs> HitBoundaryEvent;
+    //    public event EventHandler<OffsetEventArgs> HitBoundaryEvent;
 
         public virtual bool HitBoundary()
         {
@@ -723,33 +741,33 @@ namespace Infrastructure.ObjectModel
             return ret;
         }
 
-        protected virtual void OnBoundaryHit(object i_Sender, OffsetEventArgs i_EventArgs)
-        {
-            if (HitBoundaryEvent != null)
-            {
-                HitBoundaryEvent.Invoke(i_Sender, i_EventArgs);
-            }
-        }
+        //protected virtual void OnBoundaryHit(object i_Sender, OffsetEventArgs i_EventArgs)
+        //{
+        //    if (HitBoundaryEvent != null)
+        //    {
+        //        HitBoundaryEvent.Invoke(i_Sender, i_EventArgs);
+        //    }
+        //}
 
-        protected virtual void BoundaryCheckAndInvoke()
-        {
-            if (HitBoundary())
-            {
-            //    float offset = Position.X - MathHelper.Clamp(Position.X, 0, GraphicsDevice.Viewport.Width - Width);
-                float offset = Position.X - MathHelper.Clamp(Position.X, GraphicsDevice.Viewport.Bounds.Left, GraphicsDevice.Viewport.Bounds.Right - Width);
+        //protected virtual void BoundaryCheckAndInvoke()
+        //{
+        //    if (HitBoundary())
+        //    {
+        //    //    float offset = Position.X - MathHelper.Clamp(Position.X, 0, GraphicsDevice.Viewport.Width - Width);
+        //        float offset = Position.X - MathHelper.Clamp(Position.X, GraphicsDevice.Viewport.Bounds.Left, GraphicsDevice.Viewport.Bounds.Right - Width);
 
-             //   Vector2 newPosition = new Vector2(Position.X - offset, Position.Y);
+        //     //   Vector2 newPosition = new Vector2(Position.X - offset, Position.Y);
 
-            //    offset += Bounds.X - MathHelper.Clamp(Bounds.X, GraphicsDevice.Viewport.Bounds.Left, GraphicsDevice.Viewport.Bounds.Right - Width);
-                //    float offset2 = Position.X - Bounds.Right;
-                //    float offset3 = Position.X - Bounds.Left; ;
-                //Position = new Vector2()
-                // Position = new Vector2(MathHelper.Clamp(Position.X, GraphicsDevice.Viewport.Bounds.Left, GraphicsDevice.Viewport.Bounds.Right - Width), Position.Y);
-             //   this.Position = newPosition;
+        //    //    offset += Bounds.X - MathHelper.Clamp(Bounds.X, GraphicsDevice.Viewport.Bounds.Left, GraphicsDevice.Viewport.Bounds.Right - Width);
+        //        //    float offset2 = Position.X - Bounds.Right;
+        //        //    float offset3 = Position.X - Bounds.Left; ;
+        //        //Position = new Vector2()
+        //        // Position = new Vector2(MathHelper.Clamp(Position.X, GraphicsDevice.Viewport.Bounds.Left, GraphicsDevice.Viewport.Bounds.Right - Width), Position.Y);
+        //     //   this.Position = newPosition;
 
-                OnBoundaryHit(this, new OffsetEventArgs(offset));
-            }
-        }
+        //        OnBoundaryHit(this, new OffsetEventArgs(offset));
+        //    }
+        //}
         //    Position = new Vector2(MathHelper.Clamp(Position.X, 0, GraphicsDevice.Viewport.Width - Texture.Width), Position.Y);
 
 
@@ -759,18 +777,18 @@ namespace Infrastructure.ObjectModel
         }
     }
 
-    public class OffsetEventArgs : EventArgs
-    {
-        public float Offset { get; set; }
-        //public static readonly float Empty = 0;
+    //public class OffsetEventArgs : EventArgs
+    //{
+    //    public float Offset { get; set; }
+    //    //public static readonly float Empty = 0;
 
-        public OffsetEventArgs() : base()
-        {
-        }
+    //    public OffsetEventArgs() : base()
+    //    {
+    //    }
 
-        public OffsetEventArgs(float i_Offset) : base()
-        {
-            Offset = i_Offset;
-        }
-    }
+    //    public OffsetEventArgs(float i_Offset) : base()
+    //    {
+    //        Offset = i_Offset;
+    //    }
+    //}
 }

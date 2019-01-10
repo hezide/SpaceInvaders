@@ -217,6 +217,11 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
             this.Collision += new EventHandler<EventArgs>(i_CollisionHandler);
             this.Gun.AddCollisionListener(i_CollisionHandler);
         }
+
+        public override void Draw(GameTime gameTime)
+        {
+            base.DrawNonPremultiplied();
+        }
     }
 }
 

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
 {
-    public class Barriers : SpritesCollection
+    public class Barriers : SpritesCollection<Barrier>//<Barrier>
     {
         private const int k_NumberOfBarriers = 4;
 
@@ -17,43 +17,21 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
         {
         }
 
-        protected override void AllocateSpritesCollection()
-        {
-            base.Sprites = new List<Sprite>();
-        }
-
         protected override void AllocateSprites(Game i_Game)
         {
-            //Barrier barrierToAdd;
-
             for (int i = 0; i < k_NumberOfBarriers; i++)
             {
-            //    barrierToAdd = new Barrier(i_Game);
                 Sprites.Add(new Barrier(i_Game));
-
-            //    Texture2D texture = new Texture2D(barrierToAdd.GraphicsDevice, (int)barrierToAdd.Width, (int)barrierToAdd.Height);
-            //    texture.SetData<Color>(barrierToAdd.Pixels);
             }
         }
 
-        //private Barrier createBarrierWithClonedTexture(Game i_Game)
-        //{// TODO: i dont use the original texture - all textures are cloned .. is this ok ?
-        //    Barrier barrierToAdd = new Barrier(i_Game);
-        //    Texture2D texture = new Texture2D(i_Game.GraphicsDevice, (int)barrierToAdd.Texture.Width, (int)barrierToAdd.Texture.Height);
-
-        //    texture.SetData<Color>(barrierToAdd.Pixels);
-        //    barrierToAdd.Texture = texture;
-
-        //    return barrierToAdd;
-        //}
-
-        protected override void SetPositions(float i_InitialX, float i_InitialY)
+        protected override void InitPositions(float i_InitialX, float i_InitialY)
         {
             // TODO: calculation ?
             float x = i_InitialX / (Sprites.Count) + Sprites[0].Width * 1.5f;
             float y = 0;
 
-            foreach (Sprite sprite in Sprites)
+            foreach (Barrier sprite in Sprites)
             {
                 y = i_InitialY - sprite.Height * 2;
 
@@ -61,14 +39,6 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
 
                 x += sprite.Width * 2;
             }
-        }
-
-        protected override void DoOnBoundaryHit(Sprite i_Sprite, OffsetEventArgs i_EventArgs)
-        {
-           // foreach (Sprite barrier in Sprites)
-            //{
-                i_Sprite.Velocity *= k_DirectionChangeMultiplier;
-           // }
         }
     }
 }

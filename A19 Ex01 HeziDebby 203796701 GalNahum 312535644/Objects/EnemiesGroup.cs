@@ -2,25 +2,26 @@
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
-{
-    public class EnemiesGroup //: SpritesCollection
+{// TODO: need to apply sprites collection
+    public class EnemiesGroup : SpritesCollection<Enemy>
     {
         private const string k_AssetName = @"Sprites\EnemiesSpriteShit96x64";
         private const int k_Rows = 5;
         private const int k_Cols = 9;
         private const int k_TextureWidthDivider = 2;
         private const int k_TextureHeightDivider = 3;
-        private Vector2 m_GroupDirection = new Vector2(1, 0);
+    //    private Vector2 m_GroupDirection = new Vector2(1, 0);
 
         public List<List<Enemy>> Enemies { get; private set; }
 
-        public EnemiesGroup(Game i_Game) // : base(i_Game)
+        public EnemiesGroup(Game i_Game) : base(i_Game)
         {
-            Enemies = new List<List<Enemy>>();
-            AllocateSprites(i_Game);
-            //base.Sprites = Enemies.Cast<Sprite>().ToList();
+           // AllocateSprites(i_Game); // TODO: need to cast list<list<enemy>> to list<enemy> in an elegant way
+            base.Sprites = Enemies.SelectMany(enemy => enemy).ToList();
+            // base.Sprites =// Enemies.SelectMany(list => list).Distinct().ToList();
         }
 
         //protected override void AllocateSpritesCollection()
@@ -30,8 +31,10 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
         //}
 
         //       protected override void AllocateSprites(Game i_Game)
-        private void AllocateSprites(Game i_Game)
+        protected override void AllocateSprites(Game i_Game)
         {// TODO: encapsulate in methods
+            Enemies = new List<List<Enemy>>();
+
             int seed = 1;
             List<Enemy> currentCol;
             Vector2 enemyCellIdx; // = Vector2.Zero;
@@ -63,9 +66,10 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
             }
         }
 
-        public void Initialize(float i_InitialX = 0, float i_InitialY = 0)
+        public override void Initialize(float i_InitialX = 0, float i_InitialY = 0)
         {
-            SetPositions(i_InitialX, i_InitialY);
+            base.Initialize(i_InitialX, i_InitialY);
+            //InitPositions(i_InitialX, i_InitialY);
             initJumpValues();
         }
 
@@ -75,7 +79,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
         }
 
         // protected override void SetPositions(float i_InitialX, float i_InitialY)
-        private void SetPositions(float i_InitialX, float i_InitialY)
+        protected override void InitPositions(float i_InitialX, float i_InitialY)
         {
             float x = i_InitialX;
             float y = i_InitialY;
@@ -93,12 +97,13 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
         }
         // TODO: virtual ? override ? 
         // TODO: call this method
-        public void Update(GameTime i_GameTime)
+        public override void Update(GameTime i_GameTime)
         {
             if (groupHitBoundary())
             {
-                m_GroupDirection *= -1;
-
+                m_GroupDirection *= r_DirectionChangeMultiplier;
+                // TODO: think of inserting an injection point here - 
+                // have kind of code duplication with base class
                 foreach (List<Enemy> currentCol in Enemies)
                 {
                     foreach (Enemy enemy in currentCol)
@@ -110,10 +115,14 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
                     }
                 }
             }
-
-            jumpGroup(i_GameTime);
+            else
+            {
+                jumpGroup(i_GameTime);
+            }
         }
 
+        // **************************************************//
+        // TODO: encapsulate
         private TimeSpan m_TimeToJump;
         private TimeSpan m_TimeLeftForNextJump;
         private Vector2 m_JumpDestination;
@@ -176,7 +185,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
             return m_GroupDirection.X > 0 ? Enemies.Count - 1 : 0;
         }
 
-        //protected override void DoOnBoundaryHit(Sprite i_Sprite, OffsetEventArgs i_EventArgs)
+        //protected override void DoOnBoundaryHit(GameTime i_GameTime)
         //{
 
         //    stepDown(i_Sprite);
