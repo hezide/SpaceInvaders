@@ -53,10 +53,9 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
             //m_SpriteBatch = new SpriteBatch(GraphicsDevice);
             //this.Services.AddService(typeof(SpriteBatch), m_SpriteBatch);
             
-
             base.Initialize();
-            m_SpriteBatch = new SpriteBatch(GraphicsDevice);
-            this.Services.AddService(typeof(SpriteBatch), m_SpriteBatch);
+            //m_SpriteBatch = new SpriteBatch(GraphicsDevice);
+            //this.Services.AddService(typeof(SpriteBatch), m_SpriteBatch);
             Window.Title = "Space Invaders";
 
             IsMouseVisible = true;
@@ -118,11 +117,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            m_SpriteBatch.Begin();
-
             base.Draw(gameTime);
-
-            m_SpriteBatch.End();
         }
 
         private void notifier_GoMotherSpaceship()
@@ -145,7 +140,18 @@ The winner is: {2}", m_ScoreManagers[0].TextToString(), m_ScoreManagers[1].TextT
 
         private string getWinner()
         {
-            return m_ScoreManagers[0].Score > m_ScoreManagers[1].Score ? m_ScoreManagers[0].Name : m_ScoreManagers[1].Name;
+            string theWinner = "Tie!";
+
+            if (m_ScoreManagers[0].Score > m_ScoreManagers[1].Score)
+            {
+                theWinner = m_ScoreManagers[0].Name;
+            }
+            else if (m_ScoreManagers[0].Score < m_ScoreManagers[1].Score)
+            {
+                theWinner = m_ScoreManagers[1].Name;
+            }
+
+            return theWinner;
         }
     }
 }

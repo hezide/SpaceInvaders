@@ -161,7 +161,6 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
             return Enemies[GetEdgeSpriteIdxByDirection()][0];
         }
 
-
         // TODO: consider as an extension method
         private void stepDown(Sprite i_Sprite)
         {
@@ -172,7 +171,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
         {
             double currentTime = m_TimeToJump.TotalSeconds;
 
-            currentTime -= currentTime * i_PrecentageToIncrease; // TODO: const
+            currentTime -= currentTime * i_PrecentageToIncrease;
             m_TimeToJump = TimeSpan.FromSeconds(currentTime);
             m_TimeLeftForNextJump = m_TimeToJump;
 
@@ -180,6 +179,21 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
             {
                 enemy.IncreaseCellAnimation(m_TimeToJump);
             }
+        }
+
+        public bool ReachedHeight(int i_Height)
+        {
+            bool heightReached = false;
+
+            foreach (List<Enemy> enemiesCol in Enemies)
+            {
+                if (enemiesCol[enemiesCol.Count - 1].Bounds.Bottom >= i_Height)
+                {
+                    heightReached = true;
+                }
+            }
+
+            return heightReached;
         }
 
         // **************************************************//
@@ -203,22 +217,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
             m_DirectionMultiplier = m_GroupDirection;
         }
 
-
-        public bool ReachedHeight(int i_Height)
-        {
-            bool heightReached = false;
-
-            foreach (List<Enemy> enemiesCol in Enemies)
-            {
-                if (enemiesCol[enemiesCol.Count - 1].Bounds.Bottom >= i_Height)
-                {
-                    heightReached = true;
-                }
-            }
-
-            return heightReached;
-        }
-
+        
         private void jumpGroup(GameTime i_GameTime)
         {
             m_TimeLeftForNextJump -= i_GameTime.ElapsedGameTime;
