@@ -16,7 +16,6 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
         private const int k_MaxCollidedEnemies = 4;
         private const double k_BoundaryHitIncreaser = 0.08;
         private const double k_DeadEnemiesIncreaser = 0.04;
-
         public List<List<Enemy>> Enemies { get; private set; }
 
         public EnemiesGroup(Game i_Game) : base(i_Game)
@@ -128,20 +127,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
 
         public override void Update(GameTime i_GameTime)
         {
-            if (GroupHitBoundary())
-            {
-                foreach (Enemy enemy in this.Sprites)
-                {
-                    stepDown(enemy);
-                }
-
-                m_GroupDirection *= r_DirectionChangeMultiplier;
-                increaseEnemyVelocity(k_BoundaryHitIncreaser);
-            }
-            else
-            {
-                jumpGroup(i_GameTime);
-            }
+            jumpGroup(i_GameTime);
         }
 
         protected override bool GroupHitBoundary()
@@ -161,24 +147,12 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
             return Enemies[GetEdgeSpriteIdxByDirection()][0];
         }
 
-        // TODO: consider as an extension method
-        private void stepDown(Sprite i_Sprite)
-        {
-            i_Sprite.Position = new Vector2(i_Sprite.Position.X, i_Sprite.Position.Y + ((i_Sprite.Height - 1) / 2));
-        }
-
         private void increaseEnemyVelocity(double i_PrecentageToIncrease)
         {
             double currentTime = m_TimeToJump.TotalSeconds;
-
             currentTime -= currentTime * i_PrecentageToIncrease;
             m_TimeToJump = TimeSpan.FromSeconds(currentTime);
             m_TimeLeftForNextJump = m_TimeToJump;
-
-            foreach (Enemy enemy in base.Sprites)
-            {
-                enemy.IncreaseCellAnimation(m_TimeToJump);
-            }
         }
 
         public bool ReachedHeight(int i_Height)
@@ -202,7 +176,6 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
         private TimeSpan m_TimeLeftForNextJump;
         private Vector2 m_JumpDestination;
         private Rectangle m_JumpBounds;
-        private Vector2 m_DirectionMultiplier;
 
         private void initJumpValues()
         {
@@ -213,13 +186,12 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
             Enemy boundEnemy = enemy; // TODO: the names arent so good
             m_JumpDestination = new Vector2(boundEnemy.Width / 2, boundEnemy.Height / 2);
             m_JumpBounds = boundEnemy.GraphicsDevice.Viewport.Bounds;
-
-            m_DirectionMultiplier = m_GroupDirection;
         }
 
         
         private void jumpGroup(GameTime i_GameTime)
         {
+            bool stepDown = false;
             m_TimeLeftForNextJump -= i_GameTime.ElapsedGameTime;
 
             Vector2 jumpDestination = m_JumpDestination * m_GroupDirection;
@@ -234,16 +206,31 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
                 jumpDestination.X = m_JumpBounds.Left - getEdgeEnemyByDirection().Position.X;
             }
 
+
             if (m_TimeLeftForNextJump.TotalSeconds < 0)
             {
+                if (GroupHitBoundary())
+                {
+                    stepDown = true;
+                    m_GroupDirection *= r_DirectionChangeMultiplier;
+                    increaseEnemyVelocity(k_BoundaryHitIncreaser);
+                }
                 foreach (List<Enemy> currentCol in Enemies)
                 {
                     foreach (Enemy enemy in currentCol)
                     {
-                        enemy.Position += jumpDestination;
-                        m_TimeLeftForNextJump = m_TimeToJump;
+                        if (stepDown)
+                        {
+                            enemy.Position = new Vector2(enemy.Position.X, enemy.Position.Y + ((enemy.Height - 1) / 2));
+                            enemy.IncreaseCellAnimation(m_TimeToJump);
+                        }
+                        else
+                        {
+                            enemy.Position += jumpDestination;
+                        }
                     }
                 }
+                m_TimeLeftForNextJump = m_TimeToJump;
             }
         }
     }
