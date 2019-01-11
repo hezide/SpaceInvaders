@@ -24,21 +24,6 @@ namespace Infrastructure.ObjectModel
             set { m_Texture = value; }
         }
 
-        // TODO 01: The Bounds property for collision detection
-        //public Rectangle Bounds
-        //{
-        //    get
-        //    {
-        //        return new Rectangle(
-        //            (int)m_Position.X,
-        //            (int)m_Position.Y,
-        //            m_Width,
-        //            m_Height);
-        //    }
-        //}
-        // -- end of TODO 01
-
-        // TODO 13: Notify about  change:
         protected float m_Width;
         public float Width
         {
@@ -94,7 +79,7 @@ namespace Infrastructure.ObjectModel
                 }
             }
         }
-        // -- end of TODO 13
+
         public Vector2 m_PositionOrigin;
         public Vector2 PositionOrigin
         {
@@ -279,7 +264,7 @@ namespace Infrastructure.ObjectModel
             m_SourceRectangle = new Rectangle(0, 0, (int)m_WidthBeforeScale, (int)m_HeightBeforeScale);
         }
         //TODO: changed sharedSpriteBatch to protected, maybe better by draw order
-        protected bool m_UseSharedBatch = true;
+        private bool m_UseSharedBatch = true;
 
         protected SpriteBatch m_SpriteBatch;
         public SpriteBatch SpriteBatch
@@ -381,7 +366,6 @@ namespace Infrastructure.ObjectModel
         }
 
         #region Collision Handlers 
-
         public PixelBasedCollisionComponent PixelBasedCollisionComponent { get; set; }
 
         public virtual bool CheckCollision(ICollidable i_Source)
@@ -392,183 +376,24 @@ namespace Infrastructure.ObjectModel
 
             Rectangle intersection = boundsIntersection(source);
             collided = intersection != Rectangle.Empty;
-
+            
             if (collided && this is ICllidableByPixels)
-            //PixelsCollidable)
             {
-                collided = (this as ICllidableByPixels).PixelBasedCollisionComponent.PixelsIntersects(source, intersection);
-                // collided = pixelsIntersects(source, intersection);
+                collided = (this as ICllidableByPixels).PixelBasedCollisionComponent.CheckCollision(source, intersection);
             }
             else if (collided && (source is ICllidableByPixels))
-            //source.PixelsCollidable)
             {
                 collided = false;
             }
 
             return collided;
         }
-
-        //  private List<Point> m_IntersectionPoints;
+        // TODO: maybe on pixel manager
         public List<Point> IntersectionPoints { get; set; }
-
-        //private bool pixelsIntersects(ICollidable2D i_Source, Rectangle i_Intersection)
-        //{
-        //    Color[] sourcePixels = getPixelsData(i_Source); // TODO: this method is a helper of sprite. got nothing to do with sprite
-        //    List<Point> intersections = new List<Point>();
-
-        //    for (int y = i_Intersection.Top; y < i_Intersection.Bottom; y++)
-        //    {
-        //        for (int x = i_Intersection.Left; x < i_Intersection.Right; x++)
-        //        {
-        //            if (this.Pixels[getPixel(x, y, this.Bounds)].A != 0 &&
-        //                 sourcePixels[getPixel(x, y, i_Source.Bounds)].A != 0)
-        //            {
-        //                intersections.Add(new Point(x, y));
-        //            }
-        //        }
-        //    }
-
-        //    m_IntersectionPoints = intersections;
-
-        //    return m_IntersectionPoints.Count > 0;
-        //}
-    
-        public virtual void OnPixelsCollision(ICollidable i_Collidable)
-        {
-            foreach (Point point in IntersectionPoints)
-            {
-                DoOnPixelsCollision(point);
-            }
-
-            this.Texture.SetData<Color>(this.Pixels);
-        }
-
-        protected virtual void DoOnPixelsCollision(Point i_Point)
-        {
-            int pixelIdx = i_Point.X - this.Bounds.Left + ((i_Point.Y - this.Bounds.Top) * this.Bounds.Width);
-            this.Pixels[pixelIdx].A = 0;
-        }
-
-        protected virtual void Explode(int i_ExplosionRange)
-        {
-            foreach (Point point in IntersectionPoints)
-            {
-                   transperantPixelsInRange(point, i_ExplosionRange);
-            }
-
-            this.Texture.SetData<Color>(this.Pixels);
-        }
-
-        private void transperantPixelsInRange(Point i_Point, int i_ExplosionRange)
-        {
-            int direction = i_ExplosionRange > 0 ? 1 : -1;
-            int destinateY = i_Point.Y + i_ExplosionRange;
-            int currentY = i_Point.Y;
-
-            while (currentY != destinateY)
-            {
-                int pixelIdx = getPixel(i_Point.X, currentY, this.Bounds);
-
-                if (pixelIdx < Pixels.Length && pixelIdx >= 0)
-                {
-                    DoOnPixelsCollision(new Point(i_Point.X, currentY));
-                    //transparentPixel(pixelIdx);
-                    //this.Pixels[pixelIdx].A = 0;
-                }
-
-                currentY += destinateY < currentY ? -1 : 1;
-            }
-        }
-
-        /*
-        public void Explode(int i_XToExplode, int i_YToExplode, Sprite i_SpriteToExplode)
-{
-   int direction = this.Velocity.Y < 0 ? -1 : 1;
-   int destinateY = (i_YToExplode + direction * (int)(Height * 0.7));
-   int currentY = i_YToExplode;
-
-   while (currentY != destinateY)
-   {
-       //  base.OnPixelsCollision(i_X, currentY, i_Source);
-       if (i_SpriteToExplode.GetPixel(i_XToExplode, i_YToExplode, i_SpriteToExplode.Bounds) >= 0)
-       {
-           i_SpriteToExplode.OnPixelsCollision(i_XToExplode, currentY);
-
-       }
-
-       currentY += destinateY < currentY ? -1 : 1;
-   }
-}
-    */
-        //   return (i_X - i_Bounds.Left) + ((i_Y - i_Bounds.Top) * i_Bounds.Width);
-        // 
-
-        //private bool isPixelsIntersection(ICollidable2D i_Source)
-        //{
-        //    bool isPixelIntersect = false;
-
-        //    while (!isPixelIntersect)
-        //    {
-
-        //    }
-
-        //    return false;
-        //}
-
-        //{
-        //    bool collided = false;
-        //    ICollidable2D source = i_Source as ICollidable2D;
-
-        //    if (source != null)
-        //    {
-        //        collided = checkBoundsCollision(source);
-
-        //        if (collided && this.CollisionByPixels)
-        //        {
-        //            collided = checkPixelBasedCollision(source);
-        //        }
-        //        else if (collided && source.CollisionByPixels)
-        //        {
-        //            collided = false;
-        //        }
-        //    }
-
-        //    /*
-        //     pseudo
-        //     if ( source is ipixelCollidable)
-        //     collided = iPixelCollidable.checkPixelBased(i_source)
-        //     */
-
-        //    return collided;
-        //}
-
-        //public virtual bool CheckCollision(ICollidable i_Source)
-        //{
-        //    bool collided = false;
-        //    ICollidable2D source = i_Source as ICollidable2D;
-
-        //    if (source != null)
-        //    {
-        //        collided = checkCollisionByBounds(source);
-        //        // TODO: change the name CollisionByPixels
-        //        if (collided && this is IPixelCollidable) //CollisionByPixels) // || source.CollisionByPixels))
-        //        // TODO: checks twise the pixels (for both objects) - try to optimize !
-        //        {
-        //            //  collided = pixelBasedCollisionDetection(source);
-        //            collided = (this as IPixelCollidable).Collided()
-        //        }
-        //        else if (collided && source is IPixelCollidable) //.CollisionByPixels)
-        //        {
-        //            collided = false;
-        //        }
-        //    }
-
-        //    return collided;
-        //}
+        public Rectangle IntersectionRectangle { get; set; }
 
         private Rectangle boundsIntersection(ICollidable2D i_Source)
         {
-            //  return i_Source.Bounds.Intersects(this.Bounds) || i_Source.Bounds.Contains(this.Bounds);
             return Rectangle.Intersect(this.Bounds, i_Source.Bounds);
         }
 
@@ -592,35 +417,6 @@ namespace Infrastructure.ObjectModel
             }
         }
 
-        //private bool m_CollisionByPixels = false;
-        //public bool PixelsCollidable
-        //{
-        //    get { return m_CollisionByPixels; }
-        //    set { m_CollisionByPixels = value; }
-        //}
-
-    
-
-        private void transparentPixel(int i_PixelIdx)
-        {
-           // int pixelIndex = getPixel(i_X, i_Y, this.Bounds);
-
-            //if (pixelIndex >= 0 && pixelIndex < Pixels.Length) // TODO: throws exception out of bounds
-            //{
-            this.Pixels[i_PixelIdx].A = 0;
-            //}
-        }
-
-        private bool isTransparent(Color[] i_Pixels, int i_X, int i_Y, Rectangle i_Bounds)
-        {
-            return i_Pixels[getPixel(i_X, i_Y, i_Bounds)].A == 0;
-        }
-
-        private int getPixel(int i_X, int i_Y, Rectangle i_Bounds)
-        {
-            return (i_X - i_Bounds.Left) + ((i_Y - i_Bounds.Top) * i_Bounds.Width);
-        }
-
         private Color[] getPixelsData(ICollidable2D i_Source)
         {
             Color[] sourcePixels;
@@ -638,16 +434,12 @@ namespace Infrastructure.ObjectModel
             return sourcePixels;
         }
 
-        // -- end of TODO 14
-
-        // TODO 15: Implement a basic collision reaction between two ICollidable2D objects
         public virtual void Collided(ICollidable i_Collidable)
         {
             // defualt behavior
             if (this is ICllidableByPixels)
             {
-                OnPixelsCollision(i_Collidable);
-                //this.Texture.SetData<Color>(Pixels);
+                PixelBasedCollisionComponent.Collided(i_Collidable);
             }
             else
             {
@@ -656,7 +448,7 @@ namespace Infrastructure.ObjectModel
 
             OnCollision(i_Collidable, EventArgs.Empty); // TODO: isnt the sender is this ? or both ?
         }
-
+        
 
         #endregion //Collision Handlers
 
@@ -668,36 +460,13 @@ namespace Infrastructure.ObjectModel
 
             return texture;
         }
-        // TODO: should be on Sprite ? maybe should encapsulate in a different class ...
-        // *** sprites hit boundaries behavior ***
-        //private bool m_BoundaryHitAffects = false;
-        //public bool BoundaryHitAffects
-        //{
-        //    get { return m_BoundaryHitAffects; }
-        //    set { m_BoundaryHitAffects = value; }
-        //}
-
-    //    public event EventHandler<OffsetEventArgs> HitBoundaryEvent;
-
+  
         public virtual bool HitBoundary()
         {
-            bool ret = false;
-            //return this.Visible ?
-            ////Bounds.Right >= GraphicsDevice.Viewport.Bounds.Right ||
-            ////Bounds.Left <= GraphicsDevice.Viewport.Bounds.Left : false;
-
-            if (this.Visible) // TODO: this is for debugging only
-            {
-                if (Bounds.Right >= GraphicsDevice.Viewport.Bounds.Right ||
-                    Bounds.Left <= GraphicsDevice.Viewport.Bounds.Left)
-                {
-                    ret = true;
-                }
-            }
-
-            return ret;
+            return this.Visible ?
+            Bounds.Right >= GraphicsDevice.Viewport.Bounds.Right ||
+            Bounds.Left <= GraphicsDevice.Viewport.Bounds.Left : false;
         }
-
 
         public Sprite ShallowClone()
         {
@@ -710,48 +479,4 @@ namespace Infrastructure.ObjectModel
             this.Visible = false;
         }
     }
-    //protected virtual void OnBoundaryHit(object i_Sender, OffsetEventArgs i_EventArgs)
-    //{
-    //    if (HitBoundaryEvent != null)
-    //    {
-    //        HitBoundaryEvent.Invoke(i_Sender, i_EventArgs);
-    //    }
-    //}
-
-    //protected virtual void BoundaryCheckAndInvoke()
-    //{
-    //    if (HitBoundary())
-    //    {
-    //    //    float offset = Position.X - MathHelper.Clamp(Position.X, 0, GraphicsDevice.Viewport.Width - Width);
-    //        float offset = Position.X - MathHelper.Clamp(Position.X, GraphicsDevice.Viewport.Bounds.Left, GraphicsDevice.Viewport.Bounds.Right - Width);
-
-    //     //   Vector2 newPosition = new Vector2(Position.X - offset, Position.Y);
-
-    //    //    offset += Bounds.X - MathHelper.Clamp(Bounds.X, GraphicsDevice.Viewport.Bounds.Left, GraphicsDevice.Viewport.Bounds.Right - Width);
-    //        //    float offset2 = Position.X - Bounds.Right;
-    //        //    float offset3 = Position.X - Bounds.Left; ;
-    //        //Position = new Vector2()
-    //        // Position = new Vector2(MathHelper.Clamp(Position.X, GraphicsDevice.Viewport.Bounds.Left, GraphicsDevice.Viewport.Bounds.Right - Width), Position.Y);
-    //     //   this.Position = newPosition;
-
-    //        OnBoundaryHit(this, new OffsetEventArgs(offset));
-    //    }
-    //}
-    //    Position = new Vector2(MathHelper.Clamp(Position.X, 0, GraphicsDevice.Viewport.Width - Texture.Width), Position.Y);
-
-
-    //public class OffsetEventArgs : EventArgs
-    //{
-    //    public float Offset { get; set; }
-    //    //public static readonly float Empty = 0;
-
-    //    public OffsetEventArgs() : base()
-    //    {
-    //    }
-
-    //    public OffsetEventArgs(float i_Offset) : base()
-    //    {
-    //        Offset = i_Offset;
-    //    }
-    //}
 }

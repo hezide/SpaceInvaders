@@ -33,8 +33,8 @@ namespace Infrastructure.ServiceInterfaces
     {
         PixelBasedCollisionComponent PixelBasedCollisionComponent { get; set; }
         List<Point> IntersectionPoints { get; set; }
+        Rectangle IntersectionRectangle { get; set; }
         Color[] Pixels { get; }
-        void OnPixelsCollision(ICollidable i_Collidable);
     }
 
     // TODO 08: Define the 3D specific interface for 3D collidable objects:

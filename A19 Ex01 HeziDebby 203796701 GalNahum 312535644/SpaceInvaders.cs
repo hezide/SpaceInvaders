@@ -59,8 +59,6 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
 
             IsMouseVisible = true;
 
-            // TODO: insert to methods ?
-
             // *** initializing activation inputs ***
             m_Player1.ActivateByMouse = true;
             m_Player1.ActivationKeysList = new List<Keys> { Keys.H, Keys.K, Keys.U };
@@ -69,7 +67,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
             // *** initializing non default players positions ***
             m_Player2.Position = new Vector2(m_Player1.Position.X + m_Player1.Width, m_Player2.Position.Y);
 
-            // *** initializing souls components positions ***
+            // *** initializing souls components non default positions ***
             m_Player2.SoulsComponent.Position = new Vector2(m_Player2.SoulsComponent.Position.X, m_Player2.SoulsComponent.Position.Y + m_Player2.SoulsComponent.Height + 6);
 
             initScoreManagers(); // TODO: is score managers list is sprite collection ?
@@ -78,7 +76,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
 
             m_Barriers.Initialize(GraphicsDevice.Viewport.Width, m_Player1.Position.Y);
         }
-        // TODO: change the name
+
         private void initScoreManagers()
         {// TODO: discusting. change 
             m_Player1.AddCollisionListener(m_ScoreManagers[0].CollisionHandler);
@@ -97,7 +95,6 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
             {
                 base.Update(gameTime);
                 m_MotherShipRandomNotifier.Update(gameTime);
-
                 m_Enemies.Update(gameTime); // TODO: i dont want to see this in the code .......
                 m_Barriers.Update(gameTime);
             }
@@ -109,17 +106,9 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
         }
 
         private bool IsGameOver()
-        { // TODO: on disposed ?
-            //return (m_Player1.SoulsComponent.NumberOfSouls == 0 && m_Player2.SoulsComponent.NumberOfSouls == 0)
-            //    || m_Enemies.ReachedHeight(m_Player1.Bounds.Top);
-            // DEBUG ONLY
-            if (m_Player1.SoulsComponent.NumberOfSouls == 0 && m_Player2.SoulsComponent.NumberOfSouls == 0
-                || m_Enemies.ReachedHeight(m_Player1.Bounds.Top))
-            {
-                return true;
-            }
-
-            return false;
+        {
+            return (m_Player1.SoulsComponent.NumberOfSouls == 0 && m_Player2.SoulsComponent.NumberOfSouls == 0)
+                || m_Enemies.ReachedHeight(m_Player1.Bounds.Top);
         }
 
         protected override void Draw(GameTime gameTime)
@@ -140,7 +129,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
                 m_MotherSpaceship.SetInitialValues();
             }
         }
-        // TODO: logic of game over
+
         private void OnGameOver()
         {
             string finalScore = string.Format(@"

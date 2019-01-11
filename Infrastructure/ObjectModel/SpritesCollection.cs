@@ -8,7 +8,6 @@ namespace Infrastructure.ObjectModel
         where T : Sprite
     {
         protected readonly Vector2 r_DirectionChangeMultiplier;
-
         public List<T> Sprites { get; protected set; }
         protected Vector2 m_GroupDirection;
 
@@ -19,7 +18,6 @@ namespace Infrastructure.ObjectModel
             AllocateSprites(i_Game);
         }
 
-        // TODO: should i have a size property only for basic implementation here ?
         protected abstract void AllocateSprites(Game i_Game);
 
         public virtual void Initialize(float i_InitialX = 0, float i_InitialY = 0)

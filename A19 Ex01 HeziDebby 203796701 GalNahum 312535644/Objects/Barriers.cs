@@ -40,5 +40,12 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
                 x += sprite.Width * 2;
             }
         }
+
+        //protected override bool GroupHitBoundary()
+        //{
+        //    Barrier barrier = Sprites[GetEdgeSpriteIdxByDirection()];
+
+        //    return barrier.Bounds.Right >= barrier.
+        //}
     }
 }

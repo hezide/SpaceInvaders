@@ -1,16 +1,11 @@
 ﻿using Infrastructure.ServiceInterfaces;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Infrastructure.ObjectModel
 {
-    public class PixelBasedCollisionComponent
-    {// TODO: check code duplications leftover from sprite
+    public class PixelBasedCollisionComponent // TODO: interface ?
+    {
         private ICllidableByPixels m_Collidable;
 
         public PixelBasedCollisionComponent(ICllidableByPixels i_Collidable)
@@ -18,31 +13,64 @@ namespace Infrastructure.ObjectModel
             m_Collidable = i_Collidable;
         }
 
-        public bool PixelsIntersects(ICollidable2D i_Source, Rectangle i_Intersection)
+        public bool CheckCollision(ICollidable2D i_Source, Rectangle i_IntersectionBounds)
         {
-            m_Collidable.IntersectionPoints = GetIntersectionPoints(i_Source, i_Intersection);
-
-            return m_Collidable.IntersectionPoints.Count > 0;
+            return pixelsIntersects(i_Source, i_IntersectionBounds);
         }
 
-        public List<Point> GetIntersectionPoints(ICollidable2D i_Source, Rectangle i_Intersection)
-        {
+        private bool pixelsIntersects(ICollidable2D i_Source, Rectangle i_Intersection)
+        {// TODO: optimized
+            bool intersects = false;
             Color[] sourcePixels = getPixelsData(i_Source); // TODO: this method is a helper of sprite. got nothing to do with sprite
-            List<Point> intersections = new List<Point>();
 
-            for (int y = i_Intersection.Top; y < i_Intersection.Bottom; y++)
+            for (int y = i_Intersection.Top; y < i_Intersection.Bottom && !intersects; y++)
             {
-                for (int x = i_Intersection.Left; x < i_Intersection.Right; x++)
+                for (int x = i_Intersection.Left; x < i_Intersection.Right && !intersects; x++)
                 {
-                    if (!isTransparent(m_Collidable.Pixels, x, y, m_Collidable.Bounds) && 
+                    if (!isTransparent(m_Collidable.Pixels, x, y, m_Collidable.Bounds) &&
                         !isTransparent(sourcePixels, x, y, i_Source.Bounds))
                     {
-                        intersections.Add(new Point(x, y));
+                        intersects = true;
                     }
                 }
             }
 
-            return intersections;
+            if (intersects)
+            {
+                m_Collidable.IntersectionRectangle = i_Intersection;
+                IntersectionPoints = new List<Point>();
+            }
+
+            return intersects;
+        }
+
+        public void Collided(ICollidable i_Collidable)
+        {
+            if (i_Collidable is IExplodable)
+            {
+                collidePixelByRange(i_Collidable as IExplodable);
+            }
+            else
+            {
+                OnPixelsCollision(i_Collidable);
+            }
+
+            m_Collidable.Texture.SetData<Color>(m_Collidable.Pixels);
+        }
+
+        public virtual void OnPixelsCollision(ICollidable i_Collidable)
+        {
+            int pixelIdx;
+
+            for (int y = m_Collidable.IntersectionRectangle.Top; y < m_Collidable.IntersectionRectangle.Bottom; y++)
+            {
+                for (int x = m_Collidable.IntersectionRectangle.Left; x < m_Collidable.IntersectionRectangle.Right; x++)
+                {// TODO: remove trnasparent pixels from array
+                 //  IntersectionPoints.Add(new Point(x, y));
+                    pixelIdx = getPixel(x, y, m_Collidable.Bounds);
+                    m_Collidable.Pixels[pixelIdx].A = 0;
+                }
+            }
         }
 
         private bool isTransparent(Color[] i_Pixels, int i_X, int i_Y, Rectangle i_Bounds)
@@ -57,12 +85,7 @@ namespace Infrastructure.ObjectModel
 
         private void transparentPixel(int i_PixelIdx)
         {
-            // int pixelIndex = getPixel(i_X, i_Y, this.Bounds);
-
-            //if (pixelIndex >= 0 && pixelIndex < Pixels.Length) // TODO: throws exception out of bounds
-            //{
             m_Collidable.Pixels[i_PixelIdx].A = 0;
-            //}
         }
 
         private Color[] getPixelsData(ICollidable2D i_Source)
@@ -82,24 +105,73 @@ namespace Infrastructure.ObjectModel
             return sourcePixels;
         }
 
-        //public void TransperantPixelsInRange(Point i_Point, int i_ExplosionRange)
-        //{
-        //    int direction = i_ExplosionRange > 0 ? 1 : -1;
-        //    int destinateY = i_Point.Y + i_ExplosionRange;
-        //    int currentY = i_Point.Y;
+        private void collidePixelByRange(IExplodable i_Collidable)
+        {
+            Color[] sourcePixels = getPixelsData(i_Collidable as ICollidable2D);
 
-        //    while (currentY != destinateY)
-        //    {
-        //        int pixelIdx = getPixel(i_Point.X, currentY, m_Collidable.Bounds);
+            for (int y = m_Collidable.IntersectionRectangle.Top; y < m_Collidable.IntersectionRectangle.Bottom; y++)
+            {
+                for (int x = m_Collidable.IntersectionRectangle.Left; x < m_Collidable.IntersectionRectangle.Right; x++)
+                {// TODO: remove trnasparent pixels from array
+                    if (!isTransparent(m_Collidable.Pixels, x, y, m_Collidable.Bounds) &&
+                        !isTransparent(sourcePixels, x, y, (i_Collidable as ICollidable2D).Bounds))
+                    {
+                        IntersectionPoints.Add(new Point(x, y));
+                    }
+                }
+            }
 
-        //        if (pixelIdx < m_Collidable.Pixels.Length && pixelIdx >= 0)
-        //        {
-        //            transparentPixel(pixelIdx);
-        //        }
+            transpaerntIntersectionPoints(i_Collidable.ExplosionRange);
+        }
 
-        //        currentY += destinateY < currentY ? -1 : 1;
-        //    }
-        //}
+        public List<Point> IntersectionPoints { get; set; }
+
+        private void transpaerntIntersectionPoints(float i_ExplosionRange)
+        {
+            foreach (Point point in IntersectionPoints)
+            {
+                transparentPixelsInRange(point.X, point.Y, i_ExplosionRange);
+            }
+        }
+
+        private void transparentPixelsInRange(int i_X, int i_Y, float i_ExplosionRange)
+        {
+            int direction = i_ExplosionRange > 0 ? 1 : -1;
+
+            int destinateY = i_Y + (int)i_ExplosionRange;
+            int currentY = i_Y;
+
+            while (currentY != destinateY)
+            {
+                int pixelIdx = getPixel(i_X, currentY, m_Collidable.Bounds);
+
+                if (pixelIdx < m_Collidable.Pixels.Length && pixelIdx >= 0)
+                {
+                    m_Collidable.Pixels[pixelIdx].A = 0;
+                }
+
+                currentY += destinateY < currentY ? -1 : 1; // += direction ?
+            }
+        }
 
     }
 }
+//public List<Point> GetIntersectionPoints(ICollidable2D i_Source, Rectangle i_Intersection)
+//{
+//    Color[] sourcePixels = getPixelsData(i_Source); // TODO: this method is a helper of sprite. got nothing to do with sprite
+//    List<Point> intersections = new List<Point>();
+
+//    for (int y = i_Intersection.Top; y < i_Intersection.Bottom; y++)
+//    {
+//        for (int x = i_Intersection.Left; x < i_Intersection.Right; x++)
+//        {
+//            if (!isTransparent(m_Collidable.Pixels, x, y, m_Collidable.Bounds) &&
+//                !isTransparent(sourcePixels, x, y, i_Source.Bounds))
+//            {
+//                intersections.Add(new Point(x, y));
+//            }
+//        }
+//    }
+
+//    return intersections;
+//}

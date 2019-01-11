@@ -14,6 +14,8 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
         private const int k_TextureWidthDivider = 2;
         private const int k_TextureHeightDivider = 3;
         private const int k_MaxCollidedEnemies = 4;
+        private const double k_BoundaryHitIncreaser = 0.08;
+        private const double k_DeadEnemiesIncreaser = 0.04;
 
         public List<List<Enemy>> Enemies { get; private set; }
 
@@ -22,21 +24,14 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
             base.Sprites = Enemies.SelectMany(enemy => enemy).ToList();
         }
 
-        //protected override void AllocateSpritesCollection()
-        //{
-        //    Enemies = new Enemy[k_Rows, k_Cols];
-
-        //}
-
-        //       protected override void AllocateSprites(Game i_Game)
         protected override void AllocateSprites(Game i_Game)
         {// TODO: encapsulate in methods
             Enemies = new List<List<Enemy>>();
 
             int seed = 1;
             List<Enemy> currentCol;
-            Vector2 enemyCellIdx; // = Vector2.Zero;
-            Color currentEnemyColor; // = Color.Pink;
+            Vector2 enemyCellIdx;
+            Color currentEnemyColor;
 
             for (int col = 0; col < k_Cols; col++)
             {
@@ -51,7 +46,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
                         Seed = ++seed,
                         CellIdx = enemyCellIdx,
                         TintColor = currentEnemyColor
-                    }; // TODO: temporary enemies index
+                    };
 
                     enemyToAdd.Collision += EnemyCollided;
                     enemyToAdd.Disposed += EnemyDisposed;
@@ -99,7 +94,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
             if (++m_CollidedEnemiesCounter == k_MaxCollidedEnemies)
             {
                 m_CollidedEnemiesCounter %= k_MaxCollidedEnemies;
-                increaseEnemyVelocity(0.04); // TODO: const
+                increaseEnemyVelocity(k_DeadEnemiesIncreaser);
             }
         }
 
@@ -118,7 +113,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
         {
             float x = i_InitialX;
             float y = i_InitialY;
-            // TODO: implement the positions calculation with initial values 
+
             for (int col = 0; col < k_Cols; col++)
             {
                 for (int row = 0; row < k_Rows; row++)
@@ -133,55 +128,39 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
 
         public override void Update(GameTime i_GameTime)
         {
-            // if (groupHitBoundary() && !m_GroupAtBoundary)
-            //if (m_GroupHitBoundary)
-            if (groupHitBoundary())
+            if (GroupHitBoundary())
             {
-                // m_GroupDirection *= r_DirectionChangeMultiplier;
-
-                // TODO: think of inserting an injection point here - 
-                // have kind of code duplication with base class
                 foreach (Enemy enemy in this.Sprites)
-                {      //m_GroupAtBoundary = true;
+                {
                     stepDown(enemy);
-                    //enemy.UpdateDirection(m_GroupDirection);
-                    // enemy.Direction *= -1; // TODO: const for -1 directionChanger
-                    // stepDown(enemy);
-                    // increase velocity
-                    // m_GroupHitBoundary = false;
-
-
-
                 }
 
                 m_GroupDirection *= r_DirectionChangeMultiplier;
-                increaseEnemyVelocity(0.08); // TODO: const
+                increaseEnemyVelocity(k_BoundaryHitIncreaser);
             }
-            //else if (m_GroupAtBoundary)
-            //{
-
-            //    m_GroupAtBoundary = false;
-            //    //  increaseJumpVelocity();
-            //    m_GroupDirection *= r_DirectionChangeMultiplier;
-
-            //}
             else
             {
                 jumpGroup(i_GameTime);
             }
         }
 
-        private bool groupHitBoundary()
+        protected override bool GroupHitBoundary()
         {
-            int colIndex = getEdgeEnemiesColByDirection();
+            int colIndex = GetEdgeSpriteIdxByDirection();
 
             return Enemies[colIndex][0].HitBoundary();
         }
 
-        private int getEdgeEnemiesColByDirection()
+        protected override int GetEdgeSpriteIdxByDirection()
         {
             return m_GroupDirection.X > 0 ? Enemies.Count - 1 : 0;
         }
+
+        private Enemy getEdgeEnemyByDirection()
+        {
+            return Enemies[GetEdgeSpriteIdxByDirection()][0];
+        }
+
 
         // TODO: consider as an extension method
         private void stepDown(Sprite i_Sprite)
@@ -216,7 +195,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
             m_TimeToJump = TimeSpan.FromSeconds(0.5);
             m_TimeLeftForNextJump = TimeSpan.FromSeconds(0.5);
 
-            Enemy enemy = GetEdgeEnemyByDirection();
+            Enemy enemy = getEdgeEnemyByDirection();
             Enemy boundEnemy = enemy; // TODO: the names arent so good
             m_JumpDestination = new Vector2(boundEnemy.Width / 2, boundEnemy.Height / 2);
             m_JumpBounds = boundEnemy.GraphicsDevice.Viewport.Bounds;
@@ -224,10 +203,6 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
             m_DirectionMultiplier = m_GroupDirection;
         }
 
-        private Enemy GetEdgeEnemyByDirection()
-        {
-            return Enemies[getEdgeEnemiesColByDirection()][0];
-        }
 
         public bool ReachedHeight(int i_Height)
         {
@@ -249,15 +224,15 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
             m_TimeLeftForNextJump -= i_GameTime.ElapsedGameTime;
 
             Vector2 jumpDestination = m_JumpDestination * m_GroupDirection;
-            Vector2 maxDistance = GetEdgeEnemyByDirection().Position + jumpDestination;
+            Vector2 maxDistance = getEdgeEnemyByDirection().Position + jumpDestination;
 
-            if (maxDistance.X + GetEdgeEnemyByDirection().Width >= m_JumpBounds.Right)
+            if (maxDistance.X + getEdgeEnemyByDirection().Width >= m_JumpBounds.Right)
             {
-                jumpDestination.X = (m_JumpBounds.Right - GetEdgeEnemyByDirection().Width) - GetEdgeEnemyByDirection().Position.X;
+                jumpDestination.X = (m_JumpBounds.Right - getEdgeEnemyByDirection().Width) - getEdgeEnemyByDirection().Position.X;
             }
             else if (maxDistance.X <= m_JumpBounds.Left)
             {
-                jumpDestination.X = m_JumpBounds.Left - GetEdgeEnemyByDirection().Position.X;
+                jumpDestination.X = m_JumpBounds.Left - getEdgeEnemyByDirection().Position.X;
             }
 
             if (m_TimeLeftForNextJump.TotalSeconds < 0)

@@ -12,13 +12,13 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
         private const float k_Velocity = 155;
         public Type OwnerType; // TODO: should i put default value ?
 
-        public int ExplosionRange
+        public float ExplosionRange
         {
             get
             {
                 int direction = Velocity.Y > 0 ? 1 : -1;
 
-                return (int)(Height * 0.7 * direction);
+                return (Height * 0.7f * (float)direction);
             }
         }
 

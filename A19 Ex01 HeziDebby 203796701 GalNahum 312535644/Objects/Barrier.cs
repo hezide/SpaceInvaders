@@ -1,12 +1,11 @@
 ﻿using Infrastructure.ObjectModel;
 using Infrastructure.ServiceInterfaces;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
 {
     public class Barrier : Sprite, ICllidableByPixels
-    { // TODO: after pixels dying need to update the bounds - currently stil hitting the boundary by origin bounds
+    {
         private const string k_AssetName = @"Sprites\Barrier_44x32";
         private const float k_Velocitiy = 45;
 
@@ -30,30 +29,10 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
             DrawNonPremultiplied();
         }
 
-        public override void Collided(ICollidable i_Collidable)
-        {
-            if (i_Collidable is IExplodable)
-            {
-                Explode((i_Collidable as IExplodable).ExplosionRange);
-            }
-            else
-            {
-                OnPixelsCollision(i_Collidable);
-            }
-        }
-        //protected override void OnPixelsCollision(int i_X, int i_Y, ICollidable2D i_Source)
+        //public override bool HitBoundary()
         //{
-        //    base.OnPixelsCollision(i_X, i_Y, i_Source);
-        //}
-        //public override void Collided(ICollidable i_Collidable)
-        //{
-        //    base.Collided(i_Collidable);
-        ////    Texture.SetData<Color>(Pixels);
-        //}
-
-        //public override void Update(GameTime gameTime)
-        //{
-        //    base.Update(gameTime);
+        //    return (Bounds.Right >= GraphicsDevice.Viewport.Bounds.Right ||
+        //            Bounds.Left <= GraphicsDevice.Viewport.Bounds.Left);
         //}
     }
 }
