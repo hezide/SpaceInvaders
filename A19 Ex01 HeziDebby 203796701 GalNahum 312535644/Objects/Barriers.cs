@@ -22,16 +22,13 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
 
         protected override void InitPositions(float i_InitialX, float i_InitialY)
         {
-
             float x = i_InitialX / (Sprites.Count) + Sprites[0].Width * 1.5f;
             float y = 0;
 
             foreach (Barrier sprite in Sprites)
             {
                 y = i_InitialY - sprite.Height * 2;
-
                 sprite.Position = new Vector2(x, y);
-
                 x += sprite.Width * 2;
             }
 

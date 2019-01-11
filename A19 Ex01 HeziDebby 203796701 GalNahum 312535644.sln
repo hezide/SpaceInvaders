@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28010.2036
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "A19 Ex01 HeziDebby 203796701 GalNahum 312535644", "A19 Ex01 HeziDebby 203796701 GalNahum 312535644\A19 Ex01 HeziDebby 203796701 GalNahum 312535644.csproj", "{E27DF9BD-48CC-4D59-9671-9D828BF3C84B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "A19 Ex02 HeziDebby 203796701 GalNahum 312535644", "A19 Ex01 HeziDebby 203796701 GalNahum 312535644\A19 Ex02 HeziDebby 203796701 GalNahum 312535644.csproj", "{E27DF9BD-48CC-4D59-9671-9D828BF3C84B}"
 	ProjectSection(ProjectDependencies) = postProject
 		{BA2FC29B-8640-463C-B7C0-1D1AED9C67BF} = {BA2FC29B-8640-463C-B7C0-1D1AED9C67BF}
 	EndProjectSection

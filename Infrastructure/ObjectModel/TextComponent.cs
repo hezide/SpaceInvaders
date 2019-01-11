@@ -20,13 +20,7 @@ namespace Infrastructure.ObjectModel
             get { return m_TintColor; }
             set { m_TintColor = value; }
         }
-
-        private Vector2 m_Position = Vector2.Zero;
-        public Vector2 Position
-        {
-            get { return m_Position; }
-            set { m_Position = value; }
-        }
+        public Vector2 Position { get; set; } = Vector2.Zero;
 
         public Rectangle Bounds
         {

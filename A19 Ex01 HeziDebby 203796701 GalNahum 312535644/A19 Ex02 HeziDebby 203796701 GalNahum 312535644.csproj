@@ -53,7 +53,6 @@
     <Compile Include="Objects\EnemiesGroup.cs" />
     <Compile Include="Objects\Enemy.cs" />
     <Compile Include="Objects\Gun.cs" />
-    <Compile Include="Objects\InputActivator.cs" />
     <Compile Include="Objects\SoulsComponent.cs" />
     <Compile Include="Objects\Barrier.cs" />
     <Compile Include="SpaceInvaders.cs" />

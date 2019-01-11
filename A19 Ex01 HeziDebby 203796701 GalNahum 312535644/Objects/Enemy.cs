@@ -15,13 +15,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
 
         private RandomActionComponent m_RandomShootingNotifier;
         private Gun m_Gun;
-
-        private int m_Seed = 0;
-        public int Seed
-        {
-            get { return m_Seed; }
-            set { m_Seed = value; }
-        }
+        public int Seed { get; set; } = 0;
 
         public Enemy(string i_AssetName, Game i_Game) : base(i_AssetName, i_Game)
         {
@@ -36,7 +30,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
             m_Gun.Initialize(Color.Blue);
 
             m_RandomShootingNotifier = new RandomActionComponent(1, 30, Seed);
-            m_RandomShootingNotifier.RandomTimeAchieved += Shoot;
+            m_RandomShootingNotifier.RandomTimeAchieved += randomShootingNotifier_Shoot;
 
             initAnimations();
         }
@@ -45,7 +39,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
         {
             TimeSpan animationLength = TimeSpan.FromSeconds(0.5);
 
-           CellAnimator celAnimation = new CellAnimator(animationLength, k_NumOfFrames, (int)CellIdx.Y, TimeSpan.Zero);
+            CellAnimator celAnimation = new CellAnimator(animationLength, k_NumOfFrames, (int)CellIdx.Y, TimeSpan.Zero);
 
             float spinsPerSecond = MathHelper.TwoPi * 6;
             animationLength = TimeSpan.FromSeconds(1.2);
@@ -53,7 +47,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
             SpinAnimator spinner = new SpinAnimator("Spinner", spinsPerSecond, animationLength);
             ShrinkAnimator shrinker = new ShrinkAnimator("Shrinker", animationLength);
 
-            spinner.Finished += new EventHandler(onDyingAnimationFinish);
+            spinner.Finished += new EventHandler(spinner_OnDyingAnimationFinish);
 
             this.Animations.Add(celAnimation);
             this.Animations.Add(spinner);
@@ -64,19 +58,13 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
             this.Animations["Shrinker"].Enabled = false;
         }
 
-        private void onDyingAnimationFinish(object i_Sender, EventArgs i_EventArgs)
+        private void spinner_OnDyingAnimationFinish(object i_Sender, EventArgs i_EventArgs)
         {
             this.Dispose(true);
             this.Animations.Pause();
             this.Visible = false;
         }
-
-        private Vector2 m_CellIdx = Vector2.Zero;
-        public Vector2 CellIdx
-        {
-            get { return m_CellIdx; }
-            set { m_CellIdx = value; }
-        }
+        public Vector2 CellIdx { get; set; } = Vector2.Zero;
 
         protected override void InitBounds()
         {
@@ -115,14 +103,13 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
             OnCollision(this, EventArgs.Empty);
         }
 
-        public override void Update(GameTime gameTime)
+        public override void Update(GameTime i_GameTime)
         {
-            m_RandomShootingNotifier.Update(gameTime);
-
-            base.Update(gameTime);
+            m_RandomShootingNotifier.Update(i_GameTime);
+            base.Update(i_GameTime);
         }
 
-        public void Shoot()
+        private void randomShootingNotifier_Shoot()
         {
             m_Gun.Shoot(new Vector2(Position.X + Width / 2, Position.Y));
         }

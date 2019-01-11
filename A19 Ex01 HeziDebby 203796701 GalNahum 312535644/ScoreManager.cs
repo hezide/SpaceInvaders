@@ -12,15 +12,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
         private readonly string r_Name;
 
         Dictionary<Type, int> m_ScoreTable;
-
-        private int m_Score = 0;
-        public int Score
-        {
-            get
-            {
-                return m_Score;
-            }
-        }
+        public int Score { get; private set; } = 0;
 
         public string Name
         {
@@ -58,14 +50,14 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
 
         public void CollisionHandler(object i_Sender, EventArgs i_EventArgs)
         {
-            m_Score += m_ScoreTable[i_Sender.GetType()];
+            Score += m_ScoreTable[i_Sender.GetType()];
 
             if (i_Sender is Enemy && (i_Sender as Enemy).TintColor != Color.LightYellow)
             {
-                m_Score += (i_Sender as Enemy).TintColor == Color.LightBlue ? 30 : 150;
+                Score += (i_Sender as Enemy).TintColor == Color.LightBlue ? 30 : 150;
             }
 
-            m_Score = MathHelper.Clamp(m_Score, 0, int.MaxValue);
+            Score = MathHelper.Clamp(Score, 0, int.MaxValue);
         }
 
         public override string TextToString()

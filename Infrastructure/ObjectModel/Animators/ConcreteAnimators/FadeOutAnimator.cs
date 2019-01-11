@@ -6,14 +6,14 @@ namespace Infrastructure.ObjectModel.Animators.ConcreteAnimators
     public class FadeOutAnimator : SpriteAnimator
     {
         private TimeSpan m_FadeOutLength;
-        private readonly byte m_AlphaFactor;
+        private readonly byte r_AlphaFactor;
 
         public FadeOutAnimator(string i_Name, TimeSpan i_FadeOutLength)
             : base(i_Name, i_FadeOutLength)
         {
             m_FadeOutLength = i_FadeOutLength;
 
-            m_AlphaFactor = (byte)(255.0 / i_FadeOutLength.TotalSeconds);
+            r_AlphaFactor = (byte)(255.0 / i_FadeOutLength.TotalSeconds);
         }
 
         public FadeOutAnimator(TimeSpan i_FadeOutLength)
@@ -25,7 +25,7 @@ namespace Infrastructure.ObjectModel.Animators.ConcreteAnimators
         {
             byte alpha = BoundSprite.TintColor.A;
 
-            alpha -= (byte)(m_AlphaFactor * i_GameTime.ElapsedGameTime.TotalSeconds);
+            alpha -= (byte)(r_AlphaFactor * i_GameTime.ElapsedGameTime.TotalSeconds);
 
             BoundSprite.TintColor = new Color(BoundSprite.TintColor, alpha);
         }

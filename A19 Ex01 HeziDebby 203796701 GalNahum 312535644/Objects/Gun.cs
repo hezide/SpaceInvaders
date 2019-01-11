@@ -10,39 +10,33 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
     // TODO: is this sprite collection ?
     public class Gun
     {
-        public List<Bullet> BulletsList { get; private set; }
-        public int Ammo { get; private set; }
+        private List<Bullet> m_BulletsList;
+        private int m_Ammo;
+        public bool Enable { get; set; } = true;
 
         public Gun(int i_Ammo, Game i_Game, Type i_OwnerType)
         {
-            Ammo = i_Ammo;
-            BulletsList = new List<Bullet>();
+            m_Ammo = i_Ammo;
+            m_BulletsList = new List<Bullet>();
 
             allocateBullets(i_Game, i_OwnerType);
         }
 
         private void allocateBullets(Game i_Game, Type i_OwnerType)
         {
-            for (int i = 0; i < Ammo; i++)
+            for (int i = 0; i < m_Ammo; i++)
             {
-                BulletsList.Add(new Bullet(i_Game) { OwnerType = i_OwnerType });
+                m_BulletsList.Add(new Bullet(i_Game) { OwnerType = i_OwnerType });
             }
         }
 
         public void Initialize(Color i_TintColor, int i_DirectionMultiplier = 1)
         {
-            foreach (Bullet bullet in BulletsList)
+            foreach (Bullet bullet in m_BulletsList)
             {
                 bullet.Velocity *= i_DirectionMultiplier;
                 bullet.TintColor = i_TintColor;
             }
-        }
-
-        private bool m_Enable = true;
-        public bool Enable
-        {
-            get { return m_Enable; }
-            set { m_Enable = value; }
         }
 
         public void Shoot(Vector2 i_InitialPosition)
@@ -51,7 +45,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
 
             if (this.Enable)
             {
-                foreach (Bullet bullet in BulletsList)
+                foreach (Bullet bullet in m_BulletsList)
                 {
                     if (!bullet.Visible && !shot)
                     {
@@ -65,7 +59,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
 
         public void AddCollisionListener(EventHandler i_CollisionHandler)
         {
-            foreach(Bullet bullet in BulletsList)
+            foreach(Bullet bullet in m_BulletsList)
             {
                 bullet.Collision += new EventHandler<EventArgs>(i_CollisionHandler);
             }

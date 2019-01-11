@@ -52,7 +52,6 @@
     <Compile Include="ObjectModel\Animators\ConcreteAnimators\BlinkAnimator.cs" />
     <Compile Include="ObjectModel\Animators\ConcreteAnimators\CellAnimator.cs" />
     <Compile Include="ObjectModel\Animators\ConcreteAnimators\FadeOutAnimator.cs" />
-    <Compile Include="ObjectModel\Animators\ConcreteAnimators\JumpAnimator.cs" />
     <Compile Include="ObjectModel\Animators\ConcreteAnimators\ShrinkAnimator.cs" />
     <Compile Include="ObjectModel\Animators\ConcreteAnimators\SpinAnimator.cs" />
     <Compile Include="ObjectModel\Animators\SpriteAnimator.cs" />

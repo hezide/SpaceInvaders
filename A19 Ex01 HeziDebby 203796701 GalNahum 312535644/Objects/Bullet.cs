@@ -19,7 +19,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
             {
                 int direction = Velocity.Y > 0 ? 1 : -1;
 
-                return (Height * k_ExplosionRangeMultiplier * (float)direction);
+                return (Height * k_ExplosionRangeMultiplier * direction);
             }
         }
 
@@ -32,10 +32,10 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
         {
             base.Update(gameTime);
 
-            SetVisibleFalseIfOutOfSight();
+            setVisibleFalseIfOutOfSight();
         }
 
-        private void SetVisibleFalseIfOutOfSight()
+        private void setVisibleFalseIfOutOfSight()
         {
             if (Position.Y <= GraphicsDevice.Viewport.Y)
             {
@@ -43,11 +43,11 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
             }
         }
 
-        public override void Draw(GameTime gameTime)
+        public override void Draw(GameTime i_GameTime)
         {
             if (Visible)
             {
-                base.Draw(gameTime);
+                base.Draw(i_GameTime);
             }
         }
 

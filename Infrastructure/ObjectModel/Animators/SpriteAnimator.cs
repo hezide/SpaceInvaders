@@ -8,15 +8,19 @@ namespace Infrastructure.ObjectModel.Animators
 {
     public abstract class SpriteAnimator
     {
-        private Sprite m_BoundSprite;
-        private TimeSpan m_AnimationLength;
         private TimeSpan m_TimeLeft;
         private bool m_IsFinished = false;
-        private bool m_Enabled = true;
         private bool m_Initialized = false;
         private readonly string r_Name;
         protected bool m_ResetAfterFinish = true;
         protected internal Sprite m_OriginalSpriteInfo;
+        protected internal Sprite BoundSprite { get; set; }
+        public bool Enabled { get; set; } = true;
+
+        public string Name
+        {
+            get { return r_Name; }
+        }
 
         public event EventHandler Finished;
 
@@ -37,29 +41,12 @@ namespace Infrastructure.ObjectModel.Animators
         protected SpriteAnimator(string i_Name, TimeSpan i_AnimationLength)
         {
             r_Name = i_Name;
-            m_AnimationLength = i_AnimationLength;
-        }
-
-        protected internal Sprite BoundSprite
-        {
-            get { return m_BoundSprite; }
-            set { m_BoundSprite = value; }
-        }
-
-        public string Name
-        {
-            get { return r_Name; }
-        }
-
-        public bool Enabled
-        {
-            get { return m_Enabled; }
-            set { m_Enabled = value; }
+            AnimationLength = i_AnimationLength;
         }
 
         public bool IsFinite
         {
-            get { return this.m_AnimationLength != TimeSpan.Zero; }
+            get { return this.AnimationLength != TimeSpan.Zero; }
         }
 
         public bool ResetAfterFinish
@@ -84,16 +71,16 @@ namespace Infrastructure.ObjectModel.Animators
         {
             if (m_OriginalSpriteInfo == null)
             {
-                m_OriginalSpriteInfo = m_BoundSprite.ShallowClone();
+                m_OriginalSpriteInfo = BoundSprite.ShallowClone();
             }
         }
 
         public void Reset()
         {
-            Reset(m_AnimationLength);
+            reset(AnimationLength);
         }
 
-        public void Reset(TimeSpan i_AnimationLength)
+        private void reset(TimeSpan i_AnimationLength)
         {
             if (!m_Initialized)
             {
@@ -101,8 +88,8 @@ namespace Infrastructure.ObjectModel.Animators
             }
             else
             {
-                m_AnimationLength = i_AnimationLength;
-                m_TimeLeft = m_AnimationLength;
+                AnimationLength = i_AnimationLength;
+                m_TimeLeft = AnimationLength;
                 this.IsFinished = false;
             }
 
@@ -118,24 +105,21 @@ namespace Infrastructure.ObjectModel.Animators
 
         public void Resume()
         {
-            m_Enabled = true;
+            Enabled = true;
         }
 
         public virtual void Restart()
         {
-            Restart(m_AnimationLength);
+            Restart(AnimationLength);
         }
 
         public virtual void Restart(TimeSpan i_AnimationLength)
         {
-            Reset(i_AnimationLength);
+            reset(i_AnimationLength);
             Resume();
         }
 
-        protected TimeSpan AnimationLength
-        {
-            get { return m_AnimationLength; }
-        }
+        protected TimeSpan AnimationLength { get; private set; }
 
         public bool IsFinished
         {

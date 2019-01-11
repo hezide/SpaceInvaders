@@ -6,20 +6,15 @@ namespace Infrastructure.ObjectModel.Animators.ConcreteAnimators
 {
     public class BlinkAnimator : SpriteAnimator
     {
-        private TimeSpan m_BlinkLength;
         private TimeSpan m_TimeLeftForNextBlink;
 
-        public TimeSpan BlinkLength
-        {
-            get { return m_BlinkLength; }
-            set { m_BlinkLength = value; }
-        }
+        public TimeSpan BlinkLength { get; set; }
 
         // CTORs
         public BlinkAnimator(string i_Name, TimeSpan i_BlinkLength, TimeSpan i_AnimationLength)
             : base(i_Name, i_AnimationLength)
         {
-            this.m_BlinkLength = i_BlinkLength;
+            this.BlinkLength = i_BlinkLength;
             this.m_TimeLeftForNextBlink = i_BlinkLength;
         }
 
@@ -36,7 +31,7 @@ namespace Infrastructure.ObjectModel.Animators.ConcreteAnimators
             {
                 // we have elapsed, so blink
                 BoundSprite.Visible = !BoundSprite.Visible;
-                m_TimeLeftForNextBlink = m_BlinkLength;
+                m_TimeLeftForNextBlink = BlinkLength;
             }
         }
 

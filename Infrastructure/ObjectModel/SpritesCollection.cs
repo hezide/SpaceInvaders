@@ -40,7 +40,7 @@ namespace Infrastructure.ObjectModel
 
         protected virtual void DoOnBoundaryHit(GameTime i_GameTime)
         {
-            foreach (T item in Sprites) // TODO: change to T 
+            foreach (T item in Sprites)
             {
                 item.Velocity *= r_DirectionChangeMultiplier;
             }

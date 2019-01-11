@@ -16,6 +16,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
         private const int k_MaxCollidedEnemies = 4;
         private const double k_BoundaryHitIncreaser = 0.08;
         private const double k_DeadEnemiesIncreaser = 0.04;
+        private int m_CollidedEnemiesCounter = 0;
         public List<List<Enemy>> Enemies { get; private set; }
 
         public EnemiesGroup(Game i_Game) : base(i_Game)
@@ -63,11 +64,11 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
 
         private void addListeners(Enemy i_Enemy)
         {
-            i_Enemy.Collision += enemyCollided;
-            i_Enemy.Disposed += enemyDisposed;
+            i_Enemy.Collision += enemy_Collision;
+            i_Enemy.Disposed += enemy_Disposed;
         }
 
-        private void enemyDisposed(object i_Sender, EventArgs i_EventArgs)
+        private void enemy_Disposed(object i_Sender, EventArgs i_EventArgs)
         {
             Enemy disposedEnemy = i_Sender as Enemy;
             List<Enemy> colToRemove = null;
@@ -93,9 +94,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
             }
         }
 
-        private int m_CollidedEnemiesCounter = 0;
-
-        private void enemyCollided(object i_Sender, EventArgs i_EventArgs)
+        private void enemy_Collision(object i_Sender, EventArgs i_EventArgs)
         {
             if (++m_CollidedEnemiesCounter == k_MaxCollidedEnemies)
             {
@@ -193,13 +192,50 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
             m_JumpDestination = new Vector2(boundEnemy.Width / 2, boundEnemy.Height / 2);
             m_JumpBounds = boundEnemy.GraphicsDevice.Viewport.Bounds;
         }
-
         
         private void jumpGroup(GameTime i_GameTime)
         {
-            bool stepDown = false;
             m_TimeLeftForNextJump -= i_GameTime.ElapsedGameTime;
 
+            if (m_TimeLeftForNextJump.TotalSeconds < 0)
+            {
+                performJump();
+                m_TimeLeftForNextJump = m_TimeToJump;
+            }
+        }
+
+        private void performJump()
+        {
+            bool stepDown = false;
+
+            Vector2 jumpDestination = calcJumpDestination();
+
+            if (GroupHitBoundary())
+            {
+                stepDown = true;
+                m_GroupDirection *= r_DirectionChangeMultiplier;
+                increaseEnemyVelocity(k_BoundaryHitIncreaser);
+            }
+
+            foreach (List<Enemy> currentCol in Enemies)
+            {
+                foreach (Enemy enemy in currentCol)
+                {
+                    if (stepDown)
+                    {
+                        enemy.Position = new Vector2(enemy.Position.X, enemy.Position.Y + ((enemy.Height - 1) / 2));
+                        enemy.IncreaseCellAnimation(m_TimeToJump);
+                    }
+                    else
+                    {
+                        enemy.Position += jumpDestination;
+                    }
+                }
+            }
+        }
+
+        private Vector2 calcJumpDestination()
+        {
             Vector2 jumpDestination = m_JumpDestination * m_GroupDirection;
             Vector2 maxDistance = getEdgeEnemyByDirection().Position + jumpDestination;
 
@@ -211,33 +247,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
             {
                 jumpDestination.X = m_JumpBounds.Left - getEdgeEnemyByDirection().Position.X;
             }
-
-
-            if (m_TimeLeftForNextJump.TotalSeconds < 0)
-            {
-                if (GroupHitBoundary())
-                {
-                    stepDown = true;
-                    m_GroupDirection *= r_DirectionChangeMultiplier;
-                    increaseEnemyVelocity(k_BoundaryHitIncreaser);
-                }
-                foreach (List<Enemy> currentCol in Enemies)
-                {
-                    foreach (Enemy enemy in currentCol)
-                    {
-                        if (stepDown)
-                        {
-                            enemy.Position = new Vector2(enemy.Position.X, enemy.Position.Y + ((enemy.Height - 1) / 2));
-                            enemy.IncreaseCellAnimation(m_TimeToJump);
-                        }
-                        else
-                        {
-                            enemy.Position += jumpDestination;
-                        }
-                    }
-                }
-                m_TimeLeftForNextJump = m_TimeToJump;
-            }
+            return jumpDestination;
         }
     }
 }

@@ -16,12 +16,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
         private int m_SecondsToSpawn;
         private int m_MinTimeSpan = 1; // default value
         private int m_MaxTimeSpan = 20; // default value
-        private bool m_Enabled = true;
-        public bool Enabled
-        {
-            get { return m_Enabled; }
-            set { m_Enabled = value; }
-        }
+        public bool Enabled { get; set; } = true;
 
         public RandomActionComponent()
         {

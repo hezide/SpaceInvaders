@@ -10,38 +10,38 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
 {
     public class SpaceInvaders : Game
     {
-        readonly GraphicsDeviceManager m_Graphics;
-        private readonly Background m_Background;
-        private readonly InputManager m_InputManager;
-        private readonly CollisionsManager m_CollisionsManager;
+        readonly GraphicsDeviceManager r_Graphics;
+        private readonly Background r_Background;
+        private readonly InputManager r_InputManager;
+        private readonly CollisionsManager r_CollisionsManager;
         private Spaceship m_Player1;
         private Spaceship m_Player2;
         private EnemiesGroup m_Enemies;
         private Barriers m_Barriers;
         private MotherShip m_MotherSpaceship;
         private RandomActionComponent m_MotherShipRandomNotifier;
-        private readonly List<ScoreManager> m_ScoreManagers;
+        private readonly List<ScoreManager> r_ScoreManagers;
         private int m_ActivePlayers;
 
         public SpaceInvaders()
         {
-            m_Graphics = new GraphicsDeviceManager(this);
-            m_Background = new Background(this);
+            r_Graphics = new GraphicsDeviceManager(this);
+            r_Background = new Background(this);
             m_Player1 = new Spaceship(@"Sprites\Ship01_32x32", this);
             m_Player2 = new Spaceship(@"Sprites\Ship02_32x32", this);
-            m_InputManager = new InputManager(this);
-            m_CollisionsManager = new CollisionsManager(this);
+            r_InputManager = new InputManager(this);
+            r_CollisionsManager = new CollisionsManager(this);
 
             m_Enemies = new EnemiesGroup(this);
             m_Barriers = new Barriers(this);
             m_MotherSpaceship = new MotherShip(this);
             m_MotherShipRandomNotifier = new RandomActionComponent();
-            m_MotherShipRandomNotifier.RandomTimeAchieved += notifier_GoMotherSpaceship;
+            m_MotherShipRandomNotifier.RandomTimeAchieved += motherShipRandomNotifier_GoMotherSpaceship;
 
-            m_ScoreManagers = new List<ScoreManager>
+            r_ScoreManagers = new List<ScoreManager>
             {
-                { new ScoreManager("P1", this) { TintColor = Color.Blue} },
-                { new ScoreManager("P2", this) { TintColor = Color.Green} }
+                { new ScoreManager("Player 1", this) { TintColor = Color.Blue} },
+                { new ScoreManager("Player 2", this) { TintColor = Color.Green} }
             };
 
             Content.RootDirectory = "Content";
@@ -62,8 +62,8 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
             // *** initializing non default players positions ***
             m_Player2.Position = new Vector2(m_Player1.Position.X + m_Player1.Width, m_Player2.Position.Y);
 
-            m_Player1.Disposed += onPlayerDisposed;
-            m_Player2.Disposed += onPlayerDisposed;
+            m_Player1.Disposed += player_Disposed;
+            m_Player2.Disposed += player_Disposed;
             m_ActivePlayers = 2;
             // *** initializing souls components non default positions ***
             m_Player2.SoulsComponent.Position = new Vector2(m_Player2.SoulsComponent.Position.X, m_Player2.SoulsComponent.Position.Y + m_Player2.SoulsComponent.Height + 6);
@@ -77,14 +77,14 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
 
         private void initScoreManagers()
         {
-            m_Player1.AddCollisionListener(m_ScoreManagers[0].CollisionHandler);
-            m_Player2.AddCollisionListener(m_ScoreManagers[1].CollisionHandler);
+            m_Player1.AddCollisionListener(r_ScoreManagers[0].CollisionHandler);
+            m_Player2.AddCollisionListener(r_ScoreManagers[1].CollisionHandler);
 
-            m_ScoreManagers[0].Position = new Vector2(m_ScoreManagers[0].Position.X + 5, m_ScoreManagers[0].Position.Y + 3);
-            m_ScoreManagers[1].Position = new Vector2(m_ScoreManagers[0].Position.X, m_ScoreManagers[0].Bounds.Height);
+            r_ScoreManagers[0].Position = new Vector2(r_ScoreManagers[0].Position.X + 5, r_ScoreManagers[0].Position.Y + 3);
+            r_ScoreManagers[1].Position = new Vector2(r_ScoreManagers[0].Position.X, r_ScoreManagers[0].Bounds.Height);
         }
 
-        protected override void Update(GameTime gameTime)
+        protected override void Update(GameTime i_GameTime)
         {
             if (isGameOver())
             {
@@ -92,10 +92,10 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
             }
             else
             {
-                base.Update(gameTime);
-                m_MotherShipRandomNotifier.Update(gameTime);
-                m_Enemies.Update(gameTime);
-                m_Barriers.Update(gameTime);
+                base.Update(i_GameTime);
+                m_MotherShipRandomNotifier.Update(i_GameTime);
+                m_Enemies.Update(i_GameTime);
+                m_Barriers.Update(i_GameTime);
             }
 
             if (Keyboard.GetState().IsKeyDown(Keys.Escape))
@@ -106,18 +106,17 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
 
         private bool isGameOver()
         {
-            return (m_ActivePlayers == 0)
-                || m_Enemies.ReachedHeight(m_Player1.Bounds.Top);
+            return (m_ActivePlayers == 0) || m_Enemies.ReachedHeight(m_Player1.Bounds.Top) || m_Enemies.Enemies.Capacity == 0;
         }
 
-        protected override void Draw(GameTime gameTime)
+        protected override void Draw(GameTime i_GameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            base.Draw(gameTime);
+            base.Draw(i_GameTime);
         }
 
-        private void notifier_GoMotherSpaceship()
+        private void motherShipRandomNotifier_GoMotherSpaceship()
         {
             if (m_MotherSpaceship.IsOutOfSight())
             {
@@ -130,28 +129,28 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
             string finalScore = string.Format(@"
 {0}
 {1}
-The winner is: {2}", m_ScoreManagers[0].TextToString(), m_ScoreManagers[1].TextToString(), getWinner());
+The winner is: {2}", r_ScoreManagers[0].TextToString(), r_ScoreManagers[1].TextToString(), getWinner());
             System.Windows.Forms.MessageBox.Show(finalScore, "Game Over", System.Windows.Forms.MessageBoxButtons.OK);
             Exit();
         }
 
         private string getWinner()
         {
-            string theWinner = "Tie!";
+            string theWinner = "It's a Tie!";
 
-            if (m_ScoreManagers[0].Score > m_ScoreManagers[1].Score)
+            if (r_ScoreManagers[0].Score > r_ScoreManagers[1].Score)
             {
-                theWinner = m_ScoreManagers[0].Name;
+                theWinner = r_ScoreManagers[0].Name;
             }
-            else if (m_ScoreManagers[0].Score < m_ScoreManagers[1].Score)
+            else if (r_ScoreManagers[0].Score < r_ScoreManagers[1].Score)
             {
-                theWinner = m_ScoreManagers[1].Name;
+                theWinner = r_ScoreManagers[1].Name;
             }
 
             return theWinner;
         }
 
-        private void onPlayerDisposed(object i_Sender, EventArgs i_EventArgs)
+        private void player_Disposed(object i_Sender, EventArgs i_EventArgs)
         {
             m_ActivePlayers--;
         }

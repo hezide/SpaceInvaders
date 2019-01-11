@@ -19,7 +19,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
         public SoulsComponent SoulsComponent { get; set; }
         public Gun Gun { get; private set; }
 
-        IInputManager m_InputManager;
+        private IInputManager m_InputManager;
         public List<Keys> ActivationKeysList { private get; set; }
         public bool ActivateByMouse { private get; set; }
 
@@ -104,11 +104,11 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
             RotationOrigin = SourceRectangleCenter;
         }
 
-        public override void Update(GameTime gameTime)
+        public override void Update(GameTime i_GameTime)
         {
-            updateByInput(gameTime);
+            updateByInput(i_GameTime);
 
-            base.Update(gameTime);
+            base.Update(i_GameTime);
         }
 
         private void updateByInput(GameTime i_GameTime)
