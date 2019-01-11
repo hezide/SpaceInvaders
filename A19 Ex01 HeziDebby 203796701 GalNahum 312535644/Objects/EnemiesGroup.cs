@@ -144,6 +144,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
                 foreach (Enemy enemy in this.Sprites)
                 {      //m_GroupAtBoundary = true;
                     stepDown(enemy);
+                    
                     //enemy.UpdateDirection(m_GroupDirection);
                     // enemy.Direction *= -1; // TODO: const for -1 directionChanger
                     // stepDown(enemy);
@@ -156,6 +157,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
 
                 m_GroupDirection *= r_DirectionChangeMultiplier;
                 increaseEnemyVelocity(0.08); // TODO: const
+
             }
             //else if (m_GroupAtBoundary)
             //{
@@ -260,7 +262,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
                 jumpDestination.X = m_JumpBounds.Left - GetEdgeEnemyByDirection().Position.X;
             }
 
-            if (m_TimeLeftForNextJump.TotalSeconds < 0)
+            if (m_TimeLeftForNextJump.TotalSeconds < 0 )
             {
                 foreach (List<Enemy> currentCol in Enemies)
                 {
