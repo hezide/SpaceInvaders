@@ -7,7 +7,6 @@ using Infrastructure.ServiceInterfaces;
 
 namespace Infrastructure.Managers
 {
-    // TODO 10: Implement the collisions manager service:
     public class CollisionsManager : GameService, ICollisionsManager
     {
         protected readonly List<ICollidable> m_Collidables = new List<ICollidable>();
@@ -33,9 +32,9 @@ namespace Infrastructure.Managers
             }
         }
 
-        private void collidable_Disposed(object sender, EventArgs e)
+        private void collidable_Disposed(object i_Sender, EventArgs i_EventArgs)
         {
-            ICollidable collidable = sender as ICollidable;
+            ICollidable collidable = i_Sender as ICollidable;
 
             if (collidable != null
                 &&
@@ -85,5 +84,4 @@ namespace Infrastructure.Managers
             }
         }
     }
-    // -- end of TODO 10
 }

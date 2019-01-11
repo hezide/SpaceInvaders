@@ -25,7 +25,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
         }
 
         protected override void AllocateSprites(Game i_Game)
-        {// TODO: encapsulate in methods
+        {
             Enemies = new List<List<Enemy>>();
 
             int seed = 1;
@@ -48,12 +48,13 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
                         TintColor = currentEnemyColor
                     };
 
-                    enemyToAdd.Collision += EnemyCollided;
-                    enemyToAdd.Disposed += EnemyDisposed;
+                    addListeners(enemyToAdd);
+
                     currentCol.Add(enemyToAdd);
 
                     enemyCellIdx.X += row % 2 == 0 ? 1 : 0;
                     enemyCellIdx.Y = row % 2 == 0 ? 0 : 1;
+
                     currentEnemyColor = getEnemyColorByRow(row);
                 }
 
@@ -61,8 +62,14 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
             }
         }
 
-        private void EnemyDisposed(object i_Sender, EventArgs i_EventArgs) // TODO: on sprites collection - for barrier too
-        {// TODO: what about collided ? logically its the same
+        private void addListeners(Enemy i_Enemy)
+        {
+            i_Enemy.Collision += enemyCollided;
+            i_Enemy.Disposed += enemyDisposed;
+        }
+
+        private void enemyDisposed(object i_Sender, EventArgs i_EventArgs)
+        {
             Enemy disposedEnemy = i_Sender as Enemy;
             List<Enemy> colToRemove = null;
 
@@ -89,7 +96,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
 
         private int m_CollidedEnemiesCounter = 0;
 
-        private void EnemyCollided(object i_Sender, EventArgs i_EventArgs)
+        private void enemyCollided(object i_Sender, EventArgs i_EventArgs)
         {
             if (++m_CollidedEnemiesCounter == k_MaxCollidedEnemies)
             {
@@ -209,8 +216,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
             m_TimeToJump = TimeSpan.FromSeconds(0.5);
             m_TimeLeftForNextJump = TimeSpan.FromSeconds(0.5);
 
-            Enemy enemy = getEdgeEnemyByDirection();
-            Enemy boundEnemy = enemy; // TODO: the names arent so good
+            Enemy boundEnemy = getEdgeEnemyByDirection();
             m_JumpDestination = new Vector2(boundEnemy.Width / 2, boundEnemy.Height / 2);
             m_JumpBounds = boundEnemy.GraphicsDevice.Viewport.Bounds;
 

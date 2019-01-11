@@ -9,9 +9,9 @@ using System.Collections.Generic;
 
 namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
 {
-    public class Spaceship : Sprite, ICollidable2D //, IShooter
+    public class Spaceship : Sprite, ICollidable2D
     {
-        public enum eActivationKey { Left, Right, Shoot }; // TODO: is enum good here ?
+        private enum eActivationKey { Left, Right, Shoot };
 
         private const int k_MaxAmmo = 3;
         private const float k_Velocity = 145;
@@ -19,30 +19,19 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
         public SoulsComponent SoulsComponent { get; set; }
         public Gun Gun { get; private set; }
 
-        //  public InputActivator m_InputActivator { get; set; }
-        // TODO: consider encapsulating the folowing in a class
         IInputManager m_InputManager;
         public List<Keys> ActivationKeysList { private get; set; }
         public bool ActivateByMouse { private get; set; }
-        // TODO: this way, i count on who ever activating the player to remember setting a score manager
-        // TODO: lets try and see that is works, after it does ->
-        // lets create a public method on sprite of add listenres then only scroeManager will know player
-        //public ScoreManager ScoreManager { get; set; }
 
         public Spaceship(string i_AssetName, Game i_Game) : base(i_AssetName, i_Game)
         {
-            //  r_Name = i_Name;
             SoulsComponent = new SoulsComponent(i_AssetName, Game);
             Gun = new Gun(k_MaxAmmo, i_Game, this.GetType());
-            //    ScoreManager = i_ScoreManager;
         }
 
         public override void Initialize()
         {
             base.Initialize();
-            //  m_UseSharedBatch = false;
-          //  m_SpriteBatch = new SpriteBatch(GraphicsDevice);
-          //  m_UseSharedBatch = false;
 
             initInputManager();
 
@@ -54,15 +43,6 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
             setInitialPosition();
             initAnimations();
         }
-
-        // TODO: *** for unshared sprite batch
-        //protected override void LoadContent()
-        //{
-        //    m_SpriteBatch = new SpriteBatch(GraphicsDevice);
-        //    m_UseSharedBatch = false;
-
-        //    base.LoadContent();
-        //}
 
         private void initAnimations()
         {
@@ -87,7 +67,6 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
             this.Animations["Blinker"].Pause();
             this.Animations["Spinner"].Enabled = false;
             this.Animations["Fader"].Enabled = false;
-            // this.Animations.Pause();
         }
 
         private void onHitAnimationFinish(object i_Sender, EventArgs i_EventArgs)
@@ -97,7 +76,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
                 setInitialPosition();
             }
             else
-            { // TODO: check how affect at game over
+            {
                 this.Dispose(true);
             }
         }
@@ -193,7 +172,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
         }
 
         public override void Collided(ICollidable i_Collidable)
-        {// TODO: souls reach -1 -> see what is the right way to dispose player
+        {
             SoulsComponent.NumberOfSouls--;
 
             if (SoulsComponent.NumberOfSouls > 0)
@@ -201,7 +180,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
                 this.Animations["Blinker"].Restart();
             }   
             else
-            {// TODO: this is compositeAnimator.. encapsulate
+            {
                 this.Animations["Spinner"].Enabled = true;
                 this.Animations["Fader"].Enabled = true;
                 this.Gun.Enable = false;
@@ -209,7 +188,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
 
             OnCollision(this, EventArgs.Empty);
         }
-        // TODO: here and on gun(with foreach) - is this the right place ?
+        
         public void AddCollisionListener(EventHandler i_CollisionHandler)
         {
             this.Collision += new EventHandler<EventArgs>(i_CollisionHandler);
@@ -222,18 +201,3 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
         }
     }
 }
-
-/*
-
-     */
-//public class InputActivated
-//{ // TODO: check accesibilty level required
-//    public enum eActivationKey { Left, Right, Shoot };
-//    // public Dictionary<eActivationKey, Func>
-//    private IInputManager m_InputManager;
-//    public List<Keys> ActivationKeysList { get; set; }
-
-//    public InputActivated()
-//    {
-
-//    }

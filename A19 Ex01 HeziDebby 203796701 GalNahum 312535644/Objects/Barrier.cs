@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework;
 
 namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
 {
-    public class Barrier : Sprite, ICllidableByPixels
+    public class Barrier : Sprite, ICollidableByPixels
     {
         private const string k_AssetName = @"Sprites\Barrier_44x32";
         private const float k_Velocitiy = 45;
@@ -17,8 +17,6 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
         public override void Initialize()
         {
             base.Initialize();
-            // TODO: *** for unshared sprite batch
-            //m_SpriteBatch = new SpriteBatch(GraphicsDevice);
 
             Velocity = new Vector2(k_Velocitiy, 0);
             Texture = GetTextureClone();
@@ -28,11 +26,5 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
         {
             DrawNonPremultiplied();
         }
-
-        //public override bool HitBoundary()
-        //{
-        //    return (Bounds.Right >= GraphicsDevice.Viewport.Bounds.Right ||
-        //            Bounds.Left <= GraphicsDevice.Viewport.Bounds.Left);
-        //}
     }
 }

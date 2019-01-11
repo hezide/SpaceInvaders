@@ -14,7 +14,7 @@ namespace Infrastructure.ObjectModel.Animators
         private bool m_IsFinished = false;
         private bool m_Enabled = true;
         private bool m_Initialized = false;
-        private string m_Name;
+        private readonly string r_Name;
         protected bool m_ResetAfterFinish = true;
         protected internal Sprite m_OriginalSpriteInfo;
 
@@ -36,7 +36,7 @@ namespace Infrastructure.ObjectModel.Animators
 
         protected SpriteAnimator(string i_Name, TimeSpan i_AnimationLength)
         {
-            m_Name = i_Name;
+            r_Name = i_Name;
             m_AnimationLength = i_AnimationLength;
         }
 
@@ -48,7 +48,7 @@ namespace Infrastructure.ObjectModel.Animators
 
         public string Name
         {
-            get { return m_Name; }
+            get { return r_Name; }
         }
 
         public bool Enabled

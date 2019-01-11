@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.ServiceInterfaces
 {
-    public interface IExplodable
+    public interface IExplodable : ICollidable2D
     {
         float ExplosionRange { get; }
     }

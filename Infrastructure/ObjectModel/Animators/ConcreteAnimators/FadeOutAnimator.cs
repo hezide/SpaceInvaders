@@ -28,11 +28,6 @@ namespace Infrastructure.ObjectModel.Animators.ConcreteAnimators
             alpha -= (byte)(m_AlphaFactor * i_GameTime.ElapsedGameTime.TotalSeconds);
 
             BoundSprite.TintColor = new Color(BoundSprite.TintColor, alpha);
-
-            if (alpha <= 0)
-            {// TODO: check the calcluation because the alpha is never 0
-                int i = 0;
-            }
         }
 
         protected override void RevertToOriginal()

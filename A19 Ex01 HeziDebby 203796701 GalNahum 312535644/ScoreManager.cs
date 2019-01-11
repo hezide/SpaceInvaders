@@ -1,14 +1,13 @@
 ﻿using A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects;
 using Infrastructure.ObjectModel;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 
 namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
 {
     public class ScoreManager : TextComponent
-    {// TODO: should be a game service , interface of score manager ?
+    {
         private const string k_AssetName = @"Fonts\Comic Sans MS";
         private readonly string r_Name;
 
@@ -44,7 +43,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
             base.Initialize();
             initScoreTable();
         }
-        // TODO: think how to make general
+
         private void initScoreTable()
         {
             m_ScoreTable = new Dictionary<Type, int>
