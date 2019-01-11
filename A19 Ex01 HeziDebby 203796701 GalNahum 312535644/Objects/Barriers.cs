@@ -1,17 +1,12 @@
 ﻿using Infrastructure.ObjectModel;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
 {
     public class Barriers : SpritesCollection<Barrier>
     {
         private const int k_NumberOfBarriers = 4;
+        private Vector2 m_BarrierBounds;
 
         public Barriers(Game i_Game) : base(i_Game)
         {
@@ -27,7 +22,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
 
         protected override void InitPositions(float i_InitialX, float i_InitialY)
         {
-            // TODO: calculation ?
+
             float x = i_InitialX / (Sprites.Count) + Sprites[0].Width * 1.5f;
             float y = 0;
 
@@ -39,13 +34,25 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
 
                 x += sprite.Width * 2;
             }
+
+            initGroupBounds();
         }
 
-        //protected override bool GroupHitBoundary()
-        //{
-        //    Barrier barrier = Sprites[GetEdgeSpriteIdxByDirection()];
+        private void initGroupBounds()
+        {
+            int leftBound = Sprites[0].Bounds.Left;
+            int rightBound = Sprites[k_NumberOfBarriers - 1].Bounds.Right;
 
-        //    return barrier.Bounds.Right >= barrier.
-        //}
+            m_BarrierBounds = new Vector2(leftBound, rightBound);
+        }
+
+        protected override bool GroupHitBoundary()
+        {
+            Barrier barrier = Sprites[GetEdgeSpriteIdxByDirection()];
+            float offset = barrier.Width / 2;
+
+            return barrier.Bounds.Right >= m_BarrierBounds.Y + offset ||
+                barrier.Bounds.Left <= m_BarrierBounds.X - offset;
+        }
     }
 }

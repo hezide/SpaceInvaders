@@ -7,12 +7,11 @@ namespace Infrastructure.ObjectModel.Animators.ConcreteAnimators
     public class CellAnimator : SpriteAnimator
     {
         private readonly int r_NumOfCells = 1;
+        private readonly bool r_Loop = true;
         private int m_CurrCellIdx = 0;
-        private bool m_Loop = true;
         private TimeSpan m_CellTime;
         private TimeSpan m_TimeLeftForCell;
 
-        // TODO: overload with name
         // CTORs
         public CellAnimator(TimeSpan i_CellTime, int i_NumOfCells, TimeSpan i_AnimationLength)
             : base("CellAnimation", i_AnimationLength)
@@ -21,7 +20,7 @@ namespace Infrastructure.ObjectModel.Animators.ConcreteAnimators
             this.m_TimeLeftForCell = i_CellTime;
             this.r_NumOfCells = i_NumOfCells;
 
-            m_Loop = i_AnimationLength == TimeSpan.Zero;
+            r_Loop = i_AnimationLength == TimeSpan.Zero;
         }
 
         public CellAnimator(TimeSpan i_CellTime, int i_NumOfCells, int i_CurrentCell, TimeSpan i_AnimationLength)
@@ -36,7 +35,7 @@ namespace Infrastructure.ObjectModel.Animators.ConcreteAnimators
 
             if (m_CurrCellIdx >= r_NumOfCells)
             {
-                if (m_Loop)
+                if (r_Loop)
                 {
                     m_CurrCellIdx = 0;
                 }

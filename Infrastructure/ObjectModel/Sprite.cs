@@ -4,7 +4,6 @@ using Infrastructure.ServiceInterfaces;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
-using System.Collections.Generic;
 
 namespace Infrastructure.ObjectModel
 {
@@ -263,7 +262,7 @@ namespace Infrastructure.ObjectModel
         {
             m_SourceRectangle = new Rectangle(0, 0, (int)m_WidthBeforeScale, (int)m_HeightBeforeScale);
         }
-        //TODO: changed sharedSpriteBatch to protected, maybe better by draw order
+
         private bool m_UseSharedBatch = true;
 
         protected SpriteBatch m_SpriteBatch;
@@ -374,23 +373,21 @@ namespace Infrastructure.ObjectModel
 
             ICollidable2D source = i_Source as ICollidable2D;
 
+            // *** first checking rectangle intersections ***
             Rectangle intersection = boundsIntersection(source);
             collided = intersection != Rectangle.Empty;
-            
-            if (collided && this is ICllidableByPixels)
+            // *** pixel based collision detection if this || i_Source are ICollidableByPixels ***
+            if (collided && this is ICollidableByPixels)
             {
-                collided = (this as ICllidableByPixels).PixelBasedCollisionComponent.CheckCollision(source, intersection);
+                collided = (this as ICollidableByPixels).PixelBasedCollisionComponent.CheckCollision(source, intersection);
             }
-            else if (collided && (source is ICllidableByPixels))
+            else if (collided && (source is ICollidableByPixels))
             {
                 collided = false;
             }
 
             return collided;
         }
-        // TODO: maybe on pixel manager
-        public List<Point> IntersectionPoints { get; set; }
-        public Rectangle IntersectionRectangle { get; set; }
 
         private Rectangle boundsIntersection(ICollidable2D i_Source)
         {
@@ -437,7 +434,7 @@ namespace Infrastructure.ObjectModel
         public virtual void Collided(ICollidable i_Collidable)
         {
             // defualt behavior
-            if (this is ICllidableByPixels)
+            if (this is ICollidableByPixels)
             {
                 PixelBasedCollisionComponent.Collided(i_Collidable);
             }
@@ -449,7 +446,6 @@ namespace Infrastructure.ObjectModel
             OnCollision(i_Collidable, EventArgs.Empty); // TODO: isnt the sender is this ? or both ?
         }
         
-
         #endregion //Collision Handlers
 
         protected Texture2D GetTextureClone()

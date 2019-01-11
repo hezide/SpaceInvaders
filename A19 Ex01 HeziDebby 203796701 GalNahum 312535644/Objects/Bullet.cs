@@ -6,11 +6,12 @@ using System;
 
 namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
 {
-    public class Bullet : Sprite, ICollidable2D, IExplodable // TODO: try to avoid iExplodable
+    public class Bullet : Sprite, ICollidable2D, IExplodable
     {
         private const string k_AssetName = @"Sprites\Bullet";
         private const float k_Velocity = 155;
-        public Type OwnerType; // TODO: should i put default value ?
+        private const float k_ExplosionRangeMultiplier = 0.7f;
+        public Type OwnerType;
 
         public float ExplosionRange
         {
@@ -18,7 +19,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
             {
                 int direction = Velocity.Y > 0 ? 1 : -1;
 
-                return (Height * 0.7f * (float)direction);
+                return (Height * k_ExplosionRangeMultiplier * (float)direction);
             }
         }
 
@@ -34,7 +35,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
             SetVisibleFalseIfOutOfSight();
         }
 
-        private void SetVisibleFalseIfOutOfSight() // TODO: can be on sprite ? have something like this on motherShip .. check
+        private void SetVisibleFalseIfOutOfSight()
         {
             if (Position.Y <= GraphicsDevice.Viewport.Y)
             {
@@ -64,24 +65,17 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
 
         public override void Collided(ICollidable i_Collidable)
         {
-            if (i_Collidable is Bullet && this.OwnerType == typeof(Enemy)) // TODO: do i have to have type checking ?
+            if (i_Collidable is Bullet && this.OwnerType == typeof(Enemy))
             {
                 if (isRandomCollision())
                 {
-                    doCollision(i_Collidable); //TODO: is this the same as calling the base class ? check
+                    base.Collided(i_Collidable);
                 }
             }
             else
             {
-                doCollision(i_Collidable);
+                base.Collided(i_Collidable);
             }
-        }
-
-        private void doCollision(ICollidable i_Collidable)
-        {
-            this.Visible = false;
-
-            OnCollision(i_Collidable, EventArgs.Empty);
         }
 
         private bool isRandomCollision()

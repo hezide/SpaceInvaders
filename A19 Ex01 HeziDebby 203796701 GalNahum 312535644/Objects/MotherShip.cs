@@ -19,13 +19,9 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
         public override void Initialize()
         {
             base.Initialize();
-            // TODO: *** for unshared sprite batch
-            //m_SpriteBatch = new SpriteBatch(GraphicsDevice);
-            //m_UseSharedBatch = false;
 
             m_TintColor = Color.Red;
             Visible = false;
-            //  SetInitialValues();
 
             initAnimations();
         }

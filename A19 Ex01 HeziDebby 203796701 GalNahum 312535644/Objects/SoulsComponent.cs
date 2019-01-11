@@ -22,9 +22,6 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
         public override void Initialize()
         {
             base.Initialize();
-            // TODO: *** for unshared sprite batch
-            //m_SpriteBatch = new SpriteBatch(GraphicsDevice);
-            //m_UseSharedBatch = false;
 
             Scales = new Vector2(0.5f);
 
@@ -46,14 +43,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
 
             Position = new Vector2(x, y);
         }
-        // protected override void InitBounds()
-        // {
-        //     PosOfOriginInScreen = Position;
-        //     DestinationRectangle = new Rectangle((int)Position.X, (int)Position.Y, Width, Height);
-        //     // TODO: implementation required -> all the dependens on height and width and position
-        ////     Rectangle bounds = new Rectangle(Position,Width;
-        // }
-
+     
         public override void Draw(GameTime gameTime)
         {
             m_SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied);

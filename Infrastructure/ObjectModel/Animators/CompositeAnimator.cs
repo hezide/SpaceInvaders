@@ -48,7 +48,9 @@ namespace Infrastructure.ObjectModel.Animators
         public void Remove(string i_AnimationName)
         {
             SpriteAnimator animationToRemove;
+
             m_AnimationsDictionary.TryGetValue(i_AnimationName, out animationToRemove);
+
             if (animationToRemove != null)
             {
                 m_AnimationsDictionary.Remove(i_AnimationName);

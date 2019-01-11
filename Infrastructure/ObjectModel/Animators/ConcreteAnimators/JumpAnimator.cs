@@ -2,7 +2,7 @@
 using System;
 
 namespace Infrastructure.ObjectModel.Animators.ConcreteAnimators
-{// TODO: only jumps on X - make generic jump animator
+{
     public class JumpAnimator : SpriteAnimator
     {
         private TimeSpan m_TimeToJump;
@@ -10,7 +10,6 @@ namespace Infrastructure.ObjectModel.Animators.ConcreteAnimators
         private Vector2 m_JumpDestination;
         private Rectangle m_JumpBounds;
 
-        // TODO: create more generic overloads
         public JumpAnimator(
             string i_Name,
             Vector2 i_JumpDestination,
@@ -37,18 +36,16 @@ namespace Infrastructure.ObjectModel.Animators.ConcreteAnimators
         {
             m_TimeLeftForNextJump -= i_GameTime.ElapsedGameTime;
 
-            Vector2 jumpDestination = m_JumpDestination; // * BoundSprite.Direction; // TODO get direction as input
+            Vector2 jumpDestination = m_JumpDestination;
             Vector2 maxDistance = BoundSprite.Position + jumpDestination;
 
             if (maxDistance.X >= m_JumpBounds.Right - BoundSprite.Width)
             {
                 jumpDestination.X +=  (m_JumpBounds.Right - BoundSprite.Width) - maxDistance.X;
-                //jumpDestination = new Vector2(m_JumpBounds.Right - BoundSprite.Width, BoundSprite.Position.Y);
             }
             else if (maxDistance.X <= m_JumpBounds.Left)
             {
                 jumpDestination.X -= m_JumpBounds.Left + maxDistance.X;
-                //jumpDestination = new Vector2(m_JumpBounds.Left, BoundSprite.Position.Y);
             }
 
             if (m_TimeLeftForNextJump.TotalSeconds < 0)

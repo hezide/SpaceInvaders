@@ -9,7 +9,6 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
 {
     public class RandomActionComponent
     {
-        private Game Game { get; set; }
         private TimeSpan m_RandomSpanTime;
         private TimeSpan m_PrevRandomSpanTime;
         private Random m_Random;
@@ -17,6 +16,12 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
         private int m_SecondsToSpawn;
         private int m_MinTimeSpan = 1; // default value
         private int m_MaxTimeSpan = 20; // default value
+        private bool m_Enabled = true;
+        public bool Enabled
+        {
+            get { return m_Enabled; }
+            set { m_Enabled = value; }
+        }
 
         public RandomActionComponent()
         {
@@ -53,11 +58,14 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
 
         public void Update(GameTime i_GameTime)
         {
-            if (i_GameTime.TotalGameTime - m_PrevRandomSpanTime > m_RandomSpanTime)
+            if (Enabled)
             {
-                m_PrevRandomSpanTime = i_GameTime.TotalGameTime;
-                RandomTimeAchieved.Invoke();
-                randomize();
+                if (i_GameTime.TotalGameTime - m_PrevRandomSpanTime > m_RandomSpanTime)
+                {
+                    m_PrevRandomSpanTime = i_GameTime.TotalGameTime;
+                    RandomTimeAchieved.Invoke();
+                    randomize();
+                }
             }
         }
     }

@@ -14,7 +14,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
         private const int k_MaxAmmo = 1;
 
         private RandomActionComponent m_RandomShootingNotifier;
-        private Gun Gun;
+        private Gun m_Gun;
 
         private int m_Seed = 0;
         public int Seed
@@ -26,27 +26,26 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
         public Enemy(string i_AssetName, Game i_Game) : base(i_AssetName, i_Game)
         {
             m_TintColor = Color.Red;
-            Gun = new Gun(k_MaxAmmo, i_Game, this.GetType());
+            m_Gun = new Gun(k_MaxAmmo, i_Game, this.GetType());
         }
 
         public override void Initialize()
         {
             base.Initialize();
 
-            Gun.Initialize(Color.Blue);
+            m_Gun.Initialize(Color.Blue);
 
             m_RandomShootingNotifier = new RandomActionComponent(1, 30, Seed);
             m_RandomShootingNotifier.RandomTimeAchieved += Shoot;
 
             initAnimations();
         }
-        // TODO: set compositeAnimator for dyingAnimaions etc
+
         private void initAnimations()
         {
             TimeSpan animationLength = TimeSpan.FromSeconds(0.5);
 
            CellAnimator celAnimation = new CellAnimator(animationLength, k_NumOfFrames, (int)CellIdx.Y, TimeSpan.Zero);
-         //    JumpAnimator jumper = new JumpAnimator("Jumper", new Vector2(this.Width / 2, this.Position.Y), GraphicsDevice.Viewport.Bounds, animationLength, TimeSpan.Zero);
 
             float spinsPerSecond = MathHelper.TwoPi * 6;
             animationLength = TimeSpan.FromSeconds(1.2);
@@ -57,8 +56,6 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
             spinner.Finished += new EventHandler(onDyingAnimationFinish);
 
             this.Animations.Add(celAnimation);
-            //  this.Animations.Add(blinker);
-          //  this.Animations.Add(jumper);
             this.Animations.Add(spinner);
             this.Animations.Add(shrinker);
 
@@ -109,8 +106,8 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
 
         public override void Collided(ICollidable i_Collidable)
         {
-            if (!(i_Collidable is ICllidableByPixels))
-            { // TODO: apply as composite animator
+            if (!(i_Collidable is ICollidableByPixels))
+            {
                 this.Animations["Spinner"].Enabled = true;
                 this.Animations["Shrinker"].Enabled = true;
             }
@@ -119,7 +116,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
         }
 
         public override void Update(GameTime gameTime)
-        { // TODO: check if i can add as game service (Iupdatable ? )
+        {
             m_RandomShootingNotifier.Update(gameTime);
 
             base.Update(gameTime);
@@ -127,7 +124,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
 
         public void Shoot()
         {
-            Gun.Shoot(new Vector2(Position.X + Width / 2, Position.Y));
+            m_Gun.Shoot(new Vector2(Position.X + Width / 2, Position.Y));
         }
 
         public override bool CheckCollision(ICollidable i_Source)
@@ -144,7 +141,13 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
 
         public void IncreaseCellAnimation(TimeSpan i_TimeToJump)
         {
-            (this.Animations["CellAnimation"] as CellAnimator).UpdateCellTime(i_TimeToJump); // TODO: do i have to have casting ?
+            (this.Animations["CellAnimation"] as CellAnimator).UpdateCellTime(i_TimeToJump);
+        }
+
+        protected override void Dispose(bool i_Disposing)
+        {
+            base.Dispose(i_Disposing);
+            m_RandomShootingNotifier.Enabled = false;
         }
     }
 }
