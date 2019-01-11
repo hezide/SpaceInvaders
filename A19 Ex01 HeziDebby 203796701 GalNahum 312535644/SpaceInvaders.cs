@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 
+
 namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
 {
     public class SpaceInvaders : Game
@@ -51,6 +52,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
         {// TODO: *** this is where this should be for the spriteBatch to be for everyone
             //m_SpriteBatch = new SpriteBatch(GraphicsDevice);
             //this.Services.AddService(typeof(SpriteBatch), m_SpriteBatch);
+            
 
             base.Initialize();
             m_SpriteBatch = new SpriteBatch(GraphicsDevice);
@@ -75,6 +77,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
             m_Enemies.Initialize();
 
             m_Barriers.Initialize(GraphicsDevice.Viewport.Width, m_Player1.Position.Y);
+
         }
 
         private void initScoreManagers()
@@ -136,8 +139,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
 {0}
 {1}
 The winner is: {2}", m_ScoreManagers[0].TextToString(), m_ScoreManagers[1].TextToString(), getWinner());
-
-            MessageBox.Show("Game Over", finalScore, new[] { "OK" });
+            System.Windows.Forms.MessageBox.Show(finalScore, "Game Over", System.Windows.Forms.MessageBoxButtons.OK);
             Exit();
         }
 
