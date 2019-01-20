@@ -14,8 +14,8 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Screens
 {
     class WelcomeScreen : GameScreen
     {
-        TextComponent m_WelcomeMessage;
-        IInputManager m_InputManager;
+        private TextComponent m_WelcomeMessage;
+        private IInputManager m_InputManager;
         public WelcomeScreen(Game i_Game):base(i_Game)
         {
             Background background = new Background(this.Game, this);
@@ -35,6 +35,14 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Screens
             if (m_InputManager.KeyPressed(Keys.Enter))
             {
                 ExitScreen();
+            }
+            else if (m_InputManager.KeyPressed(Keys.Escape))
+            {
+                Game.Exit();
+            }
+            else if (m_InputManager.KeyPressed(Keys.T))
+            {
+                //todo:: show main menu
             }
         }
         public override void Draw(GameTime i_GameTime)

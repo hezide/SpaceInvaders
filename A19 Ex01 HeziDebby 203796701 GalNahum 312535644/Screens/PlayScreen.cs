@@ -26,6 +26,14 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
                 Player1Active = i_Player1Active;
                 Player2Active = i_Player2Active;
             }
+
+            public void AddItemsToScreen(PlayScreen i_PlayScreen)
+            {
+                foreach (ScoreManager scoreManager in ScoreManagers)
+                {
+                    i_PlayScreen.Add(scoreManager);
+                }
+            }
         }
 
         private Spaceship m_Player1;
@@ -35,8 +43,6 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
         private MotherShip m_MotherSpaceship;
         private RandomActionComponent m_MotherShipRandomNotifier;
         private SpaceInvadersSettings m_GameSettings;
-
-        //private readonly List<ScoreManager> r_ScoreManagers = new List<ScoreManager>();
         private GameState m_GameState;
 
         public PlayScreen(Game i_Game, GameState i_GameState = null) : base(i_Game)
@@ -49,8 +55,6 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
                 throw new Exception("a setting class has not been initialized as a service");
             }
             setGameState(i_GameState, m_GameSettings);
-
-            //m_ActivePlayers = m_GameState.GetNumOfActivePlayers();
 
             createPlayersAndScoreManagers();
             m_Enemies = new EnemiesGroup(this.Game, this);
@@ -79,10 +83,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
             else
             {
                 m_GameState = i_GameState;
-                foreach (ScoreManager item in m_GameState.ScoreManagers)
-                {
-                    this.Add(item);
-                }
+                m_GameState.AddItemsToScreen(this);
             }
         }
 
@@ -91,13 +92,11 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
             if(m_GameState.Player1Active)
             {
                 m_Player1 = new Spaceship(@"Sprites\Ship01_32x32", this.Game, this);
-                //m_GameState.ScoreManagers.Add(new ScoreManager("Player 1", this.Game, this) { TintColor = Color.Blue });
             }
 
             if (m_GameState.Player2Active)
             {
                 m_Player2 = new Spaceship(@"Sprites\Ship02_32x32", this.Game, this);
-                //m_GameState.ScoreManagers.Add(new ScoreManager("Player 2", this.Game, this) { TintColor = Color.Green });
             }
         }
 
@@ -167,7 +166,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
 
         private bool isLevelCompleted()
         {
-            return m_Enemies.Enemies.Capacity == 0;
+            return m_Enemies.Enemies.Count == 0;
         }
 
         public override void Update(GameTime i_GameTime)
@@ -178,10 +177,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
             }
             else if (isLevelCompleted())
             {
-                ExitScreen();
-                m_GameSettings.GoToNextLevel();
-                ScreensManager.SetCurrentScreen(new PlayScreen(Game,m_GameState));
-                ScreensManager.SetCurrentScreen(new LevelTransitionScreen(Game, m_GameSettings.CurrentLevel));
+                onLevelCompleted();
             }
             else
             {
@@ -193,22 +189,29 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
 
             if (Keyboard.GetState().IsKeyDown(Keys.Escape))
             {
+                //todo:: what to do on esc now? Game over or welcome screen?
                 this.Game.Exit();
             }
             if (InputManager.KeyPressed(Keys.P))
             {
                 ScreensManager.SetCurrentScreen(new PauseScreen(this.Game));
             }
+            //DEBUG - change level by pressing T
+            if (InputManager.KeyPressed(Keys.T))
             {
-                //DEBUG
-                if (InputManager.KeyPressed(Keys.T))
-                {
-                    ExitScreen();
-                    m_GameSettings.GoToNextLevel();
-                    ScreensManager.SetCurrentScreen(new PlayScreen(Game, m_GameState));
-                    ScreensManager.SetCurrentScreen(new LevelTransitionScreen(Game, m_GameSettings.CurrentLevel));
-                }
+                ExitScreen();
+                m_GameSettings.GoToNextLevel();
+                ScreensManager.SetCurrentScreen(new PlayScreen(Game, m_GameState));
+                ScreensManager.SetCurrentScreen(new LevelTransitionScreen(Game, m_GameSettings.CurrentLevel));
             }
+        }
+
+        private void onLevelCompleted()
+        {
+            ExitScreen();
+            m_GameSettings.GoToNextLevel();
+            ScreensManager.SetCurrentScreen(new PlayScreen(Game, m_GameState));
+            ScreensManager.SetCurrentScreen(new LevelTransitionScreen(Game, m_GameSettings.CurrentLevel));
         }
 
         private void motherShipRandomNotifier_GoMotherSpaceship()
@@ -221,30 +224,11 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
 
         private void onGameOver()
         {
-            //Old code, delete when game over screen is implemented properly
-            //            string finalScore = string.Format(@"
-            //{0}
-            //{1}
-            //The winner is: {2}", r_ScoreManagers[0].TextToString(), r_ScoreManagers[1].TextToString(), getWinner());
-            //            System.Windows.Forms.MessageBox.Show(finalScore, "Game Over", System.Windows.Forms.MessageBoxButtons.OK);
-            //            this.Game.Exit();
+            if (PreviousScreen as GameOverScreen != null)
+            {
+                (PreviousScreen as GameOverScreen).SetScore(m_GameState.ScoreManagers);
+            }
             ExitScreen();
-        }
-
-        private string getWinner()
-        {
-            string theWinner = "It's a Tie!";
-
-            //if (r_ScoreManagers[0].Score > r_ScoreManagers[1].Score)
-            //{
-            //    theWinner = r_ScoreManagers[0].Name;
-            //}
-            //else if (r_ScoreManagers[0].Score < r_ScoreManagers[1].Score)
-            //{
-            //    theWinner = r_ScoreManagers[1].Name;
-            //}
-
-            return theWinner;
         }
 
         private void player_Disposed(object i_Sender, EventArgs i_EventArgs)

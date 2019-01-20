@@ -146,6 +146,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
 
         protected override int GetEdgeSpriteIdxByDirection()
         {
+            //todo the problem is here!! if the is only one col left, the index will always be a sprite that still hit the boundry
             return m_GroupDirection.X > 0 ? Enemies.Count - 1 : 0;
         }
 

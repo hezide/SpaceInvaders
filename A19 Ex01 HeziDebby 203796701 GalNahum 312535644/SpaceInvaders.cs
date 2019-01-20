@@ -31,9 +31,8 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
             r_ScreensManager = new ScreensMananger(this);
             r_ScreensManager.Push(new GameOverScreen(this));
             r_ScreensManager.Push(new PlayScreen(this));
-            r_ScreensManager.Push(new LevelTransitionScreen(this, 1));
+            r_ScreensManager.Push(new LevelTransitionScreen(this, 0));
             r_ScreensManager.SetCurrentScreen(new WelcomeScreen(this));
-
         }
         protected override void Initialize()
         {
