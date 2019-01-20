@@ -1,4 +1,5 @@
 ﻿using Infrastructure.ObjectModel;
+using Infrastructure.ObjectModel.Screens;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -14,7 +15,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
         private const int k_NumberOfSouls = 3;
         public int NumberOfSouls { get; set; }
 
-        public SoulsComponent(string i_AssetName, Game i_Game) : base(i_AssetName, i_Game)
+        public SoulsComponent(string i_AssetName, Game i_Game, GameScreen i_Screen) : base(i_AssetName, i_Game, i_Screen)
         {
             NumberOfSouls = k_NumberOfSouls;
         }
@@ -46,11 +47,11 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
      
         public override void Draw(GameTime gameTime)
         {
-            m_SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied);
+            //m_SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied);
 
             drawSouls();
 
-            m_SpriteBatch.End();
+            //m_SpriteBatch.End();
         }
 
         private void drawSouls()

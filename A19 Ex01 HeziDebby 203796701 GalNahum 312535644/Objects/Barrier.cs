@@ -1,4 +1,5 @@
 ﻿using Infrastructure.ObjectModel;
+using Infrastructure.ObjectModel.Screens;
 using Infrastructure.ServiceInterfaces;
 using Microsoft.Xna.Framework;
 
@@ -7,9 +8,8 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
     public class Barrier : Sprite, ICollidableByPixels
     {
         private const string k_AssetName = @"Sprites\Barrier_44x32";
-        private const float k_Velocitiy = 45;
 
-        public Barrier(Game i_Game) : base(k_AssetName, i_Game)
+        public Barrier(Game i_Game, GameScreen i_Screen) : base(k_AssetName, i_Game, i_Screen)
         {
             PixelBasedCollisionComponent = new PixelBasedCollisionComponent(this);
         }
@@ -18,7 +18,8 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
         {
             base.Initialize();
 
-            Velocity = new Vector2(k_Velocitiy, 0);
+            float barrierSpeed = (m_GameSettings as SpaceInvadersSettings).BarriersVelocity;
+            Velocity = new Vector2(barrierSpeed, 0);
             Texture = GetTextureClone();
         }
 

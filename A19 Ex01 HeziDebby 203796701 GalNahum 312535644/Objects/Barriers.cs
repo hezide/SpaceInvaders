@@ -1,4 +1,5 @@
 ﻿using Infrastructure.ObjectModel;
+using Infrastructure.ObjectModel.Screens;
 using Microsoft.Xna.Framework;
 
 namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
@@ -8,7 +9,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
         private const int k_NumberOfBarriers = 4;
         private Vector2 m_BarrierBounds;
 
-        public Barriers(Game i_Game) : base(i_Game)
+        public Barriers(Game i_Game, GameScreen i_Screen) : base(i_Game, i_Screen)
         {
         }
 
@@ -16,7 +17,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
         {
             for (int i = 0; i < k_NumberOfBarriers; i++)
             {
-                Sprites.Add(new Barrier(i_Game));
+                Sprites.Add(new Barrier(i_Game, m_Screen));
             }
         }
 

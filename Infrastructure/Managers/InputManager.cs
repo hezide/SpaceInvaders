@@ -108,7 +108,7 @@ namespace Infrastructure.Managers
         {
             return (
                 m_PrevKeyboardState.IsKeyDown(i_Key)
-                && 
+                &&
                 m_KeyboardState.IsKeyUp(i_Key));
         }
 
@@ -684,7 +684,7 @@ ScrollWheelDelta:   {17}
  ScrollWheelDelta,
  PressedKeys
  );
-			return status;
+            return status;
         }
     }
 }

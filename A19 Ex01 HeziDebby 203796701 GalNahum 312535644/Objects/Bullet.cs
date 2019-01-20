@@ -1,4 +1,5 @@
 ﻿using Infrastructure.ObjectModel;
+using Infrastructure.ObjectModel.Screens;
 using Infrastructure.ServiceInterfaces;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -13,6 +14,11 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
         private const float k_ExplosionRangeMultiplier = 0.7f;
         public Type OwnerType;
 
+        public Bullet(Game i_Game, GameScreen i_Screen) : base(k_AssetName, i_Game, i_Screen)
+        {
+            Velocity = new Vector2(0, k_Velocity);
+        }
+
         public float ExplosionRange
         {
             get
@@ -21,11 +27,6 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
 
                 return (Height * k_ExplosionRangeMultiplier * direction);
             }
-        }
-
-        public Bullet(Game i_Game) : base(k_AssetName, i_Game)
-        {
-            Velocity = new Vector2(0, k_Velocity);
         }
 
         public override void Update(GameTime gameTime)

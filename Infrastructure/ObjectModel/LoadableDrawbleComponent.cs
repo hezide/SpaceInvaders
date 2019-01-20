@@ -1,4 +1,5 @@
 //*** Guy Ronen (c) 2008-2011 ***//
+using Infrastructure.ObjectModel.Screens;
 using Infrastructure.ServiceInterfaces;
 using Microsoft.Xna.Framework;
 //using Microsoft.Xna.Framework.Storage;
@@ -57,28 +58,31 @@ namespace Infrastructure.ObjectModel
             get { return m_AssetName; }
             set { m_AssetName = value; }
         }
-
+        protected IGameSettings m_GameSettings;
         public LoadableDrawableComponent(
-            string i_AssetName, Game i_Game, int i_UpdateOrder, int i_DrawOrder)
+            string i_AssetName, Game i_Game, GameScreen i_Screen, int i_UpdateOrder, int i_DrawOrder)
             : base(i_Game)
         {
             this.AssetName = i_AssetName;
             this.UpdateOrder = i_UpdateOrder;
             this.DrawOrder = i_DrawOrder;
-
-            // register in the game:
-            this.Game.Components.Add(this);
+            m_GameSettings = i_Game.Services.GetService(typeof(IGameSettings)) as IGameSettings;
+            
+            // register in the screen:
+            i_Screen.Add(this);
         }
 
         public LoadableDrawableComponent(
             string i_AssetName,
             Game i_Game,
+            GameScreen i_Screen,
             int i_CallsOrder)
-            : this(i_AssetName, i_Game, i_CallsOrder, i_CallsOrder)
+            : this(i_AssetName, i_Game, i_Screen, i_CallsOrder, i_CallsOrder)
         { }
 
         public override void Initialize()
         {
+
             base.Initialize();
 
             // TODO 12: Register in the collisions manager:

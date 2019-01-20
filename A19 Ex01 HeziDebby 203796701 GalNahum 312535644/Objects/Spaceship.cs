@@ -1,5 +1,6 @@
 ﻿using Infrastructure.ObjectModel;
 using Infrastructure.ObjectModel.Animators.ConcreteAnimators;
+using Infrastructure.ObjectModel.Screens;
 using Infrastructure.ServiceInterfaces;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -18,15 +19,15 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
 
         public SoulsComponent SoulsComponent { get; set; }
         public Gun Gun { get; private set; }
-
+        public ScoreManager ScoreManager { get; set; }
         private IInputManager m_InputManager;
         public List<Keys> ActivationKeysList { private get; set; }
         public bool ActivateByMouse { private get; set; }
 
-        public Spaceship(string i_AssetName, Game i_Game) : base(i_AssetName, i_Game)
+        public Spaceship(string i_AssetName, Game i_Game,GameScreen i_Screen) : base(i_AssetName, i_Game, i_Screen)
         {
-            SoulsComponent = new SoulsComponent(i_AssetName, Game);
-            Gun = new Gun(k_MaxAmmo, i_Game, this.GetType());
+            SoulsComponent = new SoulsComponent(i_AssetName, Game, i_Screen);
+            Gun = new Gun(k_MaxAmmo, i_Game, i_Screen, this.GetType());
         }
 
         public override void Initialize()

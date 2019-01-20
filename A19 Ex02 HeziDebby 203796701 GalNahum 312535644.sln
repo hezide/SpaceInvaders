@@ -10,6 +10,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "A19 Ex02 HeziDebby 20379670
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{BA2FC29B-8640-463C-B7C0-1D1AED9C67BF}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{DBA5E1C8-4245-4A42-9ED9-C1BB3AF84546}"
+	ProjectSection(SolutionItems) = preProject
+		SUBMIT XNA MTA A19 Ex02 HeziDebby 203796701 GalNahum 312535644.txt = SUBMIT XNA MTA A19 Ex02 HeziDebby 203796701 GalNahum 312535644.txt
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -19,15 +24,19 @@ Global
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{E27DF9BD-48CC-4D59-9671-9D828BF3C84B}.Debug|x64.ActiveCfg = Debug|x86
+		{E27DF9BD-48CC-4D59-9671-9D828BF3C84B}.Debug|x64.Build.0 = Debug|x86
 		{E27DF9BD-48CC-4D59-9671-9D828BF3C84B}.Debug|x86.ActiveCfg = Debug|x86
 		{E27DF9BD-48CC-4D59-9671-9D828BF3C84B}.Debug|x86.Build.0 = Debug|x86
 		{E27DF9BD-48CC-4D59-9671-9D828BF3C84B}.Release|x64.ActiveCfg = Release|x86
+		{E27DF9BD-48CC-4D59-9671-9D828BF3C84B}.Release|x64.Build.0 = Release|x86
 		{E27DF9BD-48CC-4D59-9671-9D828BF3C84B}.Release|x86.ActiveCfg = Release|x86
 		{E27DF9BD-48CC-4D59-9671-9D828BF3C84B}.Release|x86.Build.0 = Release|x86
 		{BA2FC29B-8640-463C-B7C0-1D1AED9C67BF}.Debug|x64.ActiveCfg = Debug|x86
+		{BA2FC29B-8640-463C-B7C0-1D1AED9C67BF}.Debug|x64.Build.0 = Debug|x86
 		{BA2FC29B-8640-463C-B7C0-1D1AED9C67BF}.Debug|x86.ActiveCfg = Debug|x86
 		{BA2FC29B-8640-463C-B7C0-1D1AED9C67BF}.Debug|x86.Build.0 = Debug|x86
 		{BA2FC29B-8640-463C-B7C0-1D1AED9C67BF}.Release|x64.ActiveCfg = Release|x86
+		{BA2FC29B-8640-463C-B7C0-1D1AED9C67BF}.Release|x64.Build.0 = Release|x86
 		{BA2FC29B-8640-463C-B7C0-1D1AED9C67BF}.Release|x86.ActiveCfg = Release|x86
 		{BA2FC29B-8640-463C-B7C0-1D1AED9C67BF}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection

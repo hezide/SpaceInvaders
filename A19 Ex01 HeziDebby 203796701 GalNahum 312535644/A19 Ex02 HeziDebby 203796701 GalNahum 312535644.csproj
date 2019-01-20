@@ -55,6 +55,11 @@
     <Compile Include="Objects\Gun.cs" />
     <Compile Include="Objects\SoulsComponent.cs" />
     <Compile Include="Objects\Barrier.cs" />
+    <Compile Include="Screens\GameOverScreen.cs" />
+    <Compile Include="Screens\LevelTransitionScreen.cs" />
+    <Compile Include="Screens\PauseScreen.cs" />
+    <Compile Include="Screens\PlayScreen.cs" />
+    <Compile Include="Screens\WelcomeScreen.cs" />
     <Compile Include="SpaceInvaders.cs" />
     <Compile Include="RandomActionComponent.cs" />
     <Compile Include="Objects\MotherShip.cs" />
@@ -62,6 +67,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ScoreManager.cs" />
+    <Compile Include="SpaceInvadersSettings.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Infrastructure, Version=3.4.0.456, Culture=neutral, processorArchitecture=x86">

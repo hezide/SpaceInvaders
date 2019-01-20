@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Infrastructure.ObjectModel.Screens;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
@@ -8,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.ObjectModel
 {// TODO: add interface for polymorphizem
-    public class TextComponent : LoadableDrawableComponent
+    public class TextComponent : Sprite
     {
-        protected SpriteFont m_SpriteFont;
-        protected SpriteBatch m_SpriteBatch;
-        protected string m_StringToDraw = string.Empty;
+        private SpriteFont m_SpriteFont;
+        private string m_FontName;
+        public string Text { get; set; } = string.Empty;
 
         protected Color m_TintColor = Color.White;
         public Color TintColor
@@ -29,38 +30,49 @@ namespace Infrastructure.ObjectModel
                 return new Rectangle(
                 (int)Position.X,
                 (int)Position.Y,
-                (int)m_StringToDraw.Length,
+                (int)Text.Length,
                 (int)m_SpriteFont.MeasureString(TextToString()).Y);
             }
         }
 
-        public TextComponent(string i_AssetName, Game i_Game)
-            : base(i_AssetName, i_Game, int.MaxValue)
-        { }
+        public TextComponent(string i_AssetName, Game i_Game, GameScreen i_Screen)
+            : base(String.Empty, i_Game, i_Screen,int.MaxValue)
+        {
+            m_FontName = i_AssetName;
+        }
 
-        public TextComponent(string i_AssetName, Game i_Game, int i_UpdateOrder, int i_DrawOrder)
-            : base(i_AssetName, i_Game, i_UpdateOrder, i_DrawOrder)
-        { }
+        public TextComponent(string i_AssetName, Game i_Game, GameScreen i_Screen, int i_UpdateOrder, int i_DrawOrder)
+            : base(String.Empty, i_Game, i_Screen, i_UpdateOrder, i_DrawOrder)
+        {
+            m_FontName = i_AssetName;
+        }
 
-        public TextComponent(string i_AssetName, string i_Name, Game i_Game, int i_CallsOrder)
-            : base(i_AssetName, i_Game, i_CallsOrder)
-        { }
+        public TextComponent(string i_AssetName, string i_Name, Game i_Game, GameScreen i_Screen, int i_CallsOrder)
+            : base(String.Empty, i_Game, i_Screen, i_CallsOrder)
+        {
+            m_FontName = i_AssetName;
+        }
 
         protected override void LoadContent()
         {
+            m_SpriteFont = Game.Content.Load<SpriteFont>(m_FontName);
             base.LoadContent();
-
-            m_SpriteBatch = new SpriteBatch(Game.GraphicsDevice);
-            m_SpriteFont = Game.Content.Load<SpriteFont>(AssetName);
         }
 
         public override void Draw(GameTime i_GameTime)
         {
-            m_SpriteBatch.Begin();
+            if (!m_UseSharedBatch)
+            {
+                m_SpriteBatch.Begin();
+            }
 
             m_SpriteBatch.DrawString(m_SpriteFont, TextToString(), Position, TintColor);
 
-            m_SpriteBatch.End();
+            if (!m_UseSharedBatch)
+            {
+                m_SpriteBatch.End();
+            }
+            base.Draw(i_GameTime);
         }
 
         protected override void InitBounds()
@@ -71,7 +83,7 @@ namespace Infrastructure.ObjectModel
 
         public virtual string TextToString()
         {
-            return m_StringToDraw;
+            return Text;
         }
     }
 }

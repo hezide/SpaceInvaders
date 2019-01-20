@@ -1,5 +1,6 @@
 //*** Guy Ronen (c) 2008-2011 ***//
 using Infrastructure.ObjectModel.Animators;
+using Infrastructure.ObjectModel.Screens;
 using Infrastructure.ServiceInterfaces;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -224,16 +225,16 @@ namespace Infrastructure.ObjectModel
             }
         }
 
-        public Sprite(string i_AssetName, Game i_Game, int i_UpdateOrder, int i_DrawOrder)
-            : base(i_AssetName, i_Game, i_UpdateOrder, i_DrawOrder)
+        public Sprite(string i_AssetName, Game i_Game, GameScreen i_Screen, int i_UpdateOrder, int i_DrawOrder)
+            : base(i_AssetName, i_Game, i_Screen, i_UpdateOrder, i_DrawOrder)
         { }
 
-        public Sprite(string i_AssetName, Game i_Game, int i_CallsOrder)
-            : base(i_AssetName, i_Game, i_CallsOrder)
+        public Sprite(string i_AssetName, Game i_Game, GameScreen i_Screen, int i_CallsOrder)
+            : base(i_AssetName, i_Game, i_Screen, i_CallsOrder)
         { }
 
-        public Sprite(string i_AssetName, Game i_Game)
-            : base(i_AssetName, i_Game, int.MaxValue)
+        public Sprite(string i_AssetName, Game i_Game, GameScreen i_Screen)
+            : base(i_AssetName, i_Game, i_Screen, int.MaxValue)
         { }
 
         /// <summary>
@@ -263,7 +264,7 @@ namespace Infrastructure.ObjectModel
             m_SourceRectangle = new Rectangle(0, 0, (int)m_WidthBeforeScale, (int)m_HeightBeforeScale);
         }
 
-        private bool m_UseSharedBatch = true;
+        protected bool m_UseSharedBatch = true;
 
         protected SpriteBatch m_SpriteBatch;
         public SpriteBatch SpriteBatch
@@ -284,7 +285,16 @@ namespace Infrastructure.ObjectModel
 
         protected override void LoadContent()
         {
-            m_Texture = Game.Content.Load<Texture2D>(m_AssetName);
+            //TODO:: Gal, can you think of a better approach? this is when a text component sending an empty string,
+            // he ignores the usage of the texture cause he has a spritefont
+            if(m_AssetName != String.Empty)
+            {
+                m_Texture = Game.Content.Load<Texture2D>(m_AssetName);
+            }
+            else
+            {
+                m_Texture = new Texture2D(this.Game.GraphicsDevice, 1, 1);
+            }
 
             if (m_SpriteBatch == null)
             {
@@ -344,19 +354,34 @@ namespace Infrastructure.ObjectModel
 
         protected void DrawWithParameters()
         {
-            m_SpriteBatch.Draw(m_Texture, this.PositionForDraw,
+            if (!m_UseSharedBatch)
+            {
+                m_SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied);
+            }
+
+                m_SpriteBatch.Draw(m_Texture, this.PositionForDraw,
                     this.SourceRectangle, this.TintColor,
                     this.Rotation, this.RotationOrigin, this.Scales,
                     SpriteEffects.None, this.LayerDepth);
+
+            if (!m_UseSharedBatch)
+            {
+                m_SpriteBatch.End();
+            }
         }
 
         protected void DrawNonPremultiplied()
         {
+            //todo :ugly, fix it
+            m_SpriteBatch.End();
             m_SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied);
 
             DrawWithParameters();
 
             m_SpriteBatch.End();
+            m_SpriteBatch.Begin(
+                SpriteSortMode.Deferred, BlendState.AlphaBlend, null,
+                null, null, null, Matrix.Identity);
         }
 
         protected override void DrawBoundingBox()

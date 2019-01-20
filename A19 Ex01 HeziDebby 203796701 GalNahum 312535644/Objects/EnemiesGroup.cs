@@ -1,4 +1,5 @@
 ﻿using Infrastructure.ObjectModel;
+using Infrastructure.ObjectModel.Screens;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
     {
         private const string k_AssetName = @"Sprites\EnemiesSpriteShit96x64";
         private const int k_Rows = 5;
-        private const int k_Cols = 9;
+        private int m_Cols = 9;
         private const int k_TextureWidthDivider = 2;
         private const int k_TextureHeightDivider = 3;
         private const int k_MaxCollidedEnemies = 4;
@@ -19,7 +20,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
         private int m_CollidedEnemiesCounter = 0;
         public List<List<Enemy>> Enemies { get; private set; }
 
-        public EnemiesGroup(Game i_Game) : base(i_Game)
+        public EnemiesGroup(Game i_Game, GameScreen i_Screen) : base(i_Game, i_Screen)
         {
             base.Sprites = Enemies.SelectMany(enemy => enemy).ToList();
         }
@@ -27,13 +28,13 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
         protected override void AllocateSprites(Game i_Game)
         {
             Enemies = new List<List<Enemy>>();
-
+            m_Cols = (m_GameSettings as SpaceInvadersSettings).NumOfEnemyColumns;
             int seed = 1;
             List<Enemy> currentCol;
             Vector2 enemyCellIdx;
             Color currentEnemyColor;
 
-            for (int col = 0; col < k_Cols; col++)
+            for (int col = 0; col < m_Cols; col++)
             {
                 currentCol = new List<Enemy>();
                 enemyCellIdx = Vector2.Zero;
@@ -41,7 +42,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
 
                 for (int row = 0; row < k_Rows; row++)
                 {
-                    Enemy enemyToAdd = new Enemy(k_AssetName, i_Game)
+                    Enemy enemyToAdd = new Enemy(k_AssetName, i_Game, m_Screen)
                     {
                         Seed = ++seed,
                         CellIdx = enemyCellIdx,
@@ -119,7 +120,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
             float x = i_InitialX;
             float y = i_InitialY;
 
-            for (int col = 0; col < k_Cols; col++)
+            for (int col = 0; col < m_Cols; col++)
             {
                 for (int row = 0; row < k_Rows; row++)
                 {

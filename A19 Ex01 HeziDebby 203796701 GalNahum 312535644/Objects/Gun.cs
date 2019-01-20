@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Infrastructure.ObjectModel.Screens;
+using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,19 +15,19 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
         private int m_Ammo;
         public bool Enable { get; set; } = true;
 
-        public Gun(int i_Ammo, Game i_Game, Type i_OwnerType)
+        public Gun(int i_Ammo, Game i_Game, GameScreen i_Screen, Type i_OwnerType)
         {
             m_Ammo = i_Ammo;
             m_BulletsList = new List<Bullet>();
 
-            allocateBullets(i_Game, i_OwnerType);
+            allocateBullets(i_Game, i_OwnerType,i_Screen);
         }
 
-        private void allocateBullets(Game i_Game, Type i_OwnerType)
+        private void allocateBullets(Game i_Game, Type i_OwnerType, GameScreen i_Screen)
         {
             for (int i = 0; i < m_Ammo; i++)
             {
-                m_BulletsList.Add(new Bullet(i_Game) { OwnerType = i_OwnerType });
+                m_BulletsList.Add(new Bullet(i_Game,i_Screen) { OwnerType = i_OwnerType });
             }
         }
 

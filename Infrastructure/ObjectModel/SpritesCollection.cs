@@ -1,4 +1,6 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Infrastructure.ObjectModel.Screens;
+using Infrastructure.ServiceInterfaces;
+using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 
@@ -10,9 +12,14 @@ namespace Infrastructure.ObjectModel
         protected readonly Vector2 r_DirectionChangeMultiplier;
         public List<T> Sprites { get; protected set; }
         protected Vector2 m_GroupDirection;
+        protected GameScreen m_Screen;
+        protected IGameSettings m_GameSettings;
 
-        public SpritesCollection(Game i_Game)
+        public SpritesCollection(Game i_Game, GameScreen i_Screen)
         {
+            m_Screen = i_Screen;
+            m_GameSettings = i_Game.Services.GetService(typeof(IGameSettings)) as IGameSettings;
+
             r_DirectionChangeMultiplier = new Vector2(-1);
             Sprites = new List<T>();
             AllocateSprites(i_Game);

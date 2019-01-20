@@ -1,5 +1,6 @@
 ﻿using Infrastructure.ObjectModel;
 using Infrastructure.ObjectModel.Animators.ConcreteAnimators;
+using Infrastructure.ObjectModel.Screens;
 using Infrastructure.ServiceInterfaces;
 using Microsoft.Xna.Framework;
 using System;
@@ -11,16 +12,16 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
         private const int k_TextureWidthDivider = 2;
         private const int k_TextureHeightDivider = 3;
         private const int k_NumOfFrames = 2;
-        private const int k_MaxAmmo = 1;
 
         private RandomActionComponent m_RandomShootingNotifier;
         private Gun m_Gun;
         public int Seed { get; set; } = 0;
 
-        public Enemy(string i_AssetName, Game i_Game) : base(i_AssetName, i_Game)
+        public Enemy(string i_AssetName, Game i_Game, GameScreen i_Screen) : base(i_AssetName, i_Game, i_Screen)
         {
+            int maxAmmo = (this.Game.Services.GetService(typeof(IGameSettings)) as SpaceInvadersSettings).BulletAmountForEnemies;
             m_TintColor = Color.Red;
-            m_Gun = new Gun(k_MaxAmmo, i_Game, this.GetType());
+            m_Gun = new Gun(maxAmmo, i_Game, i_Screen, this.GetType());
         }
 
         public override void Initialize()

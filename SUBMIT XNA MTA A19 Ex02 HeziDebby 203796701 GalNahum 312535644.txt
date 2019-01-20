@@ -1,0 +1,9 @@
+=======================Exercise Checking Report===================
+Excercise No..................: 2
+First Student Details.........: Hezi Debby 203796701
+Second Student Details........: Gal Nahum 312535644
+Delivery Date.................: 11/1/2019
+Delivered In Delay............: No
+Delay Reason..................: None
+Comments......................: None
+=======================End Exercise Checking Report================
