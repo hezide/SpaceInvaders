@@ -104,8 +104,6 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
         {
             base.Initialize();
 
-            this.Game.IsMouseVisible = true;
-
             initPlayers();
             initScoreManagers();
             m_Enemies.Initialize();

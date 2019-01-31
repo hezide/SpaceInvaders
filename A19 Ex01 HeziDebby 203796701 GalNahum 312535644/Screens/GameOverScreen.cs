@@ -15,7 +15,6 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Screens
 {
     class GameOverScreen : GameScreen
     {
-        private IInputManager m_InputManager;
         private TextComponent m_GameOverText;
         private TextComponent m_ScoreText;
 
@@ -29,7 +28,6 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Screens
         public override void Initialize()
         {
             base.Initialize();
-            m_InputManager = Game.Services.GetService(typeof(IInputManager)) as IInputManager;
             m_GameOverText.Text = "GAME OVER";
             m_GameOverText.Position = CenterOfViewPort;
 
@@ -42,16 +40,16 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Screens
         }
         public override void Update(GameTime gameTime)
         {
-            if (m_InputManager.KeyPressed(Keys.Escape))
+            if (InputManager.KeyPressed(Keys.Escape))
             {
                 Game.Exit();
             }
-            else if (m_InputManager.KeyPressed(Keys.Home))
+            else if (InputManager.KeyPressed(Keys.Home))
             {
                 (m_ScreensManager as ScreensMananger).Push(new PlayScreen(Game));
                 m_ScreensManager.SetCurrentScreen(new LevelTransitionScreen(Game,0));
             }
-            else if (m_InputManager.KeyPressed(Keys.T))
+            else if (InputManager.KeyPressed(Keys.T))
             {
                 //todo:: show main menu
             }

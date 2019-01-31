@@ -146,7 +146,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
 
         protected override int GetEdgeSpriteIdxByDirection()
         {
-            //todo the problem is here!! if the is only one col left, the index will always be a sprite that still hit the boundry
+            //todo the problem is here!! if there is only one col left, the index will always be a sprite that still hit the boundry
             return m_GroupDirection.X > 0 ? Enemies.Count - 1 : 0;
         }
 
@@ -225,7 +225,8 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
                 {
                     if (stepDown)
                     {
-                        enemy.Position = new Vector2(enemy.Position.X, enemy.Position.Y + ((enemy.Height - 1) / 2));
+                        //todo:: this is not that clean, we are adding one pixel just add one pixel here:"+ m_GroupDirection.X" to avoid same boundry hit 
+                        enemy.Position = new Vector2(enemy.Position.X + m_GroupDirection.X, enemy.Position.Y + ((enemy.Height - 1) / 2));
                         enemy.IncreaseCellAnimation(m_TimeToJump);
                     }
                     else

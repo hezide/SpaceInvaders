@@ -10,9 +10,10 @@ namespace Infrastructure.Managers
 {
     public class ScreensMananger : CompositeDrawableComponent<GameScreen>, IScreensMananger
     {
-        public ScreensMananger(Game i_Game)
+        public ScreensMananger(Game i_Game,GraphicsDeviceManager i_GraphicsDeviceManager = null)
             : base(i_Game)
         {
+            GraphicsDeviceManager = i_GraphicsDeviceManager;
             i_Game.Components.Add(this);
             Game.Services.AddService(typeof(IScreensMananger), this);
         }
@@ -23,6 +24,7 @@ namespace Infrastructure.Managers
         {
             get { return m_ScreensStack.Count > 0 ? m_ScreensStack.Peek() : null; }
         }
+        public GraphicsDeviceManager GraphicsDeviceManager { get; set; }
 
         public void SetCurrentScreen(GameScreen i_GameScreen)
         {

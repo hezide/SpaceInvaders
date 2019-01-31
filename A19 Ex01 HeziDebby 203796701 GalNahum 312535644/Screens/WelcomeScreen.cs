@@ -15,7 +15,6 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Screens
     class WelcomeScreen : GameScreen
     {
         private TextComponent m_WelcomeMessage;
-        private IInputManager m_InputManager;
         public WelcomeScreen(Game i_Game):base(i_Game)
         {
             Background background = new Background(this.Game, this);
@@ -24,31 +23,32 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Screens
         public override void Initialize()
         {
             base.Initialize();
-            m_InputManager = Game.Services.GetService(typeof(IInputManager)) as IInputManager;
-
+            
             m_WelcomeMessage.Text = "Welcome";
             m_WelcomeMessage.Position = CenterOfViewPort;
         }
 
         public override void Update(GameTime i_GameTime)
         {
-            if (m_InputManager.KeyPressed(Keys.Enter))
+            if (InputManager.KeyPressed(Keys.Enter))
             {
                 ExitScreen();
+                ScreensManager.SetCurrentScreen(new PlayScreen(Game));
+                ScreensManager.SetCurrentScreen(new LevelTransitionScreen(Game,0));
             }
-            else if (m_InputManager.KeyPressed(Keys.Escape))
+            else if (InputManager.KeyPressed(Keys.Escape))
             {
                 Game.Exit();
             }
-            else if (m_InputManager.KeyPressed(Keys.T))
+            else if (InputManager.KeyPressed(Keys.T))
             {
-                //todo:: show main menu
+                ScreensManager.SetCurrentScreen(new MainMenuScreen(this.Game));
             }
         }
         public override void Draw(GameTime i_GameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-
+            
             base.Draw(i_GameTime);
         }
 

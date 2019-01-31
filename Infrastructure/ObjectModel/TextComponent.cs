@@ -30,7 +30,7 @@ namespace Infrastructure.ObjectModel
                 return new Rectangle(
                 (int)Position.X,
                 (int)Position.Y,
-                (int)Text.Length,
+                (int)m_SpriteFont.MeasureString(TextToString()).X,
                 (int)m_SpriteFont.MeasureString(TextToString()).Y);
             }
         }
@@ -66,8 +66,8 @@ namespace Infrastructure.ObjectModel
                 m_SpriteBatch.Begin();
             }
 
-            m_SpriteBatch.DrawString(m_SpriteFont, TextToString(), Position, TintColor);
-
+            //m_SpriteBatch.DrawString(m_SpriteFont, TextToString(), Position, TintColor);
+            m_SpriteBatch.DrawString(m_SpriteFont, TextToString(), this.Position, this.m_TintColor,0,this.m_PositionOrigin, this.Scales, SpriteEffects.None, 0);
             if (!m_UseSharedBatch)
             {
                 m_SpriteBatch.End();

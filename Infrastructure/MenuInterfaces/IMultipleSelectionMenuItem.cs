@@ -4,9 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Infrastructure
+namespace Infrastructure.MenuInterfaces
 {
-    interface IMenuItem
+    interface IMultipleSelectionMenuItem
     {
+        void MoveUp();
+        void MoveDown();
     }
 }

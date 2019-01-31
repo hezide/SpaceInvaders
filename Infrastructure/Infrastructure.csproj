@@ -46,11 +46,16 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="ExtensionMethods.cs" />
-    <Compile Include="IMenuItem.cs" />
+    <Compile Include="IOptionSelectionable.cs" />
+    <Compile Include="ObjectModel\Animators\ConcreteAnimators\PulseAnimator.cs" />
+    <Compile Include="OptionSelectionComponent.cs" />
+    <Compile Include="MenuInterfaces\IMenuItem.cs" />
     <Compile Include="Managers\CollisionsManager.cs" />
     <Compile Include="Managers\DummyInputManager.cs" />
     <Compile Include="Managers\InputManager.cs" />
     <Compile Include="Managers\ScreensManager.cs" />
+    <Compile Include="MenuInterfaces\IActionMenuItem.cs" />
+    <Compile Include="MenuInterfaces\IMultipleSelectionMenuItem.cs" />
     <Compile Include="ObjectModel\Animators\CompositeAnimator.cs" />
     <Compile Include="ObjectModel\Animators\ConcreteAnimators\BlinkAnimator.cs" />
     <Compile Include="ObjectModel\Animators\ConcreteAnimators\CellAnimator.cs" />
@@ -63,6 +68,8 @@
     <Compile Include="ObjectModel\GameSettings.cs" />
     <Compile Include="ObjectModel\LoadableDrawbleComponent.cs" />
     <Compile Include="ObjectModel\MenuItem.cs" />
+    <Compile Include="ObjectModel\MenuItems\ActionMenuItem.cs" />
+    <Compile Include="ObjectModel\MenuItems\MultipleSelectionMenuItem.cs" />
     <Compile Include="ObjectModel\PixelBasedCollisionComponent.cs" />
     <Compile Include="ObjectModel\RegisteredComponent.cs" />
     <Compile Include="ObjectModel\Screens\GameScreen.cs" />
