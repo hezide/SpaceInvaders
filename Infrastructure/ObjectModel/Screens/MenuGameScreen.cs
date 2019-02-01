@@ -16,7 +16,6 @@ namespace Infrastructure.ObjectModel.Screens
         private TextComponent m_HeadlineMessage;
         private Dictionary<Keys, Action> m_ActivationKeys;
         protected OptionSelectionComponent<IMenuItem> m_MenuItemSelectionComponent = new OptionSelectionComponent<IMenuItem>();
-        private MouseState m_PreviousMouseState;
 
         private readonly Vector2 r_FirstItemPosition = new Vector2(0, 50);//change when doing visual adjustments
         
@@ -84,14 +83,30 @@ namespace Infrastructure.ObjectModel.Screens
         }
 
         private void mouseUpdatesHandler(GameTime i_GameTime)
-        {            
-            if (InputManager.ScrollWheelDelta > 0)
+        {
+            //todo:: insert the previous checking to the input manager to check only one click
+
+            if (InputManager.ScrollWheelDelta > 0 || (InputManager.MouseState.RightButton == ButtonState.Released && (InputManager as Managers.InputManager).PrevMouseState.RightButton == ButtonState.Pressed))
             {
                 changeMenuItemOptionsDown();
             }
             else if (InputManager.ScrollWheelDelta < 0)
             {
                 changeMenuItemOptionsUp();
+            }
+            foreach (IMenuItem menuItem in m_MenuItemSelectionComponent)
+            {
+                if (InputManager.MouseBounds().Intersects(menuItem.Bounds()))
+                {
+                    m_MenuItemSelectionComponent.ActiveItem.SetActive(false);
+                    m_MenuItemSelectionComponent.SetActiveItem(menuItem);
+                    menuItem.SetActive(true);
+                }
+            }
+            //todo:: insert the previous checking to the input manager to check only one click
+            if(InputManager.MouseState.LeftButton == ButtonState.Released && (InputManager as Managers.InputManager).PrevMouseState.LeftButton == ButtonState.Pressed)
+            {
+                moveToOtherScreen();
             }
         }
 

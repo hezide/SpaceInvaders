@@ -74,5 +74,7 @@ namespace Infrastructure.ServiceInterfaces
         Vector2 RightThumbDelta { get; }
         float LeftTrigerDelta { get; }
         float RightTrigerDelta { get; }
+
+        Rectangle MouseBounds();
     }
 }

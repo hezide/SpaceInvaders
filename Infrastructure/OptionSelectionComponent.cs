@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace Infrastructure
 {
     public class OptionSelectionComponent<T> : IOptionSelectionable<T> ,ICollection<T>
-    {
+     {
         private LinkedList<T> m_Items = new LinkedList<T>();
         public T ActiveItem { get; private set; }
 
@@ -16,16 +16,31 @@ namespace Infrastructure
 
         public bool IsReadOnly => false;
 
+        public void SetActiveItem(T i_Item)
+        {
+            if(m_Items.Contains(i_Item))
+            {
+                activateItem(i_Item);
+            }
+        }
+
+        private void activateItem(T i_Item)
+        {
+            //ActiveItem.SetActive(false);//previous Item
+            ActiveItem = i_Item;
+            //ActiveItem.SetActive(true);
+        }
+
         public T MoveToNextOption()
         {
             LinkedListNode<T> nextMenuItem = m_Items.Find(ActiveItem).Next;
             if (nextMenuItem == null)
             {
-                ActiveItem = m_Items.First.Value;
+                activateItem(m_Items.First.Value);
             }
             else
             {
-                ActiveItem = nextMenuItem.Value;
+                activateItem(nextMenuItem.Value);
             }
             return ActiveItem;
         }
@@ -35,11 +50,11 @@ namespace Infrastructure
             LinkedListNode<T> prevMenuItem = m_Items.Find(ActiveItem).Previous;
             if (prevMenuItem == null)
             {
-                ActiveItem = m_Items.Last.Value;
+                activateItem(m_Items.Last.Value);
             }
             else
             {
-                ActiveItem = prevMenuItem.Value;
+                activateItem(prevMenuItem.Value);
             }
             return ActiveItem;
         }
@@ -48,7 +63,7 @@ namespace Infrastructure
         {
             if(i_IsActive)
             {
-                ActiveItem = i_ItemToAdd;
+                activateItem(i_ItemToAdd);
             }
             m_Items.AddLast(i_ItemToAdd);
         }

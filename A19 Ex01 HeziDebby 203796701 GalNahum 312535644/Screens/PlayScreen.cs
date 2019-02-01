@@ -195,13 +195,13 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
                 ScreensManager.SetCurrentScreen(new PauseScreen(this.Game));
             }
             //DEBUG - change level by pressing T
-            if (InputManager.KeyPressed(Keys.T))
-            {
-                ExitScreen();
-                m_GameSettings.GoToNextLevel();
-                ScreensManager.SetCurrentScreen(new PlayScreen(Game, m_GameState));
-                ScreensManager.SetCurrentScreen(new LevelTransitionScreen(Game, m_GameSettings.CurrentLevel));
-            }
+            //if (InputManager.KeyPressed(Keys.T))
+            //{
+            //    ExitScreen();
+            //    m_GameSettings.GoToNextLevel();
+            //    ScreensManager.SetCurrentScreen(new PlayScreen(Game, m_GameState));
+            //    ScreensManager.SetCurrentScreen(new LevelTransitionScreen(Game, m_GameSettings.CurrentLevel));
+            //}
         }
 
         private void onLevelCompleted()

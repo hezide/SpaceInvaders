@@ -12,5 +12,6 @@ namespace Infrastructure
         void SetActive(bool i_Active);
         void SetPosition(Vector2 i_ItemPosition);
         void Initialize();
+        Rectangle Bounds();
     }
 }

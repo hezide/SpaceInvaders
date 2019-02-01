@@ -637,7 +637,10 @@ namespace Infrastructure.Managers
                 return keys;
             }
         }
-
+        public Rectangle MouseBounds()
+        {
+            return new Rectangle(m_MouseState.X, m_MouseState.Y, 1, 1);
+        }
         public override string ToString()
         {
             string status = string.Format(@"
@@ -686,5 +689,7 @@ ScrollWheelDelta:   {17}
  );
             return status;
         }
+
+        
     }
 }

@@ -15,7 +15,7 @@ namespace Infrastructure.ObjectModel
         protected TextComponent m_ItemTitle;
         protected TextComponent m_ItemText;
 
-        private readonly float r_distanceBetweenTitleAndText = 10f;
+        private readonly int r_distanceBetweenTitleAndText = 10;
         private readonly Color r_ActiveColor = Color.Blue;
         private readonly Color r_InActiveColor = Color.DimGray;
 
@@ -25,8 +25,6 @@ namespace Infrastructure.ObjectModel
             //m_ItemText.Scales = new Vector2(3);
             m_ItemTitle = new TextComponent(@"Fonts\Comic Sans MS", i_Game, i_GameScreen);
             m_ItemTitle.Text = i_ItemTitle;
-            //TODO:: Create the animatior(from guy's example)
-           
         }
 
         public void Initialize()
@@ -42,7 +40,10 @@ namespace Infrastructure.ObjectModel
             m_ItemText.Animations.Add(new PulseAnimator("Pulse", TimeSpan.Zero, 1.1f, 0.4f));
             m_ItemTitle.Animations.Add(new PulseAnimator("Pulse", TimeSpan.Zero, 1.1f, 0.4f));
         }
-
+        public Rectangle Bounds()
+        {
+            return new Rectangle(m_ItemTitle.Bounds.X, m_ItemTitle.Bounds.Y, (int)m_ItemTitle.Bounds.Width + (int)m_ItemText.Bounds.Width + r_distanceBetweenTitleAndText, (int)m_ItemTitle.Bounds.Height);
+        }
         public void SetActive(bool i_Active)
         {
             if(i_Active == true)
