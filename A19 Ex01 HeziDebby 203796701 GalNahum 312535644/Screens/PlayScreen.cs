@@ -4,7 +4,9 @@ using Infrastructure.ObjectModel;
 using Infrastructure.ObjectModel.Screens;
 using Infrastructure.ServiceInterfaces;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -44,6 +46,9 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
         private RandomActionComponent m_MotherShipRandomNotifier;
         private SpaceInvadersSettings m_GameSettings;
         private GameState m_GameState;
+        private Song m_BGMusic;
+        private SoundEffect m_GameOverSoundEffect;
+        private SoundEffect m_LevelCompletedSoundEffect;
 
         public PlayScreen(Game i_Game, GameState i_GameState = null) : base(i_Game)
         {
@@ -109,6 +114,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
             m_Enemies.Initialize();
             //todo::fix to a const, or something, 456 was m_Player1.Position.Y
             m_Barriers.Initialize(GraphicsDevice.Viewport.Width, 456);
+            MediaPlayer.Play(m_BGMusic);
         }
 
         private void initPlayers()
@@ -194,6 +200,11 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
             {
                 ScreensManager.SetCurrentScreen(new PauseScreen(this.Game));
             }
+            //TODO:: change to all the screens;
+            if (InputManager.KeyPressed(Keys.M))
+            {
+                m_GameSettings.SetIsMuted(!m_GameSettings.IsMuted());//toggle mute
+            }
             //DEBUG - change level by pressing T
             //if (InputManager.KeyPressed(Keys.T))
             //{
@@ -206,6 +217,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
 
         private void onLevelCompleted()
         {
+            m_LevelCompletedSoundEffect.Play();
             ExitScreen();
             m_GameSettings.GoToNextLevel();
             ScreensManager.SetCurrentScreen(new PlayScreen(Game, m_GameState));
@@ -226,6 +238,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
             {
                 (PreviousScreen as GameOverScreen).SetScore(m_GameState.ScoreManagers);
             }
+            m_GameOverSoundEffect.Play();
             ExitScreen();
         }
 
@@ -239,6 +252,15 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
             {
                 m_GameState.Player2Active = false;
             }
+        }
+
+        protected override void LoadContent()
+        {
+            base.LoadContent();
+            m_BGMusic = this.Game.Content.Load<Song>("Sounds/BGMusic");
+            m_GameOverSoundEffect = this.Game.Content.Load<SoundEffect>("Sounds/GameOver");
+            m_LevelCompletedSoundEffect = this.Game.Content.Load<SoundEffect>("Sounds/LevelWin");
+
         }
     }
 }

@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Infrastructure.ObjectModel;
+using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Media;
 
 namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
 {
@@ -89,5 +91,10 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
                 BulletAmountForEnemies += k_ExtraBulletAmountForEnemiesPerLevel;
             }
         }
+
+        /*****************************************
+        /                VOLUME
+        /*****************************************/
+
     }
 }

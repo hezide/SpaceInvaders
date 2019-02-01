@@ -57,11 +57,11 @@
     <Compile Include="Objects\Barrier.cs" />
     <Compile Include="Screens\GameOverScreen.cs" />
     <Compile Include="Screens\LevelTransitionScreen.cs" />
-    <Compile Include="Screens\MainMenuScreen.cs" />
-    <Compile Include="Screens\ScreenSettingsMenuScreen.cs" />
+    <Compile Include="Screens\MenuScreens\MainMenuScreen.cs" />
+    <Compile Include="Screens\MenuScreens\ScreenSettingsMenuScreen.cs" />
     <Compile Include="Screens\PauseScreen.cs" />
     <Compile Include="Screens\PlayScreen.cs" />
-    <Compile Include="Screens\SoundSettingsMenuScreen.cs" />
+    <Compile Include="Screens\MenuScreens\SoundSettingsMenuScreen.cs" />
     <Compile Include="Screens\WelcomeScreen.cs" />
     <Compile Include="SpaceInvaders.cs" />
     <Compile Include="RandomActionComponent.cs" />

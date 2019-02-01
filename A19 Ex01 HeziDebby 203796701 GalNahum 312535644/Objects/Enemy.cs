@@ -3,6 +3,7 @@ using Infrastructure.ObjectModel.Animators.ConcreteAnimators;
 using Infrastructure.ObjectModel.Screens;
 using Infrastructure.ServiceInterfaces;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using System;
 
 namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
@@ -15,6 +16,9 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
 
         private RandomActionComponent m_RandomShootingNotifier;
         private Gun m_Gun;
+        private SoundEffect m_EnemyGunShotSoundEffect;
+        private SoundEffect m_KilledSoundEffect;
+
         public int Seed { get; set; } = 0;
 
         public Enemy(string i_AssetName, Game i_Game, GameScreen i_Screen) : base(i_AssetName, i_Game, i_Screen)
@@ -95,6 +99,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
 
         public override void Collided(ICollidable i_Collidable)
         {
+            m_KilledSoundEffect.Play();
             if (!(i_Collidable is ICollidableByPixels))
             {
                 this.Animations["Spinner"].Enabled = true;
@@ -113,6 +118,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
         private void randomShootingNotifier_Shoot()
         {
             m_Gun.Shoot(new Vector2(Position.X + Width / 2, Position.Y));
+            m_EnemyGunShotSoundEffect.Play();
         }
 
         public override bool CheckCollision(ICollidable i_Source)
@@ -136,6 +142,13 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
         {
             base.Dispose(i_Disposing);
             m_RandomShootingNotifier.Enabled = false;
+        }
+
+        protected override void LoadContent()
+        {
+            base.LoadContent();
+            m_EnemyGunShotSoundEffect = this.Game.Content.Load<SoundEffect>("Sounds/EnemyGunShot");
+            m_KilledSoundEffect = this.Game.Content.Load<SoundEffect>("Sounds/EnemyKill");
         }
     }
 }

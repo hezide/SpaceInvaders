@@ -46,9 +46,11 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="ExtensionMethods.cs" />
-    <Compile Include="IOptionSelectionable.cs" />
+    <Compile Include="MenuInterfaces\IOptionSelectionable.cs" />
     <Compile Include="ObjectModel\Animators\ConcreteAnimators\PulseAnimator.cs" />
-    <Compile Include="OptionSelectionComponent.cs" />
+    <Compile Include="ServiceInterfaces\ISoundSettings.cs" />
+    <Compile Include="ObjectModel\Settings\SoundSettings.cs" />
+    <Compile Include="ObjectModel\MenuComponents\OptionSelectionComponent.cs" />
     <Compile Include="MenuInterfaces\IMenuItem.cs" />
     <Compile Include="Managers\CollisionsManager.cs" />
     <Compile Include="Managers\DummyInputManager.cs" />
@@ -65,11 +67,11 @@
     <Compile Include="ObjectModel\Animators\SpriteAnimator.cs" />
     <Compile Include="ObjectModel\CompositeDrawableComponent.cs" />
     <Compile Include="ObjectModel\GameService.cs" />
-    <Compile Include="ObjectModel\GameSettings.cs" />
+    <Compile Include="ObjectModel\Settings\GameSettings.cs" />
     <Compile Include="ObjectModel\LoadableDrawbleComponent.cs" />
-    <Compile Include="ObjectModel\MenuItem.cs" />
-    <Compile Include="ObjectModel\MenuItems\ActionMenuItem.cs" />
-    <Compile Include="ObjectModel\MenuItems\MultipleSelectionMenuItem.cs" />
+    <Compile Include="ObjectModel\MenuComponents\MenuItems\MenuItem.cs" />
+    <Compile Include="ObjectModel\MenuComponents\MenuItems\ActionMenuItem.cs" />
+    <Compile Include="ObjectModel\MenuComponents\MenuItems\MultipleSelectionMenuItem.cs" />
     <Compile Include="ObjectModel\PixelBasedCollisionComponent.cs" />
     <Compile Include="ObjectModel\RegisteredComponent.cs" />
     <Compile Include="ObjectModel\Screens\GameScreen.cs" />

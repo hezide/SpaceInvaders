@@ -152,6 +152,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
 
         private Enemy getEdgeEnemyByDirection()
         {
+            //todo:: out of range sometimes here
             return Enemies[GetEdgeSpriteIdxByDirection()][0];
         }
 

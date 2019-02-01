@@ -70,7 +70,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Screens
         {
             MultipleSelectionMenuItem multipleSelectionCreatedItem;
 
-            multipleSelectionCreatedItem = new MultipleSelectionMenuItem(Game, this, "Full Screen Mode");
+            multipleSelectionCreatedItem = new MultipleSelectionMenuItem(Game, this, "Number Of Players");
             multipleSelectionCreatedItem.AddOption("One", changeToOnePlayer, i_NumberOfPlayers == 1);
             multipleSelectionCreatedItem.AddOption("Two", changeToTwoPlayers, i_NumberOfPlayers == 2);
             AddItem(multipleSelectionCreatedItem, true);

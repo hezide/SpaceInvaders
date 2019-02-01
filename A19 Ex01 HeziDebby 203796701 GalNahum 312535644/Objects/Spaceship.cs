@@ -3,6 +3,7 @@ using Infrastructure.ObjectModel.Animators.ConcreteAnimators;
 using Infrastructure.ObjectModel.Screens;
 using Infrastructure.ServiceInterfaces;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
@@ -19,8 +20,13 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
 
         public SoulsComponent SoulsComponent { get; set; }
         public Gun Gun { get; private set; }
+
+        private SoundEffect m_ShootSoundEffect;
+
         public ScoreManager ScoreManager { get; set; }
         private IInputManager m_InputManager;
+        private SoundEffect m_LifeDieSoundEffect;
+
         public List<Keys> ActivationKeysList { private get; set; }
         public bool ActivateByMouse { private get; set; }
 
@@ -158,6 +164,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
         private void shoot()
         {
             Gun.Shoot(new Vector2(Position.X + Width / 2, Position.Y));
+            m_ShootSoundEffect.Play();
         }
 
         public override bool CheckCollision(ICollidable i_Source)
@@ -175,6 +182,8 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
         public override void Collided(ICollidable i_Collidable)
         {
             SoulsComponent.NumberOfSouls--;
+
+            m_LifeDieSoundEffect.Play();
 
             if (SoulsComponent.NumberOfSouls > 0)
             {
@@ -199,6 +208,13 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
         public override void Draw(GameTime gameTime)
         {
             base.DrawNonPremultiplied();
+        }
+
+        protected override void LoadContent()
+        {
+            base.LoadContent();
+            m_ShootSoundEffect = this.Game.Content.Load<SoundEffect>("Sounds/SSGunShot");
+            m_LifeDieSoundEffect = this.Game.Content.Load<SoundEffect>("Sounds/LifeDie");
         }
     }
 }

@@ -3,6 +3,7 @@ using Infrastructure.ObjectModel.Animators.ConcreteAnimators;
 using Infrastructure.ObjectModel.Screens;
 using Infrastructure.ServiceInterfaces;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 
@@ -12,6 +13,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
     {
         private const string k_AssetName = @"Sprites\MotherShip_32x120";
         private const float k_Velocity = 110;
+        private SoundEffect m_MSSDieSoundEffect;
 
         public MotherShip(Game i_Game, GameScreen i_Screen) : base(k_AssetName, i_Game, i_Screen)
         {
@@ -54,7 +56,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
         public override void Collided(ICollidable i_Collidable)
         {
             Velocity = Vector2.Zero;
-
+            m_MSSDieSoundEffect.Play();
             this.Animations.Restart();
         }
 
@@ -66,6 +68,12 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
         public override void Draw(GameTime gameTime)
         {
             DrawNonPremultiplied();
+        }
+
+        protected override void LoadContent()
+        {
+            base.LoadContent();
+            m_MSSDieSoundEffect = this.Game.Content.Load<SoundEffect>("Sounds/MotherShipKill");
         }
     }
 }

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
 {
-    public class Background : Sprite
+    public class Background: Sprite
     {
         private const string k_AssetName = @"Sprites\BG_Space01_1024x768";
 

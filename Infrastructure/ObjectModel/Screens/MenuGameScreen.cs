@@ -2,6 +2,7 @@
 using Infrastructure.ObjectModel.MenuItems;
 using Infrastructure.ServiceInterfaces;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
@@ -16,7 +17,7 @@ namespace Infrastructure.ObjectModel.Screens
         private TextComponent m_HeadlineMessage;
         private Dictionary<Keys, Action> m_ActivationKeys;
         protected OptionSelectionComponent<IMenuItem> m_MenuItemSelectionComponent = new OptionSelectionComponent<IMenuItem>();
-
+        private SoundEffect m_SwitchItemsSoundEffect;
         private readonly Vector2 r_FirstItemPosition = new Vector2(0, 50);//change when doing visual adjustments
         
         public MenuGameScreen(Game i_Game,string i_Headline) : base(i_Game)
@@ -84,9 +85,7 @@ namespace Infrastructure.ObjectModel.Screens
 
         private void mouseUpdatesHandler(GameTime i_GameTime)
         {
-            //todo:: insert the previous checking to the input manager to check only one click
-
-            if (InputManager.ScrollWheelDelta > 0 || (InputManager.MouseState.RightButton == ButtonState.Released && (InputManager as Managers.InputManager).PrevMouseState.RightButton == ButtonState.Pressed))
+            if (InputManager.ScrollWheelDelta > 0 || InputManager.ButtonPressed(eInputButtons.Right))
             {
                 changeMenuItemOptionsDown();
             }
@@ -94,17 +93,22 @@ namespace Infrastructure.ObjectModel.Screens
             {
                 changeMenuItemOptionsUp();
             }
+
             foreach (IMenuItem menuItem in m_MenuItemSelectionComponent)
             {
                 if (InputManager.MouseBounds().Intersects(menuItem.Bounds()))
                 {
-                    m_MenuItemSelectionComponent.ActiveItem.SetActive(false);
-                    m_MenuItemSelectionComponent.SetActiveItem(menuItem);
-                    menuItem.SetActive(true);
+                    if(menuItem != m_MenuItemSelectionComponent.ActiveItem)//prevents reactivating an active item
+                    {
+                        m_MenuItemSelectionComponent.ActiveItem.SetActive(false);
+                        m_MenuItemSelectionComponent.SetActiveItem(menuItem);
+                        menuItem.SetActive(true);
+                        m_SwitchItemsSoundEffect.Play();
+                    }
                 }
             }
-            //todo:: insert the previous checking to the input manager to check only one click
-            if(InputManager.MouseState.LeftButton == ButtonState.Released && (InputManager as Managers.InputManager).PrevMouseState.LeftButton == ButtonState.Pressed)
+
+            if(InputManager.ButtonPressed(eInputButtons.Left))
             {
                 moveToOtherScreen();
             }
@@ -133,7 +137,11 @@ namespace Infrastructure.ObjectModel.Screens
                 (m_MenuItemSelectionComponent.ActiveItem as IMultipleSelectionMenuItem).MoveDown();
             }
         }
-
+        protected override void LoadContent()
+        {
+            base.LoadContent();
+            m_SwitchItemsSoundEffect = this.Game.Content.Load<SoundEffect>("Sounds/MenuMove");
+        }
         //***************************************************//
         //          iTEM COLLECTION FUNCTIONS                //
         //***************************************************//
@@ -141,12 +149,14 @@ namespace Infrastructure.ObjectModel.Screens
         {
             m_MenuItemSelectionComponent.ActiveItem.SetActive(false);
             m_MenuItemSelectionComponent.MoveToNextOption().SetActive(true);
+            m_SwitchItemsSoundEffect.Play();
         }
 
         private void moveToPreviousMenuItem()
         {
             m_MenuItemSelectionComponent.ActiveItem.SetActive(false);
             m_MenuItemSelectionComponent.MoveToPrevOption().SetActive(true);
+            m_SwitchItemsSoundEffect.Play();
         }
 
         protected void AddItem(IMenuItem i_ItemToAdd,bool i_IsActive)
