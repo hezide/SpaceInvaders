@@ -9,9 +9,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
         private const int k_NumberOfBarriers = 4;
         private Vector2 m_BarrierBounds;
 
-        public Barriers(Game i_Game, GameScreen i_Screen) : base(i_Game, i_Screen)
-        {
-        }
+        public Barriers(Game i_Game, GameScreen i_Screen) : base(i_Game, i_Screen){}
 
         protected override void AllocateSprites(Game i_Game)
         {

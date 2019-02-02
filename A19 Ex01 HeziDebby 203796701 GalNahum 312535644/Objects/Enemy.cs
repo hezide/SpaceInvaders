@@ -69,6 +69,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
             this.Animations.Pause();
             this.Visible = false;
         }
+
         public Vector2 CellIdx { get; set; } = Vector2.Zero;
 
         protected override void InitBounds()

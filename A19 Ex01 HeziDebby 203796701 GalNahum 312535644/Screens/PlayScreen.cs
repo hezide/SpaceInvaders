@@ -73,6 +73,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
         {
             if (i_GameState == null)
             {
+                m_GameSettings.ResetLevel();
                 m_GameState = new GameState(i_SpaceInvadersSettings.NumberOfPlayers > 0, i_SpaceInvadersSettings.NumberOfPlayers > 1);
                 m_GameState.ScoreManagers = new List<ScoreManager>();
                 if (m_GameState.Player1Active)
@@ -114,7 +115,6 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
             m_Enemies.Initialize();
             //todo::fix to a const, or something, 456 was m_Player1.Position.Y
             m_Barriers.Initialize(GraphicsDevice.Viewport.Width, 456);
-            MediaPlayer.Play(m_BGMusic);
         }
 
         private void initPlayers()
@@ -170,18 +170,18 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
 
         private bool isLevelCompleted()
         {
-            return m_Enemies.Enemies.Count == 0;
+            return m_Enemies.Enemies.Count <= 0;
         }
 
         public override void Update(GameTime i_GameTime)
         {
-            if (isGameOver())
-            {
-                onGameOver();
-            }
-            else if (isLevelCompleted())
+            if (isLevelCompleted())
             {
                 onLevelCompleted();
+            }
+            else if (isGameOver())
+            {
+                onGameOver();
             }
             else
             {
@@ -200,11 +200,6 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
             {
                 ScreensManager.SetCurrentScreen(new PauseScreen(this.Game));
             }
-            //TODO:: change to all the screens;
-            if (InputManager.KeyPressed(Keys.M))
-            {
-                m_GameSettings.SetIsMuted(!m_GameSettings.IsMuted());//toggle mute
-            }
             //DEBUG - change level by pressing T
             //if (InputManager.KeyPressed(Keys.T))
             //{
@@ -213,6 +208,21 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
             //    ScreensManager.SetCurrentScreen(new PlayScreen(Game, m_GameState));
             //    ScreensManager.SetCurrentScreen(new LevelTransitionScreen(Game, m_GameSettings.CurrentLevel));
             //}
+            //DEBUG - leave only one enemy by pressing L
+            if (InputManager.KeyPressed(Keys.L))
+            {
+                int i = m_Enemies.Sprites.Count;
+                foreach (List<Enemy> enemies in m_Enemies.Enemies)
+                {
+                    foreach (Enemy enemy in enemies)
+                    {
+                        if (i == 1)
+                            return;
+                        enemy.Collided(new Bullet(this.Game, this));
+                        i--;
+                    }
+                }
+            }
         }
 
         private void onLevelCompleted()
@@ -260,7 +270,19 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
             m_BGMusic = this.Game.Content.Load<Song>("Sounds/BGMusic");
             m_GameOverSoundEffect = this.Game.Content.Load<SoundEffect>("Sounds/GameOver");
             m_LevelCompletedSoundEffect = this.Game.Content.Load<SoundEffect>("Sounds/LevelWin");
+        }
 
+        protected override void OnActivated()
+        {
+            base.OnActivated();
+            MediaPlayer.IsRepeating = true;
+            MediaPlayer.Play(m_BGMusic);
+        }
+
+        protected override void OnDeactivated()
+        {
+            base.OnDeactivated();
+            MediaPlayer.Stop();
         }
     }
 }

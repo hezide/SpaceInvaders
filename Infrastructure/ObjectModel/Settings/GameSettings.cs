@@ -16,6 +16,7 @@ namespace Infrastructure.ObjectModel
         public GameSettings(Game i_Game)
         {
             i_Game.Services.AddService(typeof(IGameSettings), this);
+            setLevel(0);
             m_SoundSettings = new SoundSettings();
         }
 

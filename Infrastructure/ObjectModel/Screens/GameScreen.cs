@@ -4,6 +4,7 @@ using Infrastructure.Managers;
 using Infrastructure.ServiceInterfaces;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 namespace Infrastructure.ObjectModel.Screens
 {
@@ -249,6 +250,8 @@ namespace Infrastructure.ObjectModel.Screens
 
         public override void Draw(GameTime gameTime)
         {
+            GraphicsDevice.Clear(Color.CornflowerBlue);
+
             bool fading = UseFadeTransition
                 && TransitionPosition > 0
                 && TransitionPosition < 1;
@@ -367,6 +370,16 @@ namespace Infrastructure.ObjectModel.Screens
             if (doUpdate)
             {
                 base.Update(gameTime);
+
+                //todo:: maybe change to a member instead of fetching everytime, depends if generally it's ok to make changes on GameScreen class
+                ISoundSettings gameSettings = (this.Game.Services.GetService(typeof(IGameSettings)) as ISoundSettings);
+                if (gameSettings != null)
+                {
+                    if(InputManager.KeyPressed(Keys.M))
+                    {
+                        gameSettings.SetIsMuted(!gameSettings.IsMuted());
+                    }
+                }
 
                 if (PreviousScreen != null && !this.IsModal)
                 {

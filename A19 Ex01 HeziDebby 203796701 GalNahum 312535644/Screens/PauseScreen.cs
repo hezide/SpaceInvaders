@@ -45,12 +45,5 @@ Press 'R' to continue.";
                 ExitScreen();
             }
         }
-        public override void Draw(GameTime i_GameTime)
-        {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
-
-            base.Draw(i_GameTime);
-        }
-
     }
 }

@@ -32,12 +32,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Screens
             m_GameOverText.Position = CenterOfViewPort;
 
         }
-        public override void Draw(GameTime i_GameTime)
-        {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            base.Draw(i_GameTime);
-        }
         public override void Update(GameTime gameTime)
         {
             if (InputManager.KeyPressed(Keys.Escape))
@@ -51,7 +46,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Screens
             }
             else if (InputManager.KeyPressed(Keys.T))
             {
-                //todo:: show main menu
+                m_ScreensManager.SetCurrentScreen(new MainMenuScreen(this.Game));
             }
             base.Update(gameTime);
         }

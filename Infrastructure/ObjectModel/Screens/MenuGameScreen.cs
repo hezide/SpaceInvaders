@@ -52,7 +52,7 @@ namespace Infrastructure.ObjectModel.Screens
             int i = 0;
             foreach (IMenuItem item in m_MenuItemSelectionComponent)
             {
-                item.SetPosition(r_FirstItemPosition + new Vector2(0, 20) * i);
+                item.SetPosition(r_FirstItemPosition + new Vector2(0, 25) * i);
                 i++;
             }
         }
@@ -89,6 +89,7 @@ namespace Infrastructure.ObjectModel.Screens
             {
                 changeMenuItemOptionsDown();
             }
+
             else if (InputManager.ScrollWheelDelta < 0)
             {
                 changeMenuItemOptionsUp();

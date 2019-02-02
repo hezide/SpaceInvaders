@@ -44,13 +44,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Screens
             {
                 ScreensManager.SetCurrentScreen(new MainMenuScreen(this.Game));
             }
+            base.Update(i_GameTime);
         }
-        public override void Draw(GameTime i_GameTime)
-        {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
-            
-            base.Draw(i_GameTime);
-        }
-
     }
 }

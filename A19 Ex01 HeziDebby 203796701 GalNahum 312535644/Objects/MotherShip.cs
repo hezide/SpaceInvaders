@@ -13,11 +13,9 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
     {
         private const string k_AssetName = @"Sprites\MotherShip_32x120";
         private const float k_Velocity = 110;
-        private SoundEffect m_MSSDieSoundEffect;
+        private SoundEffect m_MotherSpaceShipDieSoundEffect;
 
-        public MotherShip(Game i_Game, GameScreen i_Screen) : base(k_AssetName, i_Game, i_Screen)
-        {
-        }
+        public MotherShip(Game i_Game, GameScreen i_Screen) : base(k_AssetName, i_Game, i_Screen){}
 
         public override void Initialize()
         {
@@ -56,7 +54,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
         public override void Collided(ICollidable i_Collidable)
         {
             Velocity = Vector2.Zero;
-            m_MSSDieSoundEffect.Play();
+            m_MotherSpaceShipDieSoundEffect.Play();
             this.Animations.Restart();
         }
 
@@ -73,7 +71,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
         protected override void LoadContent()
         {
             base.LoadContent();
-            m_MSSDieSoundEffect = this.Game.Content.Load<SoundEffect>("Sounds/MotherShipKill");
+            m_MotherSpaceShipDieSoundEffect = this.Game.Content.Load<SoundEffect>("Sounds/MotherShipKill");
         }
     }
 }

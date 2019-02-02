@@ -41,11 +41,5 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Screens
                 this.ExitScreen();
             }
         }
-        public override void Draw(GameTime i_GameTime)
-        {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
-
-            base.Draw(i_GameTime);
-        }
     }
 }

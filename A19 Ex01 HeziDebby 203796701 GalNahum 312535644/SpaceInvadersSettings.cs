@@ -32,10 +32,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
 
         public int NumberOfPlayers { get; set; } = 2;
 
-        public SpaceInvadersSettings(Game i_Game):base(i_Game)
-        {
-            setLevel(0);//todo:: maybe should be called from the parent to the child
-        }
+        public SpaceInvadersSettings(Game i_Game):base(i_Game){}
 
         protected override void setLevel(int i_Level)
         {
@@ -91,10 +88,5 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
                 BulletAmountForEnemies += k_ExtraBulletAmountForEnemiesPerLevel;
             }
         }
-
-        /*****************************************
-        /                VOLUME
-        /*****************************************/
-
     }
 }

@@ -15,6 +15,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Screens
         public ScreenSettingsMenuScreen(Game i_Game) : base(i_Game, "Screen Settings")
         {
         }
+
         public override void Initialize()
         {
             createMouseVisibilityMenuItem(this.Game.IsMouseVisible);
@@ -25,14 +26,14 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Screens
             base.Initialize();
         }
 
-        private void createFullScreenMenuItem(bool i_IsFullScreen)
+        private void createMouseVisibilityMenuItem(bool i_IsMouseVisible)
         {
             MultipleSelectionMenuItem multipleSelectionCreatedItem;
+            multipleSelectionCreatedItem = new MultipleSelectionMenuItem(Game, this, "Mouse Visibility");
+            multipleSelectionCreatedItem.AddOption("Visible", () => { this.Game.IsMouseVisible = true; }, i_IsMouseVisible);
+            multipleSelectionCreatedItem.AddOption("Not Visible", () => { this.Game.IsMouseVisible = false; }, !i_IsMouseVisible);
 
-            multipleSelectionCreatedItem = new MultipleSelectionMenuItem(Game, this, "Full Screen Mode");
-            multipleSelectionCreatedItem.AddOption("Off", fullScreenOff, !i_IsFullScreen);
-            multipleSelectionCreatedItem.AddOption("On", fullScreenOn, i_IsFullScreen);
-            AddItem(multipleSelectionCreatedItem, false);
+            AddItem(multipleSelectionCreatedItem, true);
         }
 
         private void createWindowResizingMenuItem(bool i_AllowUserResizing)
@@ -40,61 +41,24 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Screens
             MultipleSelectionMenuItem multipleSelectionCreatedItem;
 
             multipleSelectionCreatedItem = new MultipleSelectionMenuItem(Game, this, "Allow Window Resizing");
-            multipleSelectionCreatedItem.AddOption("Allow", allowWindowResizing, i_AllowUserResizing);
-            multipleSelectionCreatedItem.AddOption("Do not allow", disallowWindowResizing, !i_AllowUserResizing);
+            multipleSelectionCreatedItem.AddOption("Allow", () => { this.Game.Window.AllowUserResizing = true; }, i_AllowUserResizing);
+            multipleSelectionCreatedItem.AddOption("Do not allow", () => { this.Game.Window.AllowUserResizing = false; }, !i_AllowUserResizing);
             AddItem(multipleSelectionCreatedItem, false);
         }
 
-        private void createMouseVisibilityMenuItem(bool i_IsMouseVisible)
+        private void createFullScreenMenuItem(bool i_IsFullScreen)
         {
             MultipleSelectionMenuItem multipleSelectionCreatedItem;
-            multipleSelectionCreatedItem = new MultipleSelectionMenuItem(Game, this, "Mouse Visibility");
-            multipleSelectionCreatedItem.AddOption("Visible", mouseVisibleOn, i_IsMouseVisible);
-            multipleSelectionCreatedItem.AddOption("Not Visible", mouseVisibleOff, !i_IsMouseVisible);
 
-            AddItem(multipleSelectionCreatedItem, true);
+            multipleSelectionCreatedItem = new MultipleSelectionMenuItem(Game, this, "Full Screen Mode");
+            multipleSelectionCreatedItem.AddOption("Off", toggleFullScreen, !i_IsFullScreen);
+            multipleSelectionCreatedItem.AddOption("On", toggleFullScreen, i_IsFullScreen);
+            AddItem(multipleSelectionCreatedItem, false);
         }
 
-        private void fullScreenOff()
+        private void toggleFullScreen()
         {
-            if((this.ScreensManager as ScreensMananger).GraphicsDeviceManager.IsFullScreen == true)
-            {
-                (this.ScreensManager as ScreensMananger).GraphicsDeviceManager.ToggleFullScreen();
-            }
-        }
-
-        private void fullScreenOn()
-        {
-            if ((this.ScreensManager as ScreensMananger).GraphicsDeviceManager.IsFullScreen == false)
-            {
-                (this.ScreensManager as ScreensMananger).GraphicsDeviceManager.ToggleFullScreen();
-            }
-        }
-
-        private void disallowWindowResizing()
-        {
-            this.Game.Window.AllowUserResizing = false;
-        }
-
-        private void allowWindowResizing()
-        {
-            this.Game.Window.AllowUserResizing = true;
-        }
-
-        private void mouseVisibleOn()
-        {
-            this.Game.IsMouseVisible = true;
-        }
-        private void mouseVisibleOff()
-        {
-            this.Game.IsMouseVisible = false;
-        }
-
-        public override void Draw(GameTime i_GameTime)
-        {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
-
-            base.Draw(i_GameTime);
+            (this.ScreensManager as ScreensMananger).GraphicsDeviceManager.ToggleFullScreen();
         }
     }
 }
