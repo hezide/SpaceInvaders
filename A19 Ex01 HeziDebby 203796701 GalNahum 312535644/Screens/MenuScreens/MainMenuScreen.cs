@@ -14,8 +14,9 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Screens
 {
     class MainMenuScreen : MenuGameScreen
     {
-        public MainMenuScreen(Game i_Game) : base(i_Game, "Main Menu")
+        public MainMenuScreen(Game i_Game) : base(i_Game)
         {
+            m_Content.Text = "Main Menu";
             Background background = new Background(i_Game, this);
         }
 

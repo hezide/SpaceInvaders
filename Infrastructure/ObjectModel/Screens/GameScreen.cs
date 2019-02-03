@@ -64,7 +64,6 @@ namespace Infrastructure.ObjectModel.Screens
 
     public abstract class GameScreen : CompositeDrawableComponent<IGameComponent>
     {
-      //  protected Sprite m_Background;
         protected TextComponent m_Content;
         protected TextComponent m_Instructions;
         protected Dictionary<Keys, NamedAction> m_ActivationKeys;
@@ -76,9 +75,6 @@ namespace Infrastructure.ObjectModel.Screens
             this.Visible = false;
 
             m_ActivationKeys = new Dictionary<Keys, NamedAction>();
-
-            // TODO G: new text component and background is code duplication
-            //   Background background = new Background(this.Game, this);
             m_Content = new TextComponent(i_Game, this);
             m_Instructions = new TextComponent(i_Game, this);
         }

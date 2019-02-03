@@ -24,7 +24,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Screens
             createMouseVisibilityMenuItem(this.Game.IsMouseVisible);
             createWindowResizingMenuItem(this.Game.Window.AllowUserResizing);
             createFullScreenMenuItem((this.ScreensManager as ScreensMananger).GraphicsDeviceManager.IsFullScreen);
-            createDoneMenuItem();
+            CreateDoneMenuItem();
 
             base.Initialize();
         }

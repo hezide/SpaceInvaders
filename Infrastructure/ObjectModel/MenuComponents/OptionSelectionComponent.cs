@@ -26,9 +26,7 @@ namespace Infrastructure
 
         private void activateItem(T i_Item)
         {
-            //ActiveItem.SetActive(false);//previous Item
             ActiveItem = i_Item;
-            //ActiveItem.SetActive(true);
         }
 
         public T MoveToNextOption()
@@ -42,6 +40,7 @@ namespace Infrastructure
             {
                 activateItem(nextMenuItem.Value);
             }
+
             return ActiveItem;
         }
 
@@ -56,15 +55,17 @@ namespace Infrastructure
             {
                 activateItem(prevMenuItem.Value);
             }
+
             return ActiveItem;
         }
 
-        public void AddItem(T i_ItemToAdd,bool i_IsActive = false)
+        public void AddItem(T i_ItemToAdd, bool i_IsActive = false)
         {
-            if(i_IsActive)
+            if (i_IsActive)
             {
                 activateItem(i_ItemToAdd);
             }
+
             m_Items.AddLast(i_ItemToAdd);
         }
         

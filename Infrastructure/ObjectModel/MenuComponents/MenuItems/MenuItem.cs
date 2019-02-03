@@ -19,12 +19,13 @@ namespace Infrastructure.ObjectModel
         private readonly Color r_ActiveColor = Color.Blue;
         private readonly Color r_InActiveColor = Color.DimGray;
 
-        public MenuItem(Game i_Game, GameScreen i_GameScreen,string i_ItemTitle)
+        public MenuItem(Game i_Game, GameScreen i_GameScreen, string i_ItemTitle)
         {
-            m_ItemText = new TextComponent(@"Fonts\Comic Sans MS", i_Game, i_GameScreen);
-            //m_ItemText.Scales = new Vector2(3);
-            m_ItemTitle = new TextComponent(@"Fonts\Comic Sans MS", i_Game, i_GameScreen);
-            m_ItemTitle.Text = i_ItemTitle;
+            m_ItemText = new TextComponent(i_Game, i_GameScreen);
+            m_ItemTitle = new TextComponent(i_Game, i_GameScreen)
+            {
+                Text = i_ItemTitle
+            };
         }
 
         public void Initialize()

@@ -38,11 +38,6 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Screens
             m_ActivationKeys.Add(Keys.T, new NamedAction("Go to Main Menu", goToMainMenu));
         }
 
-        public override void Update(GameTime gameTime)
-        {
-            base.Update(gameTime);
-        }
-
         private void goToMainMenu()
         {
             m_ScreensManager.SetCurrentScreen(new MainMenuScreen(this.Game));

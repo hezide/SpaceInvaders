@@ -15,7 +15,6 @@ namespace Infrastructure.ObjectModel.MenuItems
 
         public MultipleSelectionMenuItem(Game i_Game, GameScreen i_Screen, string i_ItemTitle) : base(i_Game, i_Screen, i_ItemTitle)
         {
-
         }
 
         public void MoveDown()
@@ -37,8 +36,8 @@ namespace Infrastructure.ObjectModel.MenuItems
             if (i_IsActive)
             {
                 m_ItemText.Text = itemToAdd.Key;
-                //activateOption(itemToAdd);
             }
+
             m_MenuItemSelectionComponent.AddItem(itemToAdd, i_IsActive);
         } 
 

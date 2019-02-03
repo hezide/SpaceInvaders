@@ -15,13 +15,13 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
         private readonly int k_RepeatingLevelDifficulty = 7;
 
         //Constants
-        private readonly float k_InitialBarriersVelocity = 45f;
-        private readonly float k_BarriersVelocityPercantageFactor = 7f;
-        private readonly int k_InitialNumOfEnemyCols = 9;
-        private readonly int k_InitialBaseEnemyScorePoints = 110;
-        private readonly int k_EnemyExtraScorePointsPerLevel = 120;
-        private readonly int k_InitialBulletAmountForEnemies = 1;
-        private readonly int k_ExtraBulletAmountForEnemiesPerLevel = 2;
+        private readonly float r_InitialBarriersVelocity = 45f;
+        private readonly float r_BarriersVelocityPercantageFactor = 7f;
+        private readonly int r_InitialNumOfEnemyCols = 9;
+        private readonly int r_InitialBaseEnemyScorePoints = 110;
+        private readonly int r_EnemyExtraScorePointsPerLevel = 120;
+        private readonly int r_InitialBulletAmountForEnemies = 1;
+        private readonly int r_ExtraBulletAmountForEnemiesPerLevel = 2;
 
         //Props For Objects
         public float BarriersVelocity { get; private set; }
@@ -51,28 +51,28 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
             }
             else if (CurrentLevel % k_RepeatingLevelDifficulty == 1)
             {
-                BarriersVelocity = k_InitialBarriersVelocity;
+                BarriersVelocity = r_InitialBarriersVelocity;
             }
             else
             {
-                BarriersVelocity = BarriersVelocity * (100f - k_BarriersVelocityPercantageFactor) / 100f;
+                BarriersVelocity = BarriersVelocity * (100f - r_BarriersVelocityPercantageFactor) / 100f;
             }
         }
 
         private void setNumOfEnemyColumns()
         {
-            NumOfEnemyColumns = CurrentLevel % k_RepeatingLevelDifficulty + k_InitialNumOfEnemyCols;
+            NumOfEnemyColumns = CurrentLevel % k_RepeatingLevelDifficulty + r_InitialNumOfEnemyCols;
         }
 
         private void setBaseEnemyHitScore()
         {
             if (CurrentLevel % k_RepeatingLevelDifficulty == 0)
             {
-                BaseEnemyScorePoints = k_InitialBaseEnemyScorePoints;
+                BaseEnemyScorePoints = r_InitialBaseEnemyScorePoints;
             }
             else
             {
-                BaseEnemyScorePoints += k_EnemyExtraScorePointsPerLevel;
+                BaseEnemyScorePoints += r_EnemyExtraScorePointsPerLevel;
             }
 
         }
@@ -81,11 +81,11 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
         {
             if (CurrentLevel % k_RepeatingLevelDifficulty == 0)
             {
-                BulletAmountForEnemies = k_InitialBulletAmountForEnemies;
+                BulletAmountForEnemies = r_InitialBulletAmountForEnemies;
             }
             else
             {
-                BulletAmountForEnemies += k_ExtraBulletAmountForEnemiesPerLevel;
+                BulletAmountForEnemies += r_ExtraBulletAmountForEnemiesPerLevel;
             }
         }
     }

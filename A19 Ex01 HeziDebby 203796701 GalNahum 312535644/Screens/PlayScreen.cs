@@ -57,7 +57,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
 
             if (m_GameSettings == null)
             {
-                throw new Exception("a setting class has not been initialized as a service");
+                m_GameSettings = new SpaceInvadersSettings(this.Game);
             }
 
             setGameState(i_GameState, m_GameSettings);
@@ -203,30 +203,6 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
                 m_MotherShipRandomNotifier.Update(i_GameTime);
                 m_Enemies.Update(i_GameTime);
                 m_Barriers.Update(i_GameTime);
-            }
-
-            //DEBUG - change level by pressing T
-            //if (InputManager.KeyPressed(Keys.T))
-            //{
-            //    ExitScreen();
-            //    m_GameSettings.GoToNextLevel();
-            //    ScreensManager.SetCurrentScreen(new PlayScreen(Game, m_GameState));
-            //    ScreensManager.SetCurrentScreen(new LevelTransitionScreen(Game, m_GameSettings.CurrentLevel));
-            //}
-            //DEBUG - leave only one enemy by pressing L
-            if (InputManager.KeyPressed(Keys.L))
-            {
-                int i = m_Enemies.Sprites.Count;
-                foreach (List<Enemy> enemies in m_Enemies.Enemies)
-                {
-                    foreach (Enemy enemy in enemies)
-                    {
-                        if (i == 1)
-                            return;
-                        enemy.Collided(new Bullet(this.Game, this));
-                        i--;
-                    }
-                }
             }
         }
 

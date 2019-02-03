@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 
 namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
 {
-    // TODO: is this sprite collection ?
     public class Gun
     {
         private List<Bullet> m_BulletsList;

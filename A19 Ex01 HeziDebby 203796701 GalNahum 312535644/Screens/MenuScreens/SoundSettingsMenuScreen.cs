@@ -29,7 +29,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Screens
             createToggleSoundMenuItem(m_SoundSettings.IsMuted());
             createBackgroundMusicVolumeMenuItem();
             createSoundEffectsVolumeMenuItem();
-            createDoneMenuItem();
+            CreateDoneMenuItem();
 
             base.Initialize();
         }

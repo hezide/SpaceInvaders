@@ -13,16 +13,20 @@ namespace Infrastructure.ObjectModel.Screens
         protected OptionSelectionComponent<IMenuItem> m_MenuItemSelectionComponent = new OptionSelectionComponent<IMenuItem>();
         private SoundEffect m_SwitchItemsSoundEffect;
 
-        public MenuGameScreen(Game i_Game, string i_Headline) : base(i_Game)
+        public MenuGameScreen(Game i_Game) : base(i_Game)
+        { }
+
+        public MenuGameScreen(Game i_Game, string i_Title) : base(i_Game)
         {
-            m_Content.Text = i_Headline;
+            m_Content.Text = i_Title;
         }
 
-        protected void createDoneMenuItem()
+        protected void CreateDoneMenuItem()
         {
             ActionMenuItem actionCreatedItem = new ActionMenuItem(Game, this, "Done", backToPreviousScreen);
             AddItem(actionCreatedItem, false);
         }
+
         private void backToPreviousScreen()
         {
             ExitScreen();
