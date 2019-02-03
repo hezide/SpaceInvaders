@@ -1,10 +1,12 @@
 ﻿//*** Guy Ronen © 2008-2011 ***//
-using System;
 using Infrastructure.Managers;
 using Infrastructure.ServiceInterfaces;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace Infrastructure.ObjectModel.Screens
 {
@@ -48,14 +50,37 @@ namespace Infrastructure.ObjectModel.Screens
         }
     }
 
+    public struct NamedAction
+    {
+        public Action Action;
+        public string Name;
+
+        public NamedAction(string i_Name, Action i_Action)
+        {
+            Name = i_Name;
+            Action = i_Action;
+        }
+    }
+
     public abstract class GameScreen : CompositeDrawableComponent<IGameComponent>
     {
+      //  protected Sprite m_Background;
+        protected TextComponent m_Content;
+        protected TextComponent m_Instructions;
+        protected Dictionary<Keys, NamedAction> m_ActivationKeys;
         //CTOR:
         public GameScreen(Game i_Game)
             : base(i_Game)
         {
             this.Enabled = false;
             this.Visible = false;
+
+            m_ActivationKeys = new Dictionary<Keys, NamedAction>();
+
+            // TODO G: new text component and background is code duplication
+            //   Background background = new Background(this.Game, this);
+            m_Content = new TextComponent(i_Game, this);
+            m_Instructions = new TextComponent(i_Game, this);
         }
 
         protected eScreenState m_State = eScreenState.Inactive;
@@ -155,7 +180,7 @@ namespace Infrastructure.ObjectModel.Screens
         }
 
         private IInputManager m_InputManager;
-        private IInputManager m_DummyInputManager = new DummyInputManager();
+        private readonly IInputManager m_DummyInputManager = new DummyInputManager();
 
         public IInputManager InputManager
         {
@@ -165,12 +190,38 @@ namespace Infrastructure.ObjectModel.Screens
         public override void Initialize()
         {
             m_InputManager = Game.Services.GetService(typeof(IInputManager)) as IInputManager;
+
             if (m_InputManager == null)
             {
                 m_InputManager = m_DummyInputManager;
             }
 
+            InitInstructions();
+
             base.Initialize();
+        }
+
+        protected virtual void InitInstructions()
+        {
+            SetScreenActivationKeys();
+
+            initInstructionsText();
+        }
+
+        protected abstract void SetScreenActivationKeys();
+
+        private void initInstructionsText()
+        {
+            StringBuilder instructions = new StringBuilder();
+            char index = m_ActivationKeys.Count > 1 ? '1' : '*';
+
+            foreach (KeyValuePair<Keys, NamedAction> keyAndAction in m_ActivationKeys)
+            {
+                instructions.AppendLine($"({index++}) Press {keyAndAction.Key.ToString()} to {keyAndAction.Value.Name}");
+            }
+
+            m_Instructions.Text = instructions.ToString();
+            m_Instructions.Scales = new Vector2(0.9f);
         }
 
         internal virtual void Activate()
@@ -375,7 +426,7 @@ namespace Infrastructure.ObjectModel.Screens
                 ISoundSettings gameSettings = (this.Game.Services.GetService(typeof(IGameSettings)) as ISoundSettings);
                 if (gameSettings != null)
                 {
-                    if(InputManager.KeyPressed(Keys.M))
+                    if (InputManager.KeyPressed(Keys.M))
                     {
                         gameSettings.SetIsMuted(!gameSettings.IsMuted());
                     }
@@ -384,6 +435,14 @@ namespace Infrastructure.ObjectModel.Screens
                 if (PreviousScreen != null && !this.IsModal)
                 {
                     PreviousScreen.Update(gameTime);
+                }
+
+                foreach (KeyValuePair<Keys, NamedAction> keyAndAction in m_ActivationKeys)
+                {
+                    if (InputManager.KeyPressed(keyAndAction.Key))
+                    {
+                        keyAndAction.Value.Action.Invoke();
+                    }
                 }
             }
         }

@@ -32,7 +32,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
 
         public int NumberOfPlayers { get; set; } = 2;
 
-        public SpaceInvadersSettings(Game i_Game):base(i_Game){}
+        public SpaceInvadersSettings(Game i_Game) : base(i_Game){}
 
         protected override void setLevel(int i_Level)
         {
@@ -42,14 +42,14 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
             setBaseEnemyHitScore();
             setBulletAmountForEnemies();
         }
-
+        
         private void setBarrierVelocity()
         {
-            if(CurrentLevel % k_RepeatingLevelDifficulty == 0)
+            if (CurrentLevel % k_RepeatingLevelDifficulty == 0)
             {
                 BarriersVelocity = 0;
             }
-            else if(CurrentLevel % k_RepeatingLevelDifficulty == 1)
+            else if (CurrentLevel % k_RepeatingLevelDifficulty == 1)
             {
                 BarriersVelocity = k_InitialBarriersVelocity;
             }

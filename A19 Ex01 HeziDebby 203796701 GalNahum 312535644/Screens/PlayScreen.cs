@@ -53,12 +53,13 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
         public PlayScreen(Game i_Game, GameState i_GameState = null) : base(i_Game)
         {
             Background background = new Background(this.Game, this);
-
             m_GameSettings = (this.Game.Services.GetService(typeof(IGameSettings)) as SpaceInvadersSettings);
-            if(m_GameSettings == null)
+
+            if (m_GameSettings == null)
             {
                 throw new Exception("a setting class has not been initialized as a service");
             }
+
             setGameState(i_GameState, m_GameSettings);
 
             createPlayersAndScoreManagers();
@@ -76,6 +77,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
                 m_GameSettings.ResetLevel();
                 m_GameState = new GameState(i_SpaceInvadersSettings.NumberOfPlayers > 0, i_SpaceInvadersSettings.NumberOfPlayers > 1);
                 m_GameState.ScoreManagers = new List<ScoreManager>();
+
                 if (m_GameState.Player1Active)
                 {
                     m_GameState.ScoreManagers.Add(new ScoreManager("Player 1", this.Game, this) { TintColor = Color.Blue });
@@ -115,6 +117,18 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
             m_Enemies.Initialize();
             //todo::fix to a const, or something, 456 was m_Player1.Position.Y
             m_Barriers.Initialize(GraphicsDevice.Viewport.Width, 456);
+            m_Instructions.Visible = false;
+        }
+
+        protected override void SetScreenActivationKeys()
+        {
+            m_ActivationKeys.Add(Keys.Escape, new NamedAction("Exit", this.Game.Exit));
+            m_ActivationKeys.Add(Keys.P, new NamedAction("Pause", pauseGame));
+        }
+
+        private void pauseGame()
+        {
+            ScreensManager.SetCurrentScreen(new PauseScreen(this.Game));
         }
 
         private void initPlayers()
@@ -191,15 +205,6 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
                 m_Barriers.Update(i_GameTime);
             }
 
-            if (Keyboard.GetState().IsKeyDown(Keys.Escape))
-            {
-                //todo:: what to do on esc now? Game over or welcome screen?
-                this.Game.Exit();
-            }
-            if (InputManager.KeyPressed(Keys.P))
-            {
-                ScreensManager.SetCurrentScreen(new PauseScreen(this.Game));
-            }
             //DEBUG - change level by pressing T
             //if (InputManager.KeyPressed(Keys.T))
             //{
@@ -248,6 +253,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
             {
                 (PreviousScreen as GameOverScreen).SetScore(m_GameState.ScoreManagers);
             }
+
             m_GameOverSoundEffect.Play();
             ExitScreen();
         }

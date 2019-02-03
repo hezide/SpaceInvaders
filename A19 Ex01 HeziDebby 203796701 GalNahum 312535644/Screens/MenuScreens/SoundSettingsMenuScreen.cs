@@ -1,4 +1,5 @@
-﻿using Infrastructure.ObjectModel;
+﻿using A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects;
+using Infrastructure.ObjectModel;
 using Infrastructure.ObjectModel.MenuItems;
 using Infrastructure.ObjectModel.Screens;
 using Infrastructure.ServiceInterfaces;
@@ -15,7 +16,11 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Screens
 {
     class SoundSettingsMenuScreen : MenuGameScreen
     {
-        public SoundSettingsMenuScreen(Game i_Game) : base(i_Game, "Sound Settings"){}
+        public SoundSettingsMenuScreen(Game i_Game) : base(i_Game, "Sound Settings")
+        {
+            Background background = new Background(i_Game, this);
+        }
+
         ISoundSettings m_SoundSettings;
 
         public override void Initialize()

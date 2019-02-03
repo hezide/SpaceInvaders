@@ -1,4 +1,6 @@
-﻿using Infrastructure.ObjectModel.MenuItems;
+﻿using A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects;
+using Infrastructure.ObjectModel;
+using Infrastructure.ObjectModel.MenuItems;
 using Infrastructure.ObjectModel.Screens;
 using Infrastructure.ServiceInterfaces;
 using Microsoft.Xna.Framework;
@@ -14,6 +16,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Screens
     {
         public MainMenuScreen(Game i_Game) : base(i_Game, "Main Menu")
         {
+            Background background = new Background(i_Game, this);
         }
 
         public override void Initialize()

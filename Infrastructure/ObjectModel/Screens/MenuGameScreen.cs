@@ -4,28 +4,20 @@ using Infrastructure.ServiceInterfaces;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Input;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Infrastructure.ObjectModel.Screens
 {
     public abstract class MenuGameScreen : GameScreen
     {
-        private TextComponent m_HeadlineMessage;
-        private Dictionary<Keys, Action> m_ActivationKeys;
         protected OptionSelectionComponent<IMenuItem> m_MenuItemSelectionComponent = new OptionSelectionComponent<IMenuItem>();
         private SoundEffect m_SwitchItemsSoundEffect;
-        private readonly Vector2 r_FirstItemPosition = new Vector2(0, 50);//change when doing visual adjustments
-        
-        public MenuGameScreen(Game i_Game,string i_Headline) : base(i_Game)
+
+        public MenuGameScreen(Game i_Game, string i_Headline) : base(i_Game)
         {
-            m_HeadlineMessage = new TextComponent(@"Fonts\Comic Sans MS", i_Game, this);
-            m_HeadlineMessage.Text = i_Headline;
-            initKeys();
+            m_Content.Text = i_Headline;
         }
+
         protected void createDoneMenuItem()
         {
             ActionMenuItem actionCreatedItem = new ActionMenuItem(Game, this, "Done", backToPreviousScreen);
@@ -35,9 +27,12 @@ namespace Infrastructure.ObjectModel.Screens
         {
             ExitScreen();
         }
-        public override void Initialize()        
+
+        public override void Initialize()
         {
             base.Initialize();
+            m_Content.Position = new Vector2(CenterOfViewPort.X - m_Content.Bounds.Width / 2, CenterOfViewPort.Y - 50);
+
             foreach (IMenuItem menuItem in m_MenuItemSelectionComponent)
             {
                 menuItem.Initialize();
@@ -47,39 +42,34 @@ namespace Infrastructure.ObjectModel.Screens
             {
                 m_MenuItemSelectionComponent.ActiveItem.SetActive(true);
             }
-            
+
             //init positions
             int i = 0;
+            Vector2 initialPosition = new Vector2(m_Content.Position.X, m_Content.Position.Y + m_Content.Bounds.Height);
+
             foreach (IMenuItem item in m_MenuItemSelectionComponent)
             {
-                item.SetPosition(r_FirstItemPosition + new Vector2(0, 25) * i);
+                item.SetPosition(initialPosition + new Vector2(0, 25) * i);
                 i++;
             }
         }
 
-        private void initKeys()
+        protected override void SetScreenActivationKeys()
         {
             //it this ok in coding standards? (function names
-            m_ActivationKeys = new Dictionary<Keys, Action>();
-            m_ActivationKeys.Add(Keys.Enter, moveToOtherScreen);
-            m_ActivationKeys.Add(Keys.PageUp, changeMenuItemOptionsUp);
-            m_ActivationKeys.Add(Keys.PageDown, changeMenuItemOptionsDown);
-            m_ActivationKeys.Add(Keys.Up, moveToPreviousMenuItem);
-            m_ActivationKeys.Add(Keys.Down, moveToNextMenuItem);
+            m_ActivationKeys = new Dictionary<Keys, NamedAction>
+            {
+                { Keys.Enter, new NamedAction("OK", moveToOtherScreen) },
+                { Keys.PageUp, new NamedAction("Option up", changeMenuItemOptionsUp) },
+                { Keys.PageDown, new NamedAction("Option Down", changeMenuItemOptionsDown) },
+                { Keys.Up, new NamedAction("Next", moveToPreviousMenuItem) },
+                { Keys.Down, new NamedAction("Previous", moveToNextMenuItem) }
+            };
         }
 
         public override void Update(GameTime i_GameTime)
         {
             mouseUpdatesHandler(i_GameTime);
-
-            foreach (KeyValuePair<Keys, Action> keyAndAction in m_ActivationKeys)
-            {
-                if(InputManager.KeyPressed(keyAndAction.Key))
-                {
-                    keyAndAction.Value.Invoke();
-                }
-            }
-
             base.Update(i_GameTime);
         }
 
@@ -99,7 +89,7 @@ namespace Infrastructure.ObjectModel.Screens
             {
                 if (InputManager.MouseBounds().Intersects(menuItem.Bounds()))
                 {
-                    if(menuItem != m_MenuItemSelectionComponent.ActiveItem)//prevents reactivating an active item
+                    if (menuItem != m_MenuItemSelectionComponent.ActiveItem)//prevents reactivating an active item
                     {
                         m_MenuItemSelectionComponent.ActiveItem.SetActive(false);
                         m_MenuItemSelectionComponent.SetActiveItem(menuItem);
@@ -109,7 +99,7 @@ namespace Infrastructure.ObjectModel.Screens
                 }
             }
 
-            if(InputManager.ButtonPressed(eInputButtons.Left))
+            if (InputManager.ButtonPressed(eInputButtons.Left))
             {
                 moveToOtherScreen();
             }
@@ -160,7 +150,7 @@ namespace Infrastructure.ObjectModel.Screens
             m_SwitchItemsSoundEffect.Play();
         }
 
-        protected void AddItem(IMenuItem i_ItemToAdd,bool i_IsActive)
+        protected void AddItem(IMenuItem i_ItemToAdd, bool i_IsActive)
         {
             m_MenuItemSelectionComponent.AddItem(i_ItemToAdd, i_IsActive);
         }

@@ -14,37 +14,36 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Screens
 {
     class WelcomeScreen : GameScreen
     {
-        private TextComponent m_WelcomeMessage;
-        public WelcomeScreen(Game i_Game):base(i_Game)
+        public WelcomeScreen(Game i_Game) : base(i_Game)
         {
             Background background = new Background(this.Game, this);
-            m_WelcomeMessage = new TextComponent(@"Fonts\Comic Sans MS", i_Game, this);
         }
         public override void Initialize()
         {
             base.Initialize();
-            
-            m_WelcomeMessage.Text = "Welcome";
-            m_WelcomeMessage.Position = CenterOfViewPort;
+
+            m_Content.Text = "Welcome to Space Invaders !";
+            m_Content.Position = new Vector2(CenterOfViewPort.X - m_Content.Bounds.Width / 2, CenterOfViewPort.Y - 20);
+            m_Instructions.Position = new Vector2(m_Content.Bounds.X, m_Content.Bounds.Y + m_Content.Bounds.Height);
         }
 
-        public override void Update(GameTime i_GameTime)
+        protected override void SetScreenActivationKeys()
         {
-            if (InputManager.KeyPressed(Keys.Enter))
-            {
-                ExitScreen();
-                ScreensManager.SetCurrentScreen(new PlayScreen(Game));
-                ScreensManager.SetCurrentScreen(new LevelTransitionScreen(Game,0));
-            }
-            else if (InputManager.KeyPressed(Keys.Escape))
-            {
-                Game.Exit();
-            }
-            else if (InputManager.KeyPressed(Keys.T))
-            {
-                ScreensManager.SetCurrentScreen(new MainMenuScreen(this.Game));
-            }
-            base.Update(i_GameTime);
+            m_ActivationKeys.Add(Keys.Enter, new NamedAction("Play", goToPlayScreen));
+            m_ActivationKeys.Add(Keys.Escape, new NamedAction("Exit", Game.Exit));
+            m_ActivationKeys.Add(Keys.T, new NamedAction("Go to Main Menu", goToMainMenuScreen));
+        }
+
+        private void goToMainMenuScreen()
+        {
+            ScreensManager.SetCurrentScreen(new MainMenuScreen(this.Game));
+        }
+
+        private void goToPlayScreen()
+        {
+            ExitScreen();
+            ScreensManager.SetCurrentScreen(new PlayScreen(Game));
+            ScreensManager.SetCurrentScreen(new LevelTransitionScreen(Game, 0));
         }
     }
 }

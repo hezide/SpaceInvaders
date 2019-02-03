@@ -11,17 +11,10 @@ namespace Infrastructure.ObjectModel
 {// TODO: add interface for polymorphizem
     public class TextComponent : Sprite
     {
+        private const string k_DefaultFont = @"Fonts\Comic Sans MS";
         private SpriteFont m_SpriteFont;
         private string m_FontName;
         public string Text { get; set; } = string.Empty;
-
-        protected Color m_TintColor = Color.White;
-        public Color TintColor
-        {
-            get { return m_TintColor; }
-            set { m_TintColor = value; }
-        }
-        public Vector2 Position { get; set; } = Vector2.Zero;
 
         public Rectangle Bounds
         {
@@ -33,6 +26,14 @@ namespace Infrastructure.ObjectModel
                 (int)m_SpriteFont.MeasureString(TextToString()).X,
                 (int)m_SpriteFont.MeasureString(TextToString()).Y);
             }
+        }
+
+        public TextComponent(Game i_Game, GameScreen i_Screen)
+           : base(String.Empty, i_Game, i_Screen, int.MaxValue)
+        {
+            m_FontName = k_DefaultFont;
+            Position = Vector2.Zero;
+            m_TintColor = Color.White;
         }
 
         public TextComponent(string i_AssetName, Game i_Game, GameScreen i_Screen)
@@ -66,12 +67,13 @@ namespace Infrastructure.ObjectModel
                 m_SpriteBatch.Begin();
             }
 
-            //m_SpriteBatch.DrawString(m_SpriteFont, TextToString(), Position, TintColor);
             m_SpriteBatch.DrawString(m_SpriteFont, TextToString(), this.Position, this.m_TintColor,0,this.m_PositionOrigin, this.Scales, SpriteEffects.None, 0);
+
             if (!m_UseSharedBatch)
             {
                 m_SpriteBatch.End();
             }
+
             base.Draw(i_GameTime);
         }
 

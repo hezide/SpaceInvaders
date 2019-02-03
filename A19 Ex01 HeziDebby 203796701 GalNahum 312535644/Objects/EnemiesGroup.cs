@@ -93,6 +93,11 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
             {
                 Enemies.Remove(colToRemove);
             }
+
+            if (Enemies.Count == 0)
+            {
+
+            }
         }
 
         private void enemy_Collision(object i_Sender, EventArgs i_EventArgs)
@@ -134,7 +139,10 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
 
         public override void Update(GameTime i_GameTime)
         {
-            jumpGroup(i_GameTime);
+            if (Enemies.Count > 0)
+            {
+                jumpGroup(i_GameTime);
+            }
         }
 
         protected override bool GroupHitBoundary()
@@ -194,7 +202,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
             m_JumpDestination = new Vector2(boundEnemy.Width / 2, boundEnemy.Height / 2);
             m_JumpBounds = boundEnemy.GraphicsDevice.Viewport.Bounds;
         }
-        
+
         private void jumpGroup(GameTime i_GameTime)
         {
             m_TimeLeftForNextJump -= i_GameTime.ElapsedGameTime;

@@ -12,8 +12,6 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Screens
 {
     class PauseScreen : GameScreen
     {
-        private TextComponent m_PausedMessage;
-
         public PauseScreen(Game i_Game):base(i_Game)
         {
             this.IsModal = true;
@@ -25,25 +23,20 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Screens
 
             this.ActivationLength = TimeSpan.FromSeconds(0.5f);
             this.DeactivationLength = TimeSpan.FromSeconds(0.5f);
-
-            m_PausedMessage = new TextComponent(@"Fonts\Comic Sans MS", i_Game, this);
         }
+
         public override void Initialize()
         {
-            m_PausedMessage.Text = @"
-Game is paused.
-Press 'R' to continue.";
-            m_PausedMessage.Position = CenterOfViewPort;
             base.Initialize();
-        }
-        public override void Update(GameTime i_GameTime)
-        {
-            base.Update(i_GameTime);
+            m_Content.Text = "Game Paused.";
 
-            if (InputManager.KeyPressed(Keys.R))
-            {
-                ExitScreen();
-            }
+            m_Content.Position = new Vector2(CenterOfViewPort.X - m_Content.Bounds.Width / 2, CenterOfViewPort.Y - 50); 
+            m_Instructions.Position = new Vector2(m_Content.Bounds.X, m_Content.Bounds.Y + m_Content.Bounds.Height);
+        }
+
+        protected override void SetScreenActivationKeys()
+        {
+            m_ActivationKeys.Add(Keys.R, new NamedAction("Continue", ExitScreen));
         }
     }
 }

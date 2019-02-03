@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.ObjectModel
 {
-    public abstract class GameSettings : IGameSettings,ISoundSettings
+    public abstract class GameSettings : IGameSettings, ISoundSettings
     {
         public int CurrentLevel { get; private set; } = 0;
         private SoundSettings m_SoundSettings;
