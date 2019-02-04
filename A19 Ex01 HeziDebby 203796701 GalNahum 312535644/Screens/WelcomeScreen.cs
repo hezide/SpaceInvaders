@@ -18,6 +18,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Screens
         {
             Background background = new Background(this.Game, this);
         }
+
         public override void Initialize()
         {
             base.Initialize();

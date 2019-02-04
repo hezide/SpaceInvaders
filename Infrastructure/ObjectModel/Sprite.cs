@@ -285,8 +285,6 @@ namespace Infrastructure.ObjectModel
 
         protected override void LoadContent()
         {
-            //TODO:: Gal, can you think of a better approach? this is when a text component sending an empty string,
-            // he ignores the usage of the texture cause he has a spritefont
             if(m_AssetName != String.Empty)
             {
                 m_Texture = Game.Content.Load<Texture2D>(m_AssetName);
@@ -372,7 +370,6 @@ namespace Infrastructure.ObjectModel
 
         protected void DrawNonPremultiplied()
         {
-            //todo :ugly, fix it
             m_SpriteBatch.End();
             m_SpriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied);
 

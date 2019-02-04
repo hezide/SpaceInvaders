@@ -132,11 +132,13 @@ namespace Infrastructure.ObjectModel.Screens
                 (m_MenuItemSelectionComponent.ActiveItem as IMultipleSelectionMenuItem).MoveDown();
             }
         }
+
         protected override void LoadContent()
         {
             base.LoadContent();
             m_SwitchItemsSoundEffect = this.Game.Content.Load<SoundEffect>("Sounds/MenuMove");
         }
+
         //***************************************************//
         //          iTEM COLLECTION FUNCTIONS                //
         //***************************************************//

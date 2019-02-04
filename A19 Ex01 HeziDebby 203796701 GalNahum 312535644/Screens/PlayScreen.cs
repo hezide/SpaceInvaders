@@ -115,8 +115,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
             initPlayers();
             initScoreManagers();
             m_Enemies.Initialize();
-            //todo::fix to a const, or something, 456 was m_Player1.Position.Y
-            m_Barriers.Initialize(GraphicsDevice.Viewport.Width, 456);
+            m_Barriers.Initialize(GraphicsDevice.Viewport.Width, (m_Player1 != null)? m_Player1.Position.Y : m_Player2.Position.Y);
             m_Instructions.Visible = false;
         }
 
@@ -176,10 +175,9 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644
 
         private bool isGameOver()
         {
-            //todo:: fix to const or something, 456 was m_Player1.Bounds.Top
             return (
                 !m_GameState.Player1Active && !m_GameState.Player2Active) || 
-                m_Enemies.ReachedHeight(456);
+                m_Enemies.ReachedHeight((m_Player1 != null) ? m_Player1.Bounds.Top : m_Player2.Bounds.Top);
         }
 
         private bool isLevelCompleted()

@@ -418,7 +418,6 @@ namespace Infrastructure.ObjectModel.Screens
             {
                 base.Update(gameTime);
 
-                //todo:: maybe change to a member instead of fetching everytime, depends if generally it's ok to make changes on GameScreen class
                 ISoundSettings gameSettings = (this.Game.Services.GetService(typeof(IGameSettings)) as ISoundSettings);
                 if (gameSettings != null)
                 {

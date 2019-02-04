@@ -232,7 +232,6 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Objects
                 {
                     if (stepDown)
                     {
-                        //todo:: this is not that clean, we are adding one pixel just add one pixel here:"+ m_GroupDirection.X" to avoid same boundry hit 
                         enemy.Position = new Vector2(enemy.Position.X + m_GroupDirection.X, enemy.Position.Y + ((enemy.Height - 1) / 2));
                         enemy.IncreaseCellAnimation(m_TimeToJump);
                     }

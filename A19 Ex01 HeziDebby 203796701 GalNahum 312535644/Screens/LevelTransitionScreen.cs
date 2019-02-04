@@ -22,6 +22,7 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Screens
             m_LevelNum = i_LevelNum;
             m_CountDownText = new TextComponent(i_Game, this);
         }
+
         public override void Initialize()
         {
             base.Initialize();

@@ -17,7 +17,6 @@ namespace A19_Ex01_HeziDebby_203796701_GalNahum_312535644.Screens
             this.IsModal = true;
             this.IsOverlayed = true;
             this.UseGradientBackground = false;
-            //todo:: is this really 40%?
             this.BlackTintAlpha = 0.6f;
             this.UseFadeTransition = true;
 
